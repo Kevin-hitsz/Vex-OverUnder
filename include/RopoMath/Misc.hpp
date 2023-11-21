@@ -29,16 +29,16 @@ namespace RopoMath{
 		return cot(Pi / 180.0 * Input);
 	}
 	template<class T>inline T Acos(T Input){
-		return Pi / 180.0 * acos(Input);
+		return 180.0 / Pi * acos(Input);
 	}
 	template<class T>inline T Asin(T Input){
-		return Pi / 180.0 * asin(Input);
+		return 180.0 / Pi * asin(Input);
 	}
 	template<class T>inline T Atan(T Input){
-		return Pi / 180.0 * atan(Input);
+		return 180.0 / Pi * atan(Input);
 	}
 	template<class T>inline T Acot(T Input){
-		return Pi / 180.0 * acot(Input);
+		return 180.0 / Pi * acot(Input);
 	}
 
 	// Misc function
@@ -66,6 +66,73 @@ namespace RopoMath{
 		return Input;
 	}
 
+	template<class T>inline T Distance(T X,T Y){
+		return sqrt(X * X + Y * Y);
+	}
+
+	template<class T>inline T DeltaTwoPoint(T X1,T Y1,T X2,T Y2){
+		T DeltaRotation;
+		if(X2-X1 == 0){
+			if(Y2-Y1 > 0){
+				DeltaRotation = 90.0;
+			}
+			else if(Y2-Y1 < 0){
+				DeltaRotation = -90.0;
+			}
+			else {
+				DeltaRotation = 0;
+			}
+			return DeltaRotation;
+		}
+		else{
+			DeltaRotation = Atan<T>((Y2-Y1)/(X2-X1));
+			if(X2-X1 > 0 && Y2-Y1 > 0){
+				//
+			}
+			if(X2-X1 > 0 && Y2-Y1 < 0){
+				//
+			}
+			if(X2-X1 < 0 && Y2-Y1 > 0){
+				DeltaRotation += 180;
+			}
+			if(X2-X1 < 0 && Y2-Y1 < 0){
+				DeltaRotation -= 180;
+			}
+			return DeltaRotation;
+		}
+	}
+
+	template<class T>inline T DeltaTwoPoint(T DeltaX,T DeltaY){
+		T DeltaRotation;
+		if(DeltaX == 0){
+			if(DeltaY > 0){
+				DeltaRotation = 90.0;
+			}
+			else if(DeltaY < 0){
+				DeltaRotation = -90.0;
+			}
+			else {
+				DeltaRotation = 0;
+			}
+			return DeltaRotation;
+		}
+		else{
+			DeltaRotation = Atan<T>( (DeltaY) / (DeltaX) );
+			if(DeltaX > 0 && DeltaY > 0){
+				//
+			}
+			if(DeltaX > 0 && DeltaY < 0){
+				//
+			}
+			if(DeltaX < 0 && DeltaY > 0){
+				DeltaRotation += 180;
+			}
+			if(DeltaX < 0 && DeltaY < 0){
+				DeltaRotation -= 180;
+			}
+			return DeltaRotation;
+		}
+	}
 
 }
 
