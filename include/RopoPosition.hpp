@@ -7,68 +7,84 @@
 #include "pros/rtos.hpp"
 #include <cmath>
 #include <vector>
+#include <numeric>
 #include "RopoMath/Misc.hpp"
-#include"RopoDevice.hpp"
 
 namespace RopoPosition{
-    double WheelRad = 0.041275;    //轮子半径
-    double ChassisRatio = 7.0 / 5.0;  //底盘宽度
-    double Pi = 3.1415;
-    pros::Task *BackgroundTask;
-    double Delta_S,S_Last_Encoder,S_Encoder,X,Y,LeftMotorEncoder,RightMotorEncoder;//
-    double Angle;
-    double Get_Delta_MotorsPosition(){
-        S_Last_Encoder = S_Encoder;
-        std::vector<double> _LeftMotorEncoder  = RopoDevice::Motors:: LeftMotor.get_positions();        //分别得到左边三个电机的编码器位置，储存在一个向量中
-        std::vector<double> _RightMotorEncoder = RopoDevice::Motors::RightMotor.get_positions();
-        double ResPosition = 0,Cnt = 0;
-        S_Encoder = 0;
-        for(double i : _LeftMotorEncoder)               //计算三个电机编码器的平均值
-            ResPosition += i,Cnt += 1;
-        ResPosition /= Cnt;
-        S_Encoder += ResPosition;
-        LeftMotorEncoder = ResPosition;
-        ResPosition = 0,Cnt = 0;
-        for(double i : _RightMotorEncoder)
-            ResPosition += i,Cnt += 1;
-        ResPosition /= Cnt;
-        RightMotorEncoder = ResPosition;
-        S_Encoder += ResPosition;
-        S_Encoder /= 2.0; 
-        // pros::lcd::print(2,"P!!!! %.1lf %.1lf",S_Encoder,S_Last_Encoder);   //左右编码器分别取平均值后再取平均值：直走时全正加，转弯时一正一反不加
-        pros::delay(20);
-        // pros::lcd::print(3,"P!  %.1lf",S_Encoder-S_Last_Encoder); 
-        pros::delay(4); 
-        return S_Encoder - S_Last_Encoder;        //获得的是电机编码器变化的量
-    }
-    void BackgroundTaskFunction(){
-        X = 0;
-        Y = 0;
-        RopoDevice::Motors::LeftMotor  .tare_position();           //分别将六个编码器置零
-        RopoDevice::Motors::RightMotor .tare_position();
-        while(true){
-            Angle = -RopoDevice::Sensors::Inertial.get_yaw();
-            Delta_S =  Get_Delta_MotorsPosition();
-            static constexpr double ChassisRatio = 7.0 / 5.0;
-            X += cos(Angle/360*2*Pi)*Delta_S / 360.0 * 2.0 * Pi * WheelRad / ChassisRatio;//cos(This->Angle)//*This->Delta_S/360.0*2.0*Pi*WheelRad/ChassisRatio;
-            Y += sin(Angle/360*2*Pi)*Delta_S / 360.0 * 2.0 * Pi * WheelRad / ChassisRatio;//sin(This->Angle)//*This->Delta_S/360.0*2.0*Pi*WheelRad/ChassisRatio;
-            pros::delay(20);
-        }
-    }
-    void StartPosition(){
-        RopoDevice::Motors::LeftMotor  . set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);//以度为单位设置编码器单元
-        RopoDevice::Motors::RightMotor . set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-        BackgroundTask = new pros::Task(BackgroundTaskFunction);    
+    typedef RopoApi::FloatType FloatType;
+
+    class Position{
+        private:
+            static constexpr double WheelRad = 0.041275;        // 轮半径
+            static constexpr double ChassisRatio = 3.0 / 2.0;   // 传动比
+            static constexpr double Pi = 3.1415926;
+            pros::Motor_Group *LeftMotor;                  // 指向左边三个电机的指针
+            pros::Motor_Group *RightMotor;                 // 指向右边电机的指针
+            pros::IMU *MyInterial;
+            pros::Task *BackgroundTask;
+            RopoApi::FloatType Delta_Distance,S_Last_Encoder,S_Encoder,X,Y,LeftMotorEncoder,RightMotorEncoder;//
+            RopoApi::FloatType Angle;
+            double Get_Delta_MotorsPosition(){
+                S_Last_Encoder = S_Encoder;
+
+                // 获取左侧三电机的编码器位置并储存在一个向量中
+                std::vector<double> _LeftMotorEncoder = LeftMotor -> get_positions();
+                std::vector<double> _RightMotorEncoder = RightMotor -> get_positions();
+
+                // 计算左侧和右侧平均值
+                LeftMotorEncoder = std::accumulate(_LeftMotorEncoder.begin(),_LeftMotorEncoder.end(),0) / (FloatType)_LeftMotorEncoder.size();
+                RightMotorEncoder = std::accumulate(_RightMotorEncoder.begin(),_RightMotorEncoder.end(),0) / (FloatType)_RightMotorEncoder.size();
+
+                // 计算总平均值
+                S_Encoder = (LeftMotorEncoder + RightMotorEncoder) / 2.0;
+
+                pros::lcd::print(2,"S_Encoder:%.1lf S_Last_Encoder:%.1lf",S_Encoder,S_Last_Encoder);   //左右编码器分别取平均值后再取平均值：直线行走增加或减少，自转一正一反=0
+                pros::delay(20);
+		        pros::lcd::print(3,"Delta_S_Encoder:%.1lf",S_Encoder-S_Last_Encoder); 
+                pros::delay(4); 
+				return S_Encoder - S_Last_Encoder;        //返回电机编码器改变平均值
+            }
+            static void BackgroundTaskFunction(void *Parameter){
+                if(Parameter == nullptr) return;
+				Position *This = static_cast<Position *>(Parameter);
+                FloatType SampleTime = 10;
+                This->X = 0;
+                This->Y = 0;
+                This->LeftMotor ->tare_position();
+                This->RightMotor->tare_position();
+                while(1){
+                    This -> Angle   = -This -> MyInterial -> get_yaw();
+                    This -> Delta_Distance = This -> Get_Delta_MotorsPosition() / 180*Pi * WheelRad/ChassisRatio;
+                    if(This->Angle <= 180.0 && This->Angle >= -180.0){       
+                        This -> X  += cos(This->Angle/180*Pi) * This->Delta_Distance;
+                        This -> Y  += sin(This->Angle/180*Pi) * This->Delta_Distance;
+                    }
+                    pros::delay(SampleTime);
+                }
+			}
+        public:
+            Position(pros::Motor_Group *_LeftMotor, pros::Motor_Group *_RightMotor, pros::IMU *_Interial):
+                LeftMotor(_LeftMotor),RightMotor(_RightMotor),MyInterial(_Interial),
+                X(0),Y(0),S_Last_Encoder(0),S_Encoder(0),LeftMotorEncoder(0),RightMotorEncoder(0),
+                Angle(0){
+                // 以 Degree 为单位设置编码器单元
+                LeftMotor -> set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+                RightMotor -> set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
+                BackgroundTask = new pros::Task(BackgroundTaskFunction,this);    
+            };
+            FloatType Get_X() const{
+                return X;
+            }
+            FloatType Get_Y() const{
+                return Y;
+            }
+            FloatType Get_Angle() const{
+                return Angle;
+            }
+            void initial(){
+                X = Y = 0;
+            }
     };
-    double Get_X(){
-        return X;
-    }
-    double Get_Y(){
-        return Y;
-    }
-    double Get_Angle(){
-        return Angle;
-    }
 }
 
 #endif //ROPO_POSITION_HPP
