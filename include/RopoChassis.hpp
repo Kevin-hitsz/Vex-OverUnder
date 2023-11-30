@@ -9,6 +9,9 @@
 #include "RopoMath/Misc.hpp"
 #include "pros/rtos.hpp"
 #include "RopoSensor/Debugger.hpp"
+#include "RopoPosition.hpp"
+#include <algorithm>
+
 
 namespace RopoChassis{
 	// Api
@@ -20,10 +23,13 @@ namespace RopoChassis{
 	// Code
 	class TankChassis{
 		private:
-			static constexpr float WheelRad = 0.041275;// 轮半径
-			static constexpr float ChassisParameter = (0.285+0.2855)/2;// 半车宽
+			static constexpr float WheelRad = 0.041275;
+			static constexpr float ChassisParameter = (0.295+0.295)/2; // 0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.15,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
+			//0.00001,0.00012,0.0004
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
 			Vector ChassisVelocity;
@@ -32,8 +38,6 @@ namespace RopoChassis{
 			int DetectionX;
 
 			// For AutoMove Functions
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.15,0.3};		//
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000057,0.00013,0.000001,0.0015,-1e7,2,0.3};		//
 			enum AutoStatus{
 				Disable = -1,
 				MovePosAbs = 0,
@@ -47,9 +51,9 @@ namespace RopoChassis{
 
 			pros::Task* BackgroundTask;
 
-			void OpenLoopMove(const RopoMath::Vector<FloatType>& Velocity) {
-				const FloatType ChassisRatio = 3.0 / 2.0; // 传动比
-				const FloatType radTorpm = 600 / 62.83;
+			void OpenLoopMove(const Vector& Velocity) {
+				const FloatType ChassisRatio = 3.0 / 2.0;
+				const FloatType radTorpm = 600 / 62.83;				// 1 degree / 2pi * 60s
 				static Vector _Velocity(RopoMath::ColumnVector,2);
 				_Velocity = Velocity;
 				_Velocity[1] = _Velocity[1] * ChassisRatio * radTorpm;
@@ -59,13 +63,14 @@ namespace RopoChassis{
 				MotorMove[1](MotorVelocity[2]);
 			}
 		public:
+
 			static inline Matrix RotationMatrix(FloatType Degree){
-					static Matrix _RotationMatrix(3, 3);
-					_RotationMatrix[1][1] = RopoMath::Cos(Degree), _RotationMatrix[1][2] = -RopoMath::Sin(Degree), _RotationMatrix[1][3] = 0;
-					_RotationMatrix[2][1] = RopoMath::Sin(Degree), _RotationMatrix[2][2] =  RopoMath::Cos(Degree), _RotationMatrix[2][3] = 0;
-					_RotationMatrix[3][1] = 0, _RotationMatrix[3][2] = 0, _RotationMatrix[3][3] = 1;
-					return _RotationMatrix;
-				}
+				static Matrix _RotationMatrix(3, 3);
+				_RotationMatrix[1][1] = RopoMath::Cos(Degree), _RotationMatrix[1][2] = -RopoMath::Sin(Degree), _RotationMatrix[1][3] = 0;
+				_RotationMatrix[2][1] = RopoMath::Sin(Degree), _RotationMatrix[2][2] =  RopoMath::Cos(Degree), _RotationMatrix[2][3] = 0;
+				_RotationMatrix[3][1] = 0, _RotationMatrix[3][2] = 0, _RotationMatrix[3][3] = 1;
+				return _RotationMatrix;
+			}
 
 			static void ChassisMoveBackgroundFunction(void *Parameter){
 				if(Parameter == nullptr)return;
@@ -88,7 +93,6 @@ namespace RopoChassis{
 						
 						AimPosition[1] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[1],AimPosition[1],1,1000.0 / This->SampleTime);
 						AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],1,1000.0 / This->SampleTime);
-						// AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],1,1000.0 / This->SampleTime);
 						AimPosition[3] = This->AimPosition[3];
 
 						Vector Delta(RopoMath::ColumnVector,3);
@@ -146,6 +150,7 @@ namespace RopoChassis{
 							TempChassisVelocity[1] = 0;
 						}
 						else if(This->AutoMoveType == MovePosAbs){
+							
 						}
 						
 						This->OpenLoopMove(TempChassisVelocity);
@@ -157,29 +162,32 @@ namespace RopoChassis{
 
 			TankChassis(	void (*RightMotorMove)(FloatType),
 							void (*LeftMotorMove )(FloatType),
-							RopoMath::Vector<FloatType> (*GetPosition_)(),
+							Vector (*GetPosition_)(),
 							int _SampleTime = 5):
 				Core( WheelRad, ChassisParameter, DefaultVelocityLimits),
 				MotorMove{  RightMotorMove,LeftMotorMove},
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
 				AutoMoveType(Disable),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
-				DegErrorTolerance(5),Arrived(false),
+				DegErrorTolerance(5),Arrived(false),DisArrived(false),DegArrived(false),
 				BackgroundTask(nullptr){
 				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
 			}
 
-			void SetAutoMoveType(AutoStatus status) {AutoMoveType = status;}
 			void SetVelocityLimits(FloatType VelocityLimits) {Core.SetVelocityLimits(VelocityLimits);}
 			void SetDegErrorTolerance(FloatType ErrorTolerance) {DegErrorTolerance = ErrorTolerance;}
-			RopoMath::Vector<FloatType> GetChassisVelocity(){return ChassisVelocity;}
-			RopoMath::Vector<FloatType> GetMotorVelocity(){return MotorVelocity;}
-			bool IfArrived(){return Arrived;}
-			void MoveVelocity(const RopoMath::Vector<FloatType>& Velocity) {
+			Vector GetChassisVelocity() const{return ChassisVelocity;}
+			Vector GetMotorVelocity() const{return MotorVelocity;}
+			bool IfArrived() const {return Arrived;}
+			bool IfDisArrived() const{return DisArrived;}
+			bool IfDegArrived() const{return DegArrived;}
+
+			void MoveVelocity(const Vector& Velocity) {
 				ChassisVelocity = Velocity, AutoMoveType = Disable;
 			}
 			void MoveVelocity(RopoApi::FloatType X,RopoApi::FloatType W){
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
+				AutoMoveType = Disable;
 			}
 
 			void AutoRotateAbs(FloatType AimDegree) {

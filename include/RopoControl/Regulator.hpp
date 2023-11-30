@@ -47,7 +47,7 @@ namespace RopoControl{
 			FloatType JumpTime;
 			bool First;
 		public:
-			PIDRegulator(FloatType _Kp,FloatType _Ki,FloatType _Kd,FloatType _OutputLimitHigh,FloatType _OutputLimitLow,FloatType _ErrorTol,FloatType _JumpTime = 0.05):
+			PIDRegulator(FloatType _Kp,FloatType _Ki,FloatType _Kd,FloatType _OutputLimitHigh,FloatType _OutputLimitLow,FloatType _ErrorTol,FloatType _JumpTime = 0.03):
 				Kp(_Kp),Ki(_Ki),Kd(_Kd),OutputLimitHigh(_OutputLimitHigh),OutputLimitLow(_OutputLimitLow),ErrorTol(_ErrorTol),JumpTime(_JumpTime),First(true){}
 			virtual FloatType Update(FloatType Error){
 				static FloatType PreError;

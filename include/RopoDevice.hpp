@@ -11,7 +11,9 @@
 #include "RopoControl/Regulator.hpp"
 #include "RopoApi.hpp"
 #include "RopoChassis.hpp"
-
+#include "RopoPosition.hpp"
+#include "RopoThrower.hpp"
+#include "RopoLifter.hpp"
 
 namespace RopoDevice{
 
@@ -19,17 +21,21 @@ namespace RopoDevice{
 	typedef RopoApi::FloatType FloatType;
 
 	namespace ThreeWire{
-		const char LiftPneumaticPort  = 'C';
-		pros::ADIDigitalOut LiftPneumatic(LiftPneumaticPort,false);
+		const char LeftExternPneumaticPort  = 'A';
+		const char RightExternPneumaticPort = 'B';
+		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
+		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
+		
+		const char CatchPneumaticPort  = 'C';
+		const char LockPneumaticPort   = 'D';
+		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
+		pros::ADIDigitalOut LockPneumatic(CatchPneumaticPort,false);
 
-		const char ExternPneumaticPort  = 'A';
-		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 	}
 
 
 	namespace Sensors{
-
-		const int InertialPort = 2;
+		const int InertialPort = 3;
 		pros::IMU Inertial(InertialPort);
 
 	}			
@@ -37,35 +43,35 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 14;
-		const int LeftMotor2Port  	= 13;
-		const int LeftMotor3Port  	= 12;
-		const int RightMotor1Port	= 17;
-		const int RightMotor2Port	= 18;
-		const int RightMotor3Port	= 19;
+		const int LeftMotor1Port  	= 20;
+		const int LeftMotor2Port  	= 8;
+		const int LeftMotor3Port  	= 10;
+		const int RightMotor1Port	= 11;
+		const int RightMotor2Port	= 15;
+		const int RightMotor3Port	= 13;
 		
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
-		pros::Motor      LeftMotor1 ( LeftMotor1Port  , 	ChassisGearset, true );
-		pros::Motor      LeftMotor2 ( LeftMotor2Port  , 	ChassisGearset, true );
-		pros::Motor      LeftMotor3 ( LeftMotor3Port  , 	ChassisGearset, true );
-		pros::Motor      RightMotor1( RightMotor1Port ,	ChassisGearset, false);
-		pros::Motor      RightMotor2( RightMotor2Port ,	ChassisGearset, false);
-		pros::Motor      RightMotor3( RightMotor3Port ,	ChassisGearset, false);
-		pros::MotorGroup LeftMotor { Motors::LeftMotor1 ,Motors::LeftMotor2 ,Motors::LeftMotor3   };
-		pros::MotorGroup RightMotor{ Motors::RightMotor1,Motors::RightMotor2,Motors::RightMotor3  };
+		pros::Motor      LeftMotor1 ( LeftMotor1Port  , 	ChassisGearset, false );
+		pros::Motor      LeftMotor2 ( LeftMotor2Port  , 	ChassisGearset, false );
+		pros::Motor      LeftMotor3 ( LeftMotor3Port  , 	ChassisGearset, false );
+		pros::Motor      RightMotor1( RightMotor1Port ,		ChassisGearset, false);
+		pros::Motor      RightMotor2( RightMotor2Port ,		ChassisGearset, false);
+		pros::Motor      RightMotor3( RightMotor3Port ,		ChassisGearset, false);
+		pros::MotorGroup LeftMotor { Motors::LeftMotor1 , Motors::LeftMotor2 , Motors::LeftMotor3   };
+		pros::MotorGroup RightMotor{ Motors::RightMotor1, Motors::RightMotor2, Motors::RightMotor3  };
 
-		// const FloatType ChassisRatio = 7.0 / 5.0;
-
+		const FloatType ChassisRatio = 3.0 / 2.0;
+		bool ChassisControllerMode = false;
 		void LeftWheelMove	(FloatType Velocity){
-			LeftMotor1.move_velocity(Velocity );
-			LeftMotor2.move_velocity(Velocity );
-			LeftMotor3.move_velocity(Velocity );
+			LeftMotor1.move_velocity(-Velocity );
+			LeftMotor2.move_velocity(-Velocity );
+			LeftMotor3.move_velocity(-Velocity );
 			// constexpr FloatType RatioParam = 20;
-			// LeftMotor1.move_voltage(Velocity * RatioParam);
-			// LeftMotor2.move_voltage(Velocity * RatioParam);
-			// LeftMotor3.move_voltage(Velocity * RatioParam);
+			// LeftMotor1.move_voltage(-Velocity * RatioParam);
+			// LeftMotor2.move_voltage(-Velocity * RatioParam);
+			// LeftMotor3.move_voltage(-Velocity * RatioParam);
 		}
 
 		void RightWheelMove (FloatType Velocity){
@@ -78,9 +84,19 @@ namespace RopoDevice{
 			// RightMotor3.move_voltage(Velocity * RatioParam);
 		}
 
-
+		const int LeftLiftMotorPort		= 16;
+		const int RightLiftMotorPort    = 19;
+		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
+		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
+		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
+		pros::MotorGroup LiftMotor { Motors::LeftLiftMotor ,Motors::RightLiftMotor};
 	}
 
+	namespace Position_Motor{
+		RopoPosition::Position MyPosition(&Motors::LeftMotor,&Motors::RightMotor,&Sensors::Inertial);
+	}
+
+	RopoLifter::LifterModule LiftMotors(&Motors::LiftMotor);
 
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_yaw();
@@ -88,8 +104,8 @@ namespace RopoDevice{
 
 	RopoMath::Vector<FloatType> GetPosition(){
 		RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
-		PositionVector[1] =  0 / 1000.0;
-		PositionVector[2] =  0 / 1000.0;
+		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
+		PositionVector[2] =  RopoDevice::Position_Motor::MyPosition.Get_Y();
 		PositionVector[3] =  GetHeading();
 
 		return PositionVector;
@@ -108,6 +124,19 @@ namespace RopoDevice{
 		Motors::RightMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Position_Motor::MyPosition.initial();
+	}
+
+	void MotorsInit(){
+		Motors::LeftMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	}
 
 }

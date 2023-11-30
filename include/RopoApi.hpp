@@ -4,11 +4,6 @@
 
 namespace RopoApi{
 	typedef double FloatType;
-
-
-
-
-	
 }
 
 #endif //ROPO_API_HPP

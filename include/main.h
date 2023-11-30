@@ -34,7 +34,7 @@
  */
 #define PROS_USE_LITERALS
 
-#include "api.h"
+
 
 /**
  * You should add more #includes here
@@ -50,6 +50,8 @@
 #include "RopoTask.hpp"
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
+#include "RopoAuto.hpp"
+#include"api.h"
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.
