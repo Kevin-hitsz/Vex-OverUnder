@@ -16,9 +16,9 @@
 namespace RopoChassis{
 	// Api
 
-	typedef RopoApi::FloatType FloatType;
-	typedef RopoMath::Vector<FloatType> Vector;
-	typedef RopoMath::Matrix<FloatType> Matrix;
+	// typedef RopoApi::FloatType FloatType;
+	// typedef RopoMath::Vector<FloatType> Vector;
+	// typedef RopoMath::Matrix<FloatType> Matrix;
 
 	// Code
 	class TankChassis{
@@ -62,6 +62,9 @@ namespace RopoChassis{
 				MotorMove[0](MotorVelocity[1]);
 				MotorMove[1](MotorVelocity[2]);
 			}
+
+			
+
 		public:
 
 			static inline Matrix RotationMatrix(FloatType Degree){
@@ -93,6 +96,7 @@ namespace RopoChassis{
 						
 						AimPosition[1] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[1],AimPosition[1],1,1000.0 / This->SampleTime);
 						AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],1,1000.0 / This->SampleTime);
+						// AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],1,1000.0 / This->SampleTime);
 						AimPosition[3] = This->AimPosition[3];
 
 						Vector Delta(RopoMath::ColumnVector,3);
@@ -105,6 +109,25 @@ namespace RopoChassis{
 						while(Delta[3] < -180.0) Delta[3] += 360.0;
 
 						if(This->AutoMoveType == MoveForward){
+							// 此情况默认车头正对
+							// FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
+							// if(Delta[1] < 0)	DeltaDis *= -1; 
+
+							// This->DisArrived = DistanceRegulator.IfArrived();
+
+							// if(!This->DisArrived){
+							// 	FloatType DisRes = DistanceRegulator.Update(DeltaDis);
+							// 	TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
+							// 	This->Arrived = false;
+							// 	//TempChassisVelocity[2] = TempChassisVelocity[1]
+							// }
+							// else{
+							// 	TempChassisVelocity[1] = 0;
+							// 	This->Arrived = true;
+							// 	TempChassisVelocity[2] = 0;
+							// }
+							// TempChassisVelocity[2] = 0;
+
 							FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
 							if(Delta[1] < 0)	DeltaDis *= -1; 
 							DeltaDis *= This -> DetectionX;
@@ -112,7 +135,7 @@ namespace RopoChassis{
 
 							if(!This->DisArrived){
 								FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
+								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );// * 0.9
 								FloatType _R = DeltaDis;//圆心在左正，圆心在右负
 								DeltaRotation -= CurrentPosition[3];
 								if(_R > 0.5){
@@ -124,6 +147,18 @@ namespace RopoChassis{
 								if(DeltaRotation < -90 ){
 									DeltaRotation += 180;
 								}
+								// _R = _R/RopoMath::Sin(DeltaRotation/2.0);
+
+								// if(_R > 0){
+								// 	_R = std::max(_R,0.5);			
+								// }
+								// if(_R < 0){
+								// 	_R = std::min(_R,-0.5);
+								// }
+								// if (TempChassisVelocity[1] > 3.0){	
+								// 	TempChassisVelocity[1] = 3.0;
+								// }
+								// TempChassisVelocity[2] = TempChassisVelocity[1]/_R;
 								TempChassisVelocity[2] = DeltaRotation / 45.0 ;
 								if(DeltaDis < 0.2){
 									TempChassisVelocity[2] = 0;
@@ -140,7 +175,7 @@ namespace RopoChassis{
 
 							if(!This->DegArrived){
 								FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
-								TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
+								TempChassisVelocity[2] = DegRes * 0.8 / ( This->SampleTime / 1000.0 );	// *0.8
 								This->Arrived = false;
 							}
 							else{
@@ -175,16 +210,17 @@ namespace RopoChassis{
 
 			void SetVelocityLimits(FloatType VelocityLimits) {Core.SetVelocityLimits(VelocityLimits);}
 			void SetDegErrorTolerance(FloatType ErrorTolerance) {DegErrorTolerance = ErrorTolerance;}
-			Vector GetChassisVelocity() const{return ChassisVelocity;}
-			Vector GetMotorVelocity() const{return MotorVelocity;}
-			bool IfArrived() const {return Arrived;}
-			bool IfDisArrived() const{return DisArrived;}
-			bool IfDegArrived() const{return DegArrived;}
+			Vector GetChassisVelocity(){return ChassisVelocity;}
+			Vector GetMotorVelocity(){return MotorVelocity;}
+
+			bool IfArrived(){return Arrived;}
+			bool IfDisArrived(){return DisArrived;}
+			bool IfDegArrived(){return DegArrived;}
 
 			void MoveVelocity(const Vector& Velocity) {
 				ChassisVelocity = Velocity, AutoMoveType = Disable;
 			}
-			void MoveVelocity(RopoApi::FloatType X,RopoApi::FloatType W){
+			void MoveVelocity(FloatType X,FloatType W){
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
 				AutoMoveType = Disable;

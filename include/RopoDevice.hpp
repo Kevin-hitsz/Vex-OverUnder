@@ -16,26 +16,18 @@
 #include "RopoLifter.hpp"
 
 namespace RopoDevice{
-
-	// Api
-	typedef RopoApi::FloatType FloatType;
-
 	namespace ThreeWire{
-		const char LeftExternPneumaticPort  = 'A';
-		const char RightExternPneumaticPort = 'B';
-		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
-		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
+		const char ExternPneumaticPort = 'B';
+		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char CatchPneumaticPort  = 'C';
-		const char LockPneumaticPort   = 'D';
+		const char CatchPneumaticPort  = 'A';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
-		pros::ADIDigitalOut LockPneumatic(CatchPneumaticPort,false);
 
 	}
 
 
 	namespace Sensors{
-		const int InertialPort = 3;
+		const int InertialPort = 7;
 		pros::IMU Inertial(InertialPort);
 
 	}			
@@ -43,12 +35,12 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 20;
-		const int LeftMotor2Port  	= 8;
-		const int LeftMotor3Port  	= 10;
-		const int RightMotor1Port	= 11;
-		const int RightMotor2Port	= 15;
-		const int RightMotor3Port	= 13;
+		const int LeftMotor1Port  	= 4;
+		const int LeftMotor2Port  	= 11;
+		const int LeftMotor3Port  	= 12;
+		const int RightMotor1Port	= 10;
+		const int RightMotor2Port	= 20;
+		const int RightMotor3Port	= 19;
 		
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -84,8 +76,8 @@ namespace RopoDevice{
 			// RightMotor3.move_voltage(Velocity * RatioParam);
 		}
 
-		const int LeftLiftMotorPort		= 16;
-		const int RightLiftMotorPort    = 19;
+		const int LeftLiftMotorPort		= 5;
+		const int RightLiftMotorPort    = 9;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );

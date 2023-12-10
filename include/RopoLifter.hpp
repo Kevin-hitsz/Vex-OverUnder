@@ -9,7 +9,7 @@ namespace RopoLifter{
 
     // Params
     const double HoldingPosition = 105.0;//120.0
-    const double WaitingPosition = 93.0;//210.0
+    const double WaitingPosition = 98.0;//210.0
     const double HiddenPosition = 0.0;
     const double LifterRatio = 1.0;  
     const int FullSpeedVoltage = 6000;
@@ -28,6 +28,7 @@ namespace RopoLifter{
             State LifterState;
             pros::MotorGroup *Motors; 
             bool ifReady;
+            bool breaktag;
 
         public:
             static void LifterBackGroundFunction(void *Parameter);
@@ -60,6 +61,7 @@ namespace RopoLifter{
         std::vector<double> PositionVector;
 
         This -> ifReady = true;
+        This -> breaktag = false;
         while(true) {
         	
             PositionVector = This -> Motors -> get_positions() ;
@@ -67,26 +69,31 @@ namespace RopoLifter{
             
             if (!This->ifReady)
             {
+                This -> breaktag = false;
                 switch(This -> LifterState){
                     case HIDDEN:
                         This->Motors->set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
                         This->Motors->move_absolute(HiddenPosition,0.7*(HiddenPosition-This->LifterPosition));
                         while (fabs(This->LifterPosition-HiddenPosition) > 2.0)
                         {
-                            
+                            if (This -> breaktag) break;
                             PositionVector = This -> Motors -> get_positions() ;
                             This -> LifterPosition = (PositionVector[0] + PositionVector[1])/ 2.0 * LifterRatio;
                             pros::delay(20);
                         }
                         // pros::delay(1000);
-                        This -> Motors-> brake();
-                        This->ifReady = true;
+                        if (!This -> breaktag)
+                        {
+                            This -> Motors-> brake();
+                            This->ifReady = true;
+                        }
                         break;    
                     case HOLDING:
                         This->Motors->set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
                         This->Motors->move_absolute(HoldingPosition,65);
                         while (fabs(This->LifterPosition-HoldingPosition) > 3.0)
                         {
+                            if (This -> breaktag) break;
                             if (fabs(This->LifterPosition-HoldingPosition) < 30.0) 
                             {
                                 This->Motors->move_absolute(HoldingPosition,30);
@@ -95,21 +102,27 @@ namespace RopoLifter{
                             This -> LifterPosition = (PositionVector[0] + PositionVector[1])/ 2.0 * LifterRatio;
                             pros::delay(20);
                         }
-                        This -> Motors -> brake();
-                        This->ifReady = true;
+                        if (!This -> breaktag)
+                        {
+                            This -> Motors-> brake();
+                            This->ifReady = true;
+                        }
                         break;
                     case WAITING:
                         This->Motors->set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
                         This->Motors->move_absolute(WaitingPosition,30);
                         while (fabs(This->LifterPosition-WaitingPosition) > 3.0)
                         {
-                            
+                            if (This -> breaktag) break;
                             PositionVector = This -> Motors -> get_positions() ;
                             This -> LifterPosition = (PositionVector[0] + PositionVector[1])/ 2.0 * LifterRatio;
                             pros::delay(20);
                         }
-                        This -> Motors -> brake();
-                        This->ifReady = true;
+                        if (!This -> breaktag)
+                        {
+                            This -> Motors-> brake();
+                            This->ifReady = true;
+                        }
                         break;
                 }
             }
@@ -117,9 +130,9 @@ namespace RopoLifter{
             pros::delay(Deltatime);
         }
     }
-    void   LifterModule::Hold()    { LifterState = HOLDING; ifReady = false; }
-    void   LifterModule::Hide()    { LifterState =  HIDDEN; ifReady = false; }
-    void   LifterModule::Wait()    { LifterState = WAITING; ifReady = false; }
+    void   LifterModule::Hold()    { LifterState = HOLDING; ifReady = false; breaktag = true;}
+    void   LifterModule::Hide()    { LifterState =  HIDDEN; ifReady = false; breaktag = true;}
+    void   LifterModule::Wait()    { LifterState = WAITING; ifReady = false; breaktag = true;}
     bool   LifterModule::IfReady() { return ifReady; }
     State  LifterModule::GetLifterStatus()   { return    LifterState; }
     double LifterModule::GetLifterPosition() { return LifterPosition; }

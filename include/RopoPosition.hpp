@@ -10,8 +10,6 @@
 #include "RopoMath/Misc.hpp"
 
 namespace RopoPosition{
-    typedef RopoApi::FloatType FloatType;
-
     class Position{
         private:
             static constexpr double WheelRad = 0.041275;        // 轮半径
@@ -21,8 +19,8 @@ namespace RopoPosition{
             pros::Motor_Group *RightMotor;                 // 指向右边电机的指针
             pros::IMU *MyInterial;
             pros::Task *BackgroundTask;
-            RopoApi::FloatType Delta_Distance,S_Last_Encoder,S_Encoder,X,Y,LeftMotorEncoder,RightMotorEncoder;
-            RopoApi::FloatType Angle;
+            FloatType Delta_Distance,S_Last_Encoder,S_Encoder,X,Y,LeftMotorEncoder,RightMotorEncoder;
+            FloatType Angle;
             double Get_Delta_MotorsPosition(){
                 S_Last_Encoder = S_Encoder;
 
@@ -71,6 +69,13 @@ namespace RopoPosition{
             FloatType Get_X() const{return X;}
             FloatType Get_Y() const{return Y;}
             FloatType Get_Angle() const{return Angle;}
+            void Set_XY(FloatType x, FloatType y){
+                X = x;
+                Y = y; 
+            }
+            void Set_Angle(FloatType angle){
+                Angle = angle;
+            }
             void initial(){X = Y = 0;}
     };
 }
