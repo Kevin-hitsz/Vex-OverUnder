@@ -6,7 +6,7 @@
 namespace RopoIntaker{
 
     const int IntakingVoltage = 12000;
-    const int HidingVoltage = -10000;
+    const int HidingVoltage = -12000;
 
     class IntakerModule{
         private:
@@ -31,12 +31,17 @@ namespace RopoIntaker{
                     } 
                     else if (This -> now_status == true && This -> target_status == false){
                         This -> Motors -> move_voltage(HidingVoltage );
-                        pros::delay(700);
+                        pros::delay(1000);
                         This -> now_status = false;
                     } 
                     else if (This -> now_status == false && This -> target_status == false){
                         This -> Motors -> move_voltage(HidingVoltage /4.0);
-                    } 
+                    }
+                    // else if (This -> now_status == false && This -> target_status == true && This -> is_resting == true){
+                    //     This -> Motors -> move_voltage(IntakingVoltage);
+                    //     pros::delay(700);
+                    //     This -> now_status = true;
+                    // }  
                     pros::delay(30);
                 }
             }

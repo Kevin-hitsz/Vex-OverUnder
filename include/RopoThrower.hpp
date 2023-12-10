@@ -7,7 +7,7 @@
 namespace RopoThrower{
 
     const double ThrownPosition = 0.0;//120.0
-    const double WaitingPosition = 335.0;//210.0
+    const double WaitingPosition = 340.0;//210.0
     const double HidingPosition = 0.0;
     const double ThrowerRatio = 1.0 / 3.0 ;// /18.0
     const int FullSpeedVoltage = 12000;
@@ -81,15 +81,14 @@ namespace RopoThrower{
                 switch(This -> ThrowerState){
                     case HIDDEN:
                         if(This -> ThrowerAimState == HIDE) {
-                            This -> Motors -> move_voltage(-FullSpeedVoltage*0.1);
+                            This -> Motors -> move_voltage(-FullSpeedVoltage*0.3);
                             This -> ifReady = true;
                         }
                         else if(This -> ThrowerAimState == WAIT || This -> ThrowerAimState == THROW) {
                             // if(This -> ThrowerPosition < WaitingPosition){
                             //     This -> Motors -> move_voltage(FullSpeedVoltage);
                             // }
-                            This -> Motors -> move_voltage(FullSpeedVoltage/2);
-                            pros::delay(400);
+                            This -> Motors -> move_voltage(FullSpeedVoltage);
                             This -> ThrowerState = WAITING;
                         }
                         break;
@@ -102,15 +101,17 @@ namespace RopoThrower{
                         } 
                         else if( This -> ThrowerAimState == WAIT) {
                             if ( WaitingPosition - This -> ThrowerPosition < 20 && WaitingPosition - This -> ThrowerPosition > 0 ) {
+                                //This -> Motors -> set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
                                 This -> Motors -> brake();
+                                This -> Motors -> move_voltage(0);
                                 This -> ifReady = true;
                             }
                             else if(This -> ThrowerPosition > WaitingPosition){
-                                This -> Motors -> move_voltage(fmin(fmax( ( -(This->ThrowerPosition - 360) + WaitingPosition) / 120 , 0.6),1.0)*FullSpeedVoltage);
+                                This -> Motors -> move_voltage(fmin(fmax( ( -(This->ThrowerPosition - 360) + WaitingPosition) / 60 , 0.75),1.0)*FullSpeedVoltage);
                                 This -> ifReady = false;                                                                                //160
                             }
                             else if(This -> ThrowerPosition < WaitingPosition){
-                                This -> Motors -> move_voltage(fmin(fmax( ( WaitingPosition - This->ThrowerPosition) / 120 , 0.6),1.0)*FullSpeedVoltage);
+                                This -> Motors -> move_voltage(fmin(fmax( ( WaitingPosition - This->ThrowerPosition) / 60 , 0.75),1.0)*FullSpeedVoltage);
                                 This -> ifReady = false;
                             }
                             

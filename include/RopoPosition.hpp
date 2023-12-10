@@ -48,7 +48,7 @@ namespace RopoPosition{
 				return S_Encoder - S_Last_Encoder;        //获得的是电机编码器变化的值
             }
             static void BackgroundTaskFunction(void *Parameter){
-                double SampleTime = 100;
+                double SampleTime = 10;
                 if(Parameter == nullptr) return;
 				Position *This = static_cast<Position *>(Parameter);
                 This->X = 0;
@@ -65,8 +65,8 @@ namespace RopoPosition{
                     if(This->Angle <= 181.0 && This->Angle >= -181.0){
       
                         This -> X  += cos(This->Angle/360*2*3.1415)*This->Delta_S/360.0*2.0*Pi*WheelRad/ChassisRatio;
-                        pros::delay(10);
-		                pros::lcd::print(4,"P!  %.4lf",This -> X); 
+                        
+		                // pros::lcd::print(4,"P!  %.4lf",This -> X); 
                         This -> Y  += sin(This->Angle/360*2*3.1415)*This->Delta_S/360.0*2.0*Pi*WheelRad/ChassisRatio;
                     }
                     pros::delay(SampleTime);

@@ -27,8 +27,8 @@ namespace RopoChassis{
 			static constexpr float ChassisParameter = (0.295+0.295)/2;//0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.15,0.3};		//
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000057,0.00013,0.000001,0.0015,-1e7,2,0.3};		//
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0006,-1e7,0.15,0.3};		//
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000062,0.00013,0.000001,0.0020,-1e7,2,0.3};		//
 			//0.00001,0.00012,0.0004
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
@@ -186,85 +186,6 @@ namespace RopoChassis{
 						}
 						else if(This->AutoMoveType == MovePosAbs){
 
-							// FloatType TurnDeg = atan(Delta[1] / Delta[2]) - CurrentPosition[3];
-							// while(TurnDeg >= 180.0) TurnDeg -= 360.0;
-							// while(TurnDeg < -180.0) TurnDeg += 360.0;
-
-							// FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
-							// if(Delta[1] < 0)	DeltaDis *= -1; 
-
-							// bool ArrivedTag = 0;
-
-							// if(!ArrivedTag){
-							// 	This->DegArrived = SlowDegRegulator.IfArrived();
-							// 	This->DisArrived = DistanceRegulator.IfArrived();
-							// }
-							// else	This->Arrived = SlowDegRegulator.IfArrived();
-							
-							// if(!This->DegArrived){
-							// 	FloatType DegRes = SlowDegRegulator.Update(TurnDeg);
-							// 	TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
-							// }
-							// else	TempChassisVelocity[2] = 0;
-
-							// pros::delay(5);
-
-							// if(This->DegArrived && !This->DisArrived){
-							// 	FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-							// 	TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
-							// }
-							// else	TempChassisVelocity[1] = 0;
-
-							// pros::delay(5);
-
-							// if(This->DisArrived && This->DegArrived){
-							// 	ArrivedTag = true;									// 到达坐标点
-							// 	if(This->Arrived)	TempChassisVelocity[2] = 0;
-							// 	else{
-							// 		FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
-							// 		TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
-							// 	}
-							// }
-							
-							// Delta = RotationMatrix(Delta[3]) * Delta;
-
-							// FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		// X
-
-							// This->Arrived = true;
-							// This->Arrived &= DistanceRegulator.IfArrived();
-							// This->Arrived &= SlowDegRegulator.IfArrived();
-
-							// if(!This->Arrived){
-							// 	FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-							// 	FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
-							// 	TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
-							// 	TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
-							// }
-							// else{
-							// 	TempChassisVelocity[1] = 0, TempChassisVelocity[2] = 0;
-							// }
-
-
-							//------Lin--------
-							FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
-							if(Delta[1] < 0)	DeltaDis *= -1; 
-
-							This->DisArrived = DistanceRegulator.IfArrived();
-
-							if(!This->DisArrived){
-								FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
-								FloatType _R = DeltaDis;//圆心在左正，圆心在右负
-								_R = _R/RopoMath::Sin(DeltaRotation/2.0);
-								TempChassisVelocity[2] = TempChassisVelocity[1]/_R;
-								//This->Arrived = false;
-							}
-							else{
-								TempChassisVelocity[1] = 0;
-								//This->Arrived = true;
-								TempChassisVelocity[2] = 0;
-							}
-							
 
 						}
 						
@@ -369,7 +290,8 @@ namespace RopoChassis{
 				}
 				
 				AutoDirectMove(xPos,yPos);
-				while(!DisArrived){
+				double Time = pros::millis();
+				while((!DisArrived) && (pros::millis()-Time <3000) ){
 					pros::delay(20);
 				}
 
