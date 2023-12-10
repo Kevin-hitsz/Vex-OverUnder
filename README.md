@@ -20,3 +20,6 @@
 ### 23.11.30
 - 增加了 RopoLifter,RopoThrower等新内容
 - 更新了 RopoChassiss 自动函数
+
+### 23.12.10
+- 从成都开幕赛初始化代码库
