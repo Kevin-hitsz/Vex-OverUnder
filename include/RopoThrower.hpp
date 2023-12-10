@@ -7,16 +7,15 @@
 namespace RopoThrower{
 
     const double ThrownPosition = 0.0;//120.0
-    const double WaitingPosition = 280.0;//210.0
+    const double WaitingPosition = 335.0;//210.0
     const double HidingPosition = 0.0;
-    const double ThrowerRatio = 1.0;  //  /3.0 // /18.0
-    const int FullSpeedVoltage = 6000;
+    const double ThrowerRatio = 1.0 / 3.0 ;// /18.0
+    const int FullSpeedVoltage = 12000;
     const int Deltatime = 3;
 
     typedef enum{
-        HIDDEN = 0,      //when thrower is hidden in the robot
+        HIDDEN = 0 ,    //when thrower is hidden in the robot
         WAITING = 1,    //when thrower have streched and waiting to shoot
-        //THROWING = 2      //when thrower haven't been hiden
     }State;
 
     typedef enum{
@@ -32,22 +31,31 @@ namespace RopoThrower{
         AimState ThrowerAimState;
         pros::MotorGroup *Motors; 
         bool ifReady;
+        bool is_disable;
+        pros::Task* ThrowerTask;
         public:
         static void ThrowerBackGroundFunction(void *Parameter);
         ThrowerModule(pros::MotorGroup *Mtrs);
+        ~ThrowerModule();
         void Throw();
         void Hide();
         void Wait();
         bool IfReady();
         State GetThrowerStatus();
+        void set_is_disable(bool _is_disable);
 
     };
     ThrowerModule::ThrowerModule(pros::MotorGroup *Mtrs) {
         ThrowerState = HIDDEN;
         ThrowerAimState = HIDE;
         Motors = Mtrs;
+        is_disable = false;
         ThrowerPosition = 0;
-        new pros::Task(ThrowerModule::ThrowerBackGroundFunction,this);
+        ThrowerTask = new pros::Task(ThrowerModule::ThrowerBackGroundFunction,this);
+    }
+
+    ThrowerModule::~ThrowerModule() {
+        delete ThrowerTask;
     }
     void ThrowerModule::ThrowerBackGroundFunction(void *Parameter) {
     	
@@ -62,64 +70,79 @@ namespace RopoThrower{
         std::vector<double> PositionVector ;
         This -> ifReady = false;
         while(true) {
-        	
-            PositionVector = This -> Motors -> get_positions() ;
-			This -> ThrowerPosition = 0;
-            for(double i : PositionVector) This -> ThrowerPosition += i;
-            This -> ThrowerPosition = This -> ThrowerPosition/ 2.0 * ThrowerRatio;
-            while(This -> ThrowerPosition >=  360)This -> ThrowerPosition -= 360;
-            while(This -> ThrowerPosition <= 0)This -> ThrowerPosition += 360;
+        	if (This -> is_disable == false) {
+                PositionVector = This -> Motors -> get_positions() ;
+                This -> ThrowerPosition = 0;
+                for(double i : PositionVector) This -> ThrowerPosition += i;
+                This -> ThrowerPosition = This -> ThrowerPosition/ 2.0 * ThrowerRatio;
+                while(This -> ThrowerPosition >=  360)This -> ThrowerPosition -= 360;
+                while(This -> ThrowerPosition <= 0)This -> ThrowerPosition += 360;
 
-            switch(This -> ThrowerState){
-                case HIDDEN:
-	                if(This -> ThrowerAimState == HIDE) {
-                        This -> Motors -> move_voltage(0);
-                        This -> ifReady = true;
-                    }
-	                else if(This -> ThrowerAimState == WAIT || This -> ThrowerAimState == THROW) {
-	                    // if(This -> ThrowerPosition < WaitingPosition){
-	                    //     This -> Motors -> move_voltage(FullSpeedVoltage);
-	                    // }
-	                    This -> ThrowerState = WAITING;
-	                }
-					break;
-                case WAITING:
-	                if(This -> ThrowerAimState == HIDE) {
-                        This -> Motors -> move_voltage(-FullSpeedVoltage*1.2);
-                        This -> ifReady = false;
-                        pros::delay(1000);
-                        This -> ThrowerState = HIDDEN;
-	                } 
-                    else if( This -> ThrowerAimState == WAIT) {
-                        if ( WaitingPosition - This -> ThrowerPosition < 20 && WaitingPosition - This -> ThrowerPosition > 0 ) {
-                            This -> Motors -> brake();
+                switch(This -> ThrowerState){
+                    case HIDDEN:
+                        if(This -> ThrowerAimState == HIDE) {
+                            This -> Motors -> move_voltage(-FullSpeedVoltage*0.1);
                             This -> ifReady = true;
                         }
-                        else if(This -> ThrowerPosition > WaitingPosition){
-	                        This -> Motors -> move_voltage(fmin(fmax( ( -(This->ThrowerPosition - 360) + WaitingPosition) / 160 , 0.4),1.0)*FullSpeedVoltage);
+                        else if(This -> ThrowerAimState == WAIT || This -> ThrowerAimState == THROW) {
+                            // if(This -> ThrowerPosition < WaitingPosition){
+                            //     This -> Motors -> move_voltage(FullSpeedVoltage);
+                            // }
+                            This -> Motors -> move_voltage(FullSpeedVoltage/2);
+                            pros::delay(400);
+                            This -> ThrowerState = WAITING;
+                        }
+                        break;
+                    case WAITING:
+                        if(This -> ThrowerAimState == HIDE) {
+                            This -> Motors -> move_voltage(-FullSpeedVoltage*0.8);
+                            This -> ifReady = false;
+                            pros::delay(1100);
+                            This -> ThrowerState = HIDDEN;
+                        } 
+                        else if( This -> ThrowerAimState == WAIT) {
+                            if ( WaitingPosition - This -> ThrowerPosition < 20 && WaitingPosition - This -> ThrowerPosition > 0 ) {
+                                This -> Motors -> brake();
+                                This -> ifReady = true;
+                            }
+                            else if(This -> ThrowerPosition > WaitingPosition){
+                                This -> Motors -> move_voltage(fmin(fmax( ( -(This->ThrowerPosition - 360) + WaitingPosition) / 120 , 0.6),1.0)*FullSpeedVoltage);
+                                This -> ifReady = false;                                                                                //160
+                            }
+                            else if(This -> ThrowerPosition < WaitingPosition){
+                                This -> Motors -> move_voltage(fmin(fmax( ( WaitingPosition - This->ThrowerPosition) / 120 , 0.6),1.0)*FullSpeedVoltage);
+                                This -> ifReady = false;
+                            }
+                            
+                        } 
+                        else if(This -> ThrowerAimState == THROW) {
+                            This -> Motors -> move_voltage(FullSpeedVoltage);
+                            This -> ifReady = false;
+                            pros::delay(400);
                             This -> ifReady = false;
                         }
-                        else if(This -> ThrowerPosition < WaitingPosition){
-	                        This -> Motors -> move_voltage(fmin(fmax( ( WaitingPosition - This->ThrowerPosition) / 160 , 0.4),1.0)*FullSpeedVoltage);
-                            This -> ifReady = false;
-                        }
-	                    
-	                } 
-                    else if(This -> ThrowerAimState == THROW) {
-	                    This -> Motors -> move_voltage(FullSpeedVoltage);
-                        This -> ifReady = false;
-                        pros::delay(400);
-                        This -> ifReady = false;
-	                }
-                	break;
+                        break;
+                }
+            } else {
+                pros::delay(Deltatime);
             }
             pros::delay(Deltatime);
         }
     }
-    void ThrowerModule::Throw()   { ThrowerAimState = THROW; }
-    void ThrowerModule::Hide()    { ThrowerAimState = HIDE; }
-    void ThrowerModule::Wait()    { ThrowerAimState = WAIT; }
+    void ThrowerModule::Throw()   { 
+        ThrowerAimState = THROW;
+        is_disable = false;
+    }
+    void ThrowerModule::Hide()    { 
+        ThrowerAimState = HIDE; 
+        is_disable = false;
+    }
+    void ThrowerModule::Wait()    { 
+        ThrowerAimState = WAIT; 
+        is_disable = false;
+    }
     bool ThrowerModule::IfReady() { return ifReady;}
     State ThrowerModule::GetThrowerStatus() { return ThrowerState;}
+    void ThrowerModule::set_is_disable(bool _is_disable) { is_disable = _is_disable; }
 }
 #endif //_ROPOTHROWER_HPP_

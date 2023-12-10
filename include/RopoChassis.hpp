@@ -16,26 +16,26 @@
 namespace RopoChassis{
 	// Api
 
-	// typedef RopoApi::FloatType FloatType;
-	// typedef RopoMath::Vector<FloatType> Vector;
-	// typedef RopoMath::Matrix<FloatType> Matrix;
+	typedef RopoApi::FloatType FloatType;
+	typedef RopoMath::Vector<FloatType> Vector;
+	typedef RopoMath::Matrix<FloatType> Matrix;
 
 	// Code
 	class TankChassis{
 		private:
 			static constexpr float WheelRad = 0.041275;
-			static constexpr float ChassisParameter = (0.295+0.295)/2; // 0.2855
+			static constexpr float ChassisParameter = (0.295+0.295)/2;//0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.15,0.3};
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.15,0.3};		//
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000057,0.00013,0.000001,0.0015,-1e7,2,0.3};		//
 			//0.00001,0.00012,0.0004
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
 			Vector ChassisVelocity;
 			Vector MotorVelocity;
 			const int SampleTime;
-			int DetectionX;
+			int DetectionX ;
 
 			// For AutoMove Functions
 			enum AutoStatus{
@@ -52,7 +52,7 @@ namespace RopoChassis{
 			pros::Task* BackgroundTask;
 
 			void OpenLoopMove(const Vector& Velocity) {
-				const FloatType ChassisRatio = 3.0 / 2.0;
+				const FloatType ChassisRatio = 6.0 / 5.0;
 				const FloatType radTorpm = 600 / 62.83;				// 1 degree / 2pi * 60s
 				static Vector _Velocity(RopoMath::ColumnVector,2);
 				_Velocity = Velocity;
@@ -135,7 +135,7 @@ namespace RopoChassis{
 
 							if(!This->DisArrived){
 								FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );// * 0.9
+								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
 								FloatType _R = DeltaDis;//圆心在左正，圆心在右负
 								DeltaRotation -= CurrentPosition[3];
 								if(_R > 0.5){
@@ -175,7 +175,7 @@ namespace RopoChassis{
 
 							if(!This->DegArrived){
 								FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
-								TempChassisVelocity[2] = DegRes * 0.8 / ( This->SampleTime / 1000.0 );	// *0.8
+								TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
 								This->Arrived = false;
 							}
 							else{
@@ -185,7 +185,87 @@ namespace RopoChassis{
 							TempChassisVelocity[1] = 0;
 						}
 						else if(This->AutoMoveType == MovePosAbs){
+
+							// FloatType TurnDeg = atan(Delta[1] / Delta[2]) - CurrentPosition[3];
+							// while(TurnDeg >= 180.0) TurnDeg -= 360.0;
+							// while(TurnDeg < -180.0) TurnDeg += 360.0;
+
+							// FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
+							// if(Delta[1] < 0)	DeltaDis *= -1; 
+
+							// bool ArrivedTag = 0;
+
+							// if(!ArrivedTag){
+							// 	This->DegArrived = SlowDegRegulator.IfArrived();
+							// 	This->DisArrived = DistanceRegulator.IfArrived();
+							// }
+							// else	This->Arrived = SlowDegRegulator.IfArrived();
 							
+							// if(!This->DegArrived){
+							// 	FloatType DegRes = SlowDegRegulator.Update(TurnDeg);
+							// 	TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
+							// }
+							// else	TempChassisVelocity[2] = 0;
+
+							// pros::delay(5);
+
+							// if(This->DegArrived && !This->DisArrived){
+							// 	FloatType DisRes = DistanceRegulator.Update(DeltaDis);
+							// 	TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
+							// }
+							// else	TempChassisVelocity[1] = 0;
+
+							// pros::delay(5);
+
+							// if(This->DisArrived && This->DegArrived){
+							// 	ArrivedTag = true;									// 到达坐标点
+							// 	if(This->Arrived)	TempChassisVelocity[2] = 0;
+							// 	else{
+							// 		FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
+							// 		TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
+							// 	}
+							// }
+							
+							// Delta = RotationMatrix(Delta[3]) * Delta;
+
+							// FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		// X
+
+							// This->Arrived = true;
+							// This->Arrived &= DistanceRegulator.IfArrived();
+							// This->Arrived &= SlowDegRegulator.IfArrived();
+
+							// if(!This->Arrived){
+							// 	FloatType DisRes = DistanceRegulator.Update(DeltaDis);
+							// 	FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
+							// 	TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
+							// 	TempChassisVelocity[2] = DegRes / ( This->SampleTime / 1000.0 );
+							// }
+							// else{
+							// 	TempChassisVelocity[1] = 0, TempChassisVelocity[2] = 0;
+							// }
+
+
+							//------Lin--------
+							FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
+							if(Delta[1] < 0)	DeltaDis *= -1; 
+
+							This->DisArrived = DistanceRegulator.IfArrived();
+
+							if(!This->DisArrived){
+								FloatType DisRes = DistanceRegulator.Update(DeltaDis);
+								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
+								FloatType _R = DeltaDis;//圆心在左正，圆心在右负
+								_R = _R/RopoMath::Sin(DeltaRotation/2.0);
+								TempChassisVelocity[2] = TempChassisVelocity[1]/_R;
+								//This->Arrived = false;
+							}
+							else{
+								TempChassisVelocity[1] = 0;
+								//This->Arrived = true;
+								TempChassisVelocity[2] = 0;
+							}
+							
+
 						}
 						
 						This->OpenLoopMove(TempChassisVelocity);
@@ -220,7 +300,7 @@ namespace RopoChassis{
 			void MoveVelocity(const Vector& Velocity) {
 				ChassisVelocity = Velocity, AutoMoveType = Disable;
 			}
-			void MoveVelocity(FloatType X,FloatType W){
+			void MoveVelocity(RopoApi::FloatType X,RopoApi::FloatType W){
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
 				AutoMoveType = Disable;

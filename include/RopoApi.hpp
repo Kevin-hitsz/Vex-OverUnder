@@ -2,13 +2,8 @@
 #ifndef ROPO_API_HPP
 #define ROPO_API_HPP
 
-#include "RopoMath/Matrix.hpp"
-#include "RopoMath/Vector.hpp"
 namespace RopoApi{
-	
+	typedef double FloatType;
 }
-typedef double FloatType;
-typedef RopoMath::Matrix<FloatType> Matrix;
-typedef RopoMath::Vector<FloatType> Vector;
 
 #endif //ROPO_API_HPP

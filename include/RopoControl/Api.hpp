@@ -9,6 +9,10 @@
 
 namespace RopoControl{
 
+	typedef RopoApi::FloatType FloatType;
+	typedef RopoMath::Vector<FloatType> Vector;
+	typedef RopoMath::Matrix<FloatType> Matrix;
+
 	#ifdef _PROS_RTOS_HPP_
 		FloatType GetSystemTimeInSec(){return pros::millis() / 1000.0;}
 	#else

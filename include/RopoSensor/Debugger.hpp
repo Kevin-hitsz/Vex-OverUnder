@@ -31,6 +31,11 @@ namespace RopoSensor{
 				Receive.Write(SendBuffer.RawMessage,Len);
 				memset(SendBuffer.Message,0,sizeof(SendBuffer));
 			}
+		
+		    template <typename... T> 
+			void Print(const char* fmt, T &&... args) {
+				sprintf(SendBuffer.Message, fmt, args...);
+			}
 
 			Debugger(int _ID,int _Baudrate):SerialCore(_ID,_Baudrate){
 				memset(ReceiveBuffer.Message,0,sizeof(ReceiveBuffer));
