@@ -12,11 +12,11 @@
 namespace RopoPosition{
     class Position{
         private:
-            static constexpr double WheelRad = 0.041275;        // 轮半径
-            static constexpr double ChassisRatio = 3.0 / 2.0;   // 传动比
+            static constexpr double WheelRad = 0.034925;        // 轮半径
+            static constexpr double ChassisRatio = 56.0 / 44.0;   // 传动比
             static constexpr double Pi = 3.1415926;
-            pros::Motor_Group *LeftMotor;                  // 指向左边三个电机的指针
-            pros::Motor_Group *RightMotor;                 // 指向右边电机的指针
+            pros::Motor_Group *LeftMotor;                  // 指向左边四个电机的指针
+            pros::Motor_Group *RightMotor;                 // 指向右边四个电机的指针
             pros::IMU *MyInterial;
             pros::Task *BackgroundTask;
             FloatType Delta_Distance,S_Last_Encoder,S_Encoder,X,Y,LeftMotorEncoder,RightMotorEncoder;
@@ -24,7 +24,7 @@ namespace RopoPosition{
             double Get_Delta_MotorsPosition(){
                 S_Last_Encoder = S_Encoder;
 
-                // 获取两侧三电机的编码器位置
+                // 获取两侧四个电机的编码器位置
                 std::vector<double> _LeftMotorEncoder = LeftMotor -> get_positions();
                 std::vector<double> _RightMotorEncoder = RightMotor -> get_positions();
                 
@@ -72,9 +72,6 @@ namespace RopoPosition{
             void Set_XY(FloatType x, FloatType y){
                 X = x;
                 Y = y; 
-            }
-            void Set_Angle(FloatType angle){
-                Angle = angle;
             }
             void initial(){X = Y = 0;}
     };

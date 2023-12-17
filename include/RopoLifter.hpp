@@ -9,7 +9,7 @@ namespace RopoLifter{
 
     // Params
     const double HoldingPosition = 105.0;//120.0
-    const double WaitingPosition = 98.0;//210.0
+    const double PullingPosition = 98.0;//210.0
     const double HiddenPosition = 0.0;
     const double LifterRatio = 1.0;  
     const int FullSpeedVoltage = 6000;
@@ -18,7 +18,7 @@ namespace RopoLifter{
     typedef enum{
         HIDDEN = 0,         //when lifter is hidden in the robot
         HOLDING = 1,        //when lifter is holding triball
-        WAITING = 2         //when lifter is tending to catch
+        PULLING = 2         //when lifter is tending to catch
     }State;
 
     // Class
