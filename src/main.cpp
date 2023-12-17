@@ -35,7 +35,7 @@ namespace ControllerModule{
 	void RumbleMe(){
 		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
 		MasterController1.rumble("-.-.-");
-		FloatType aa = pros::millis();
+		FloatType aa = pros::millis();  //.
 		while(pros::millis()-aa<45000){
 			pros::delay(100);
 		}

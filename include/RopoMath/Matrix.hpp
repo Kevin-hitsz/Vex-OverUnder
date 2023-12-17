@@ -11,7 +11,7 @@ namespace RopoMath{
 		private: 
 			static const int MaxMatrixSize = 10;
 		public:
-			T Value[MaxMatrixSize + 1][MaxMatrixSize + 1];
+			T Value[MaxMatrixSize + 1][MaxMatrixSize + 1];					//11*11？动态申请节约内存
 			int n,m;
 			// Construction
 			~Matrix(){}
@@ -40,7 +40,7 @@ namespace RopoMath{
 				}
 			}
 			// Operator
-			T* operator [](const int i){return Value[i];}
+			T* operator [](const int i){return Value[i];}		//返回指针？
 			friend Matrix<T> operator + (const Matrix<T> &x , const Matrix<T> &y){
 				Matrix<T> Tmp(x.n, x.m);
 				if(x.n != y.n || x.m != y.m)return Tmp;

@@ -83,7 +83,7 @@ namespace RopoDevice{
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
 		pros::MotorGroup LiftMotor { Motors::LeftLiftMotor ,Motors::RightLiftMotor};
 	}
-
+	
 	namespace Position_Motor{
 		RopoPosition::Position MyPosition(&Motors::LeftMotor,&Motors::RightMotor,&Sensors::Inertial);
 	}
