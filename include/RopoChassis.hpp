@@ -7,8 +7,6 @@
 #include "RopoMath/Vector.hpp"
 #include "RopoMath/Misc.hpp"
 #include "pros/rtos.hpp"
-#include "RopoSensor/Debugger.hpp"
-#include "RopoPosition.hpp"
 #include <algorithm>
 
 
@@ -76,14 +74,6 @@ namespace RopoChassis{
 				AutoStatus LastMoveType = This->AutoMoveType;
 				auto AimPosition = This->GetCurPosition();
 				while(true){
-				// ?
-					if(LastMoveType != This->AutoMoveType){
-						This->Arrived = false;
-						DistanceRegulator.Reset();
-						SlowDegRegulator.Reset();
-						AimPosition = This->GetCurPosition();
-					}
-				// ?
 					if(This->AutoMoveType == Disable){
 						This->OpenLoopMove(This->ChassisVelocity);
 					}
@@ -158,26 +148,23 @@ namespace RopoChassis{
 			void SetDegErrorTolerance(FloatType ErrorTolerance) {DegErrorTolerance = ErrorTolerance;}
 			Vector GetChassisVelocity()const{return ChassisVelocity;}
 			Vector GetMotorVelocity()const{return MotorVelocity;}
-
-			bool IfArrived(){return Arrived;}
-			bool IfDistantArrived(){return DistantArrived;}
-			bool IfDegreeArrived(){return DegreeArrived;}
+			bool IfArrived()const{return Arrived;}
+			bool IfDistantArrived()const{return DistantArrived;}
+			bool IfDegreeArrived()const{return DegreeArrived;}
 
 			void MoveVelocity(const Vector& Velocity) {
 				ChassisVelocity = Velocity, AutoMoveType = Disable;
 			}
 			void MoveVelocity(FloatType X,FloatType W){
-				ChassisVelocity[1] = X;
-				ChassisVelocity[2] = W;
-				AutoMoveType = Disable;
+				ChassisVelocity[1] = X, ChassisVelocity[2] = W, AutoMoveType = Disable;
 			}
 
 			void AutoRotateAbs(FloatType AimDegree) {
-				AimPosition[3] = AimDegree, AutoMoveType = Rotate, SlowDegRegulator.Reset();
+				AimPosition[3] = AimDegree, AutoMoveType = Rotate, SlowDegRegulator.Reset(), Arrived = false;
 				while(!Arrived) pros::delay(20);
 			}
 			void AutoMovePosAbs(FloatType AimX, FloatType AimY){
-				AimPosition[1] = AimX, AimPosition[2] = AimY, AutoMoveType = MovePosAbs;
+				AimPosition[1] = AimX, AimPosition[2] = AimY, AutoMoveType = MovePosAbs, Arrived = false;
 				while(!Arrived) pros::delay(20);
 			}
 	};
