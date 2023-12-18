@@ -52,7 +52,7 @@ namespace ControllerModule{
 	}
 
 	void Lift(){
-		RopoDevice::LiftMotors.Wait();
+		RopoDevice::LiftMotors.Pull();
 		catch_1 = 2;
 	}
 
@@ -127,7 +127,7 @@ void autonomous_1() {
 	pros::delay(1200);
 	RopoDevice::Chassis.MoveVelocity(-0.4,0);
 	pros::delay(100);
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(175);
 	RopoDevice::LiftMotors.Hold();
 	pros::delay(50);
@@ -182,7 +182,7 @@ void autonomous_1() {
 	// 	pros::delay(20);
 	// }
 	// pros::delay(300);
-	// RopoDevice::LiftMotors.Wait();
+	// RopoDevice::LiftMotors.Pull();
 	// pros::delay(1000);
 	// RopoDevice::Chassis.MoveVelocity(0,-0.5);
 	// pros::delay(600);
@@ -237,7 +237,7 @@ void autonomous_1() {
 	while (!RopoDevice::Chassis.IfDegArrived()){
 		pros::delay(20);
 	}
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(1000);
 	RopoDevice::Chassis.MoveVelocity(0,0.6);
 	pros::delay(600);
@@ -264,7 +264,7 @@ void autonomous_1() {
 		pros::delay(20);
 	}
 	pros::delay(300);
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 
 	// RopoDevice::LiftMotors.Hide();
 	// pros::delay(700);
@@ -272,7 +272,7 @@ void autonomous_1() {
 	// while (!RopoDevice::Chassis.IfArrived()){
 	// 	pros::delay(20);
 	// }
-	// RopoDevice::LiftMotors.Wait();
+	// RopoDevice::LiftMotors.Pull();
 	// pros::delay(50);
 	// RopoDevice::Chassis.MoveVelocity(0,-0.5);
 	// pros::delay(600);
@@ -347,7 +347,7 @@ void autonomous_2() {
 	pros::delay(1200);
 	RopoDevice::Chassis.MoveVelocity(-0.4,0);
 	pros::delay(100);
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 	RopoDevice::LiftMotors.Hold();
 	pros::delay(50);
@@ -359,7 +359,7 @@ void autonomous_2() {
 	}
 
 	RopoDevice::Position_Motor::MyPosition.Set_XY(1.86, 1.002);
-	RopoDevice::Position_Motor::MyPosition.Set_Angle(90);
+
 	RopoDevice::Chassis.MoveVelocity(-0.7,0);
 	pros::delay(450);
 
@@ -370,7 +370,7 @@ void autonomous_2() {
 	while (!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
 	pros::delay(300);
@@ -387,7 +387,7 @@ void autonomous_2() {
 	while (!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,-0.5);
 	pros::delay(300);
@@ -413,7 +413,7 @@ void autonomous_2() {
 	while (!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 
 	RopoDevice::Chassis.MoveVelocity(0,0);
@@ -452,7 +452,7 @@ void skill() {
 	pros::delay(1200);
 	RopoDevice::Chassis.MoveVelocity(-0.4,0);
 	pros::delay(100);
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 	RopoDevice::LiftMotors.Hold();
 	pros::delay(50);
@@ -464,7 +464,7 @@ void skill() {
 	}
 
 	RopoDevice::Position_Motor::MyPosition.Set_XY(1.86, 1.002);
-	RopoDevice::Position_Motor::MyPosition.Set_Angle(90);
+
 	RopoDevice::Chassis.MoveVelocity(-0.7,0);
 	pros::delay(450);
 
@@ -475,7 +475,7 @@ void skill() {
 	while (!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
 	pros::delay(300);
@@ -492,7 +492,7 @@ void skill() {
 	while (!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
-	RopoDevice::LiftMotors.Wait();
+	RopoDevice::LiftMotors.Pull();
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,-0.5);
 	pros::delay(300);
@@ -515,7 +515,7 @@ void skill() {
 	// while (!RopoDevice::Chassis.IfArrived()){
 	// 	pros::delay(20);
 	// }
-	// RopoDevice::LiftMotors.Wait();
+	// RopoDevice::LiftMotors.Pull();
 	// pros::delay(500);
 
 	RopoDevice::Chassis.MoveVelocity(0,0);

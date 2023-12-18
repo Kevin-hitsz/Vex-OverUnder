@@ -35,7 +35,7 @@ namespace RopoLifter{
             LifterModule(pros::MotorGroup *Mtrs);                 // 构造函数
             void Hold();
             void Hide();
-            void Wait();
+            void Pull();
             bool IfReady();
             State GetLifterStatus();
             double GetLifterPosition();
@@ -108,10 +108,10 @@ namespace RopoLifter{
                             This->ifReady = true;
                         }
                         break;
-                    case WAITING:
+                    case PULLING:
                         This->Motors->set_brake_modes(pros::E_MOTOR_BRAKE_BRAKE);
-                        This->Motors->move_absolute(WaitingPosition,30);
-                        while (fabs(This->LifterPosition-WaitingPosition) > 3.0)
+                        This->Motors->move_absolute(PullingPosition,30);
+                        while (fabs(This->LifterPosition-PullingPosition) > 3.0)
                         {
                             if (This -> breaktag) break;
                             PositionVector = This -> Motors -> get_positions() ;
@@ -132,7 +132,7 @@ namespace RopoLifter{
     }
     void   LifterModule::Hold()    { LifterState = HOLDING; ifReady = false; breaktag = true;}
     void   LifterModule::Hide()    { LifterState =  HIDDEN; ifReady = false; breaktag = true;}
-    void   LifterModule::Wait()    { LifterState = WAITING; ifReady = false; breaktag = true;}
+    void   LifterModule::Pull()    { LifterState = PULLING; ifReady = false; breaktag = true;}
     bool   LifterModule::IfReady() { return ifReady; }
     State  LifterModule::GetLifterStatus()   { return    LifterState; }
     double LifterModule::GetLifterPosition() { return LifterPosition; }
