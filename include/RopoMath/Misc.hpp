@@ -2,6 +2,7 @@
 #ifndef ROPO_MATH_MISC_HPP
 #define ROPO_MATH_MISC_HPP
 
+#include "pros/distance.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -65,75 +66,22 @@ namespace RopoMath{
 			Input = -limit;
 		return Input;
 	}
-
-	template<class T>inline T Distance(T X,T Y){
-		return sqrt(X * X + Y * Y);
+	template<class T>inline T Distance(T X, T Y){
+		// Get Distance from (x,y) to (0,0)
+		return sqrt(X*X + Y*Y);  
 	}
 
-	template<class T>inline T DeltaTwoPoint(T X1,T Y1,T X2,T Y2){
-		T DeltaRotation;
-		if(X2-X1 == 0){
-			if(Y2-Y1 > 0){
-				DeltaRotation = 90.0;
-			}
-			else if(Y2-Y1 < 0){
-				DeltaRotation = -90.0;
-			}
-			else {
-				DeltaRotation = 0;
-			}
-			return DeltaRotation;
-		}
-		else{
-			DeltaRotation = Atan<T>((Y2-Y1)/(X2-X1));
-			if(X2-X1 > 0 && Y2-Y1 > 0){
-				//
-			}
-			if(X2-X1 > 0 && Y2-Y1 < 0){
-				//
-			}
-			if(X2-X1 < 0 && Y2-Y1 > 0){
-				DeltaRotation += 180;
-			}
-			if(X2-X1 < 0 && Y2-Y1 < 0){
-				DeltaRotation -= 180;
-			}
-			return DeltaRotation;
-		}
+	template<class T>inline T TempDirection(T AimX,T AimY,T CurX,T CurY){
+		// Get Delta Distance from (CurX,CurY) to (AimX,AimY) with Direction
+		T DeltaX = AimX - CurY;
+		T DeltaY = AimY - CurY;
+		return Sign(Distance(AimX,AimY) - Distance(CurX, CurY)) * sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
 	}
 
-	template<class T>inline T DeltaTwoPoint(T DeltaX,T DeltaY){
-		T DeltaRotation;
-		if(DeltaX == 0){
-			if(DeltaY > 0){
-				DeltaRotation = 90.0;
-			}
-			else if(DeltaY < 0){
-				DeltaRotation = -90.0;
-			}
-			else {
-				DeltaRotation = 0;
-			}
-			return DeltaRotation;
-		}
-		else{
-			DeltaRotation = Atan<T>( (DeltaY) / (DeltaX) );
-			if(DeltaX > 0 && DeltaY > 0){
-				//
-			}
-			if(DeltaX > 0 && DeltaY < 0){
-				//
-			}
-			if(DeltaX < 0 && DeltaY > 0){
-				DeltaRotation += 180;
-			}
-			if(DeltaX < 0 && DeltaY < 0){
-				DeltaRotation -= 180;
-			}
-			return DeltaRotation;
-		}
+	template<class T>inline T TempDegree(T DeltaX,T DeltaY) {
+		// Get Delta Vector Degree from X 
+		return 180 / Pi * atan2(DeltaY,DeltaX);
 	}
-
 }
 
 #endif //ROPO_MATH_MISC_HPP
