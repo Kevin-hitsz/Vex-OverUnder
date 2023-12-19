@@ -51,7 +51,7 @@ namespace RopoDevice{
 		const int LeftMotor1Port  	= 11;
 		const int LeftMotor2Port  	= 17;
 		const int LeftMotor3Port  	= 20;
-		const int RightMotor1Port	= 1;
+		const int RightMotor1Port	= 3;
 		const int RightMotor2Port	= 7;
 		const int RightMotor3Port	= 10;
 		
@@ -100,12 +100,12 @@ namespace RopoDevice{
 		const pros::motor_gearset_e_t RaiserGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor RaiserMotor ( RaiserMotorPort, RaiserGearset, false );
 
-		const int LeftRollerMotorPort		= 5;
-		const int RightRollerMotorPort		= 3;
-		const pros::motor_gearset_e_t RollerGearset = pros::E_MOTOR_GEAR_GREEN;
-		pros::Motor   LeftRollerMotor ( LeftRollerMotorPort  , 	RollerGearset, false );
-		pros::Motor   RightRollerMotor ( RightRollerMotorPort  , 	RollerGearset, true );
-		pros::MotorGroup RollerMotor { Motors::LeftRollerMotor ,Motors::RightRollerMotor};
+		// const int LeftRollerMotorPort		= 5;
+		// const int RightRollerMotorPort		= 3;
+		// const pros::motor_gearset_e_t RollerGearset = pros::E_MOTOR_GEAR_GREEN;
+		// pros::Motor   LeftRollerMotor ( LeftRollerMotorPort  , 	RollerGearset, false );
+		// pros::Motor   RightRollerMotor ( RightRollerMotorPort  , 	RollerGearset, true );
+		// pros::MotorGroup RollerMotor { Motors::LeftRollerMotor ,Motors::RightRollerMotor};
 		
 
 		const int LeftIntakerMotorPort      = 12;

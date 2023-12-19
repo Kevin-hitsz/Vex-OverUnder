@@ -154,8 +154,12 @@ void initialize() {
 void disabled() {}
 
 void competition_initialize() {}
-
+void skill();
 void autonomous() {
+	skill();
+
+
+
 	//------塞球
 	RopoDevice::DeviceInitOp2();
 	ControllerModule::Wait();
@@ -311,30 +315,102 @@ void autonomous() {
 
 }
 
-namespace QuickHandControl{
-	static bool RollerR1Tag = false;
-	static bool RollerR2Tag = false;
+// namespace QuickHandControl{
+// 	static bool RollerR1Tag = false;
+// 	static bool RollerR2Tag = false;
 
-	void RollerStatusUpdate(){
-		if (RollerR1Tag && !RollerR2Tag)
-			RopoDevice::Motors::RollerMotor.move_velocity(100);
-		else if (RollerR2Tag && !RollerR1Tag)
-			RopoDevice::Motors::RollerMotor.move_velocity(-100);
-		else
-			RopoDevice::Motors::RollerMotor.move_velocity(0);			// 逻辑有待优化！！！！！
-		pros::delay(20);
-	}
+// 	void RollerStatusUpdate(){
+// 		if (RollerR1Tag && !RollerR2Tag)
+// 			RopoDevice::Motors::RollerMotor.move_velocity(100);
+// 		else if (RollerR2Tag && !RollerR1Tag)
+// 			RopoDevice::Motors::RollerMotor.move_velocity(-100);
+// 		else
+// 			RopoDevice::Motors::RollerMotor.move_velocity(0);			// 逻辑有待优化！！！！！
+// 		pros::delay(20);
+// 	}
 
-	void RollerBoolSwitch(void *param){
-		bool *p = static_cast<bool *>(param);
-		(*p) ^= 1;
-		RollerStatusUpdate();
-	}
+// 	void RollerBoolSwitch(void *param){
+// 		bool *p = static_cast<bool *>(param);
+// 		(*p) ^= 1;
+// 		RollerStatusUpdate();
+// 	}
 
-}
+// }
 
-
+const double pi =3.1415926;
 void opcontrol() {
+	//技能赛自动测试
+	{
+
+		//code start
+		//code1:抛球部分
+
+		//end1
+
+		//code2:泥头车开创！
+		RopoDevice::Intaker_Motor::MyIntaker.ChangeIntakeStatus();
+		pros::delay(300);
+		//往前
+		RopoDevice::Chassis.MoveVelocity(1,0);
+		pros::delay(200);
+		//转弯90度
+		RopoDevice::Chassis.MoveVelocity(0,-2*pi*0.5);
+		pros::delay(400);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(100);
+		//往前
+		RopoDevice::Chassis.MoveVelocity(1,0);
+		pros::delay(400);
+
+		//刹车
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(100);
+
+		
+		//转往右边
+		RopoDevice::Chassis.MoveVelocity(0,2*pi*0.5);
+		pros::delay(250);
+		//刹车
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(100);
+
+		//创进去
+		RopoDevice::Chassis.MoveVelocity(0.8,0);
+		pros::delay(600);
+		//刹车
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(100);
+		
+		//方向矫正
+		RopoDevice::Chassis.MoveVelocity(0.4,0);
+		pros::delay(200);
+		//退出来
+		RopoDevice::Chassis.MoveVelocity(-1,0);
+		pros::delay(300);
+
+
+
+
+
+
+
+		//停车
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(500);
+		
+		//断点
+		while(1)
+		pros::delay(2000);
+		//end2
+		return;
+	}//end
+
+
+
+
+
+
+	//*
 	RopoDevice::DeviceInitOp2();
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	pros::Task *DisplayTask = new pros::Task(ControllerModule::Display);
@@ -411,4 +487,19 @@ void opcontrol() {
 		pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
 		pros::delay(1);
 	}
+	//*/
+}
+
+void skill()
+{
+	//1:抛球！
+	//code
+
+	//2:赛队球！
+	//code
+
+	//3:中间球！
+	//code
+
+	//finish!!!!
 }

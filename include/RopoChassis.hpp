@@ -23,12 +23,12 @@ namespace RopoChassis{
 	// Code
 	class TankChassis{
 		private:
-			static constexpr float WheelRad = 0.041275;
+			static constexpr float WheelRad = 0.034925;
 			static constexpr float ChassisParameter = (0.295+0.295)/2;//0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0006,-1e7,0.15,0.3};		//
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000062,0.00013,0.000001,0.0020,-1e7,2,0.3};		//
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.001,0.00000,0.0006,-1e7,0.15,0.3};		//
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000072,0.00019,0.0001,0.0040,-1e7,2,0.3};		//
 			//0.00001,0.00012,0.0004
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
@@ -206,7 +206,7 @@ namespace RopoChassis{
 				AutoMoveType(Disable),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
 				DegErrorTolerance(5),Arrived(false),DisArrived(false),DegArrived(false),
 				BackgroundTask(nullptr){
-				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
+				 BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
 			}
 
 			void SetVelocityLimits(FloatType VelocityLimits) {Core.SetVelocityLimits(VelocityLimits);}
@@ -218,25 +218,33 @@ namespace RopoChassis{
 			bool IfDisArrived(){return DisArrived;}
 			bool IfDegArrived(){return DegArrived;}
 
+
 			void MoveVelocity(const Vector& Velocity) {
 				ChassisVelocity = Velocity, AutoMoveType = Disable;
 			}
+
+
 			void MoveVelocity(RopoApi::FloatType X,RopoApi::FloatType W){
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
 				AutoMoveType = Disable;
 			}
 
+
 			void AutoRotateAbs(FloatType AimDegree) {
 				AimPosition[3] = AimDegree, AutoMoveType = Rotate, DegArrived = false, SlowDegRegulator.Reset();
 			}
+
+
 			void AutoDirectMove(FloatType AimX, FloatType AimY){
 				AimPosition[1] = AimX;
 				AimPosition[2] = AimY;
 				AimPosition[3] = GetCurPosition()[3];
 				AutoMoveType = MoveForward, DisArrived = false, DistanceRegulator.Reset();
 			}
-			void AutoMovePosAbs(FloatType xPos, FloatType yPos, FloatType theta){
+
+
+			void AutoMovePosAbs(FloatType xPos, FloatType yPos, FloatType theta){		//输入0，0，-90的时候先往前冲，再回来转到90
 				Arrived = false;
 				auto CurPosition = GetCurPosition();
 				FloatType DeltaX = xPos - CurPosition[1], DeltaY = yPos -CurPosition[2];
@@ -266,6 +274,8 @@ namespace RopoChassis{
 				}
 				Arrived = true;
 			}
+
+
 			void AutoMovePosAbsBack(FloatType xPos, FloatType yPos, FloatType theta){
 				Arrived = false;
 				auto CurPosition = GetCurPosition();

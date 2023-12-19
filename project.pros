@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Test",
+    "project_name": "skillTest",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -167,8 +167,8 @@
       }
     },
     "upload_options": {
-      "icon": "X",
-      "slot": 3
+      "icon": "power",
+      "slot": 8
     }
   }
 }
