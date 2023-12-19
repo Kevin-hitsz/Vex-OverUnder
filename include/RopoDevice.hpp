@@ -35,14 +35,14 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 16;
-		const int LeftMotor2Port  	= 17;
+		const int LeftMotor1Port  	= 13;
+		const int LeftMotor2Port  	= 14;
 		const int LeftMotor3Port  	= 18;
 		const int LeftMotor4Port    = 19;
-		const int RightMotor1Port	= 3;
+		const int RightMotor1Port	= 4;
 		const int RightMotor2Port	= 2;
 		const int RightMotor3Port	= 6;
-		const int RightMotor4Port   = 7;
+		const int RightMotor4Port   = 8;
 		
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;

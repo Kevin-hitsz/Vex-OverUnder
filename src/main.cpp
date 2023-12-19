@@ -1,4 +1,5 @@
 #include "main.h"
+#include "RopoChassis.hpp"
 #include "RopoController.hpp"
 #include "RopoDevice.hpp"
 #include "RopoPosition.hpp"
@@ -565,7 +566,10 @@ void opcontrol() {
 			ChassisMove = true;
 		}
 
-		pros::lcd::print(1,"V:%.1f %.1f",XInput,WInput);
+		// Debug
+		pros::lcd::print(1,"ControlV:%.1f %.1f",XInput,WInput);
+		pros::lcd::print(2,"TemChasV:%.3f %.1f",RopoChassis::Value1,RopoChassis::Value2);
+		pros::lcd::print(3,"Flag:%d",RopoChassis::Flag);
 		pros::delay(4);
 	}
 }
