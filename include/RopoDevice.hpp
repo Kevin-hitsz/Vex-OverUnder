@@ -17,10 +17,10 @@
 
 namespace RopoDevice{
 	namespace ThreeWire{
-		const char ExternPneumaticPort = 'B';
+		const char ExternPneumaticPort = 'A';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char CatchPneumaticPort  = 'A';
+		const char CatchPneumaticPort  = 'H';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 	}
