@@ -51,7 +51,7 @@ namespace RopoDevice{
 		const int LeftMotor1Port  	= 11;
 		const int LeftMotor2Port  	= 17;
 		const int LeftMotor3Port  	= 20;
-		const int RightMotor1Port	= 1;
+		const int RightMotor1Port	= 3;
 		const int RightMotor2Port	= 7;
 		const int RightMotor3Port	= 10;
 		
@@ -96,21 +96,21 @@ namespace RopoDevice{
 		pros::Motor   RightThrowerMotor ( RightThrowerMotorPort  , 	ThrowerGearset, true );
 		pros::MotorGroup ThrowerMotor { Motors::LeftThrowerMotor ,Motors::RightThrowerMotor};
 
-		const int RaiserMotorPort = 10;
-		const pros::motor_gearset_e_t RaiserGearset = pros::E_MOTOR_GEAR_RED;
-		pros::Motor RaiserMotor ( RaiserMotorPort, RaiserGearset, false );
+		// const int RaiserMotorPort = 16;
+		// const pros::motor_gearset_e_t RaiserGearset = pros::E_MOTOR_GEAR_RED;
+		// pros::Motor RaiserMotor ( RaiserMotorPort, RaiserGearset, false );
 
-		const int LeftRollerMotorPort		= 5;
-		const int RightRollerMotorPort		= 3;
-		const pros::motor_gearset_e_t RollerGearset = pros::E_MOTOR_GEAR_GREEN;
-		pros::Motor   LeftRollerMotor ( LeftRollerMotorPort  , 	RollerGearset, false );
-		pros::Motor   RightRollerMotor ( RightRollerMotorPort  , 	RollerGearset, true );
-		pros::MotorGroup RollerMotor { Motors::LeftRollerMotor ,Motors::RightRollerMotor};
+		// const int LeftRollerMotorPort		= 5;
+		// const int RightRollerMotorPort		= 3;
+		// const pros::motor_gearset_e_t RollerGearset = pros::E_MOTOR_GEAR_GREEN;
+		// pros::Motor   LeftRollerMotor ( LeftRollerMotorPort  , 	RollerGearset, false );
+		// pros::Motor   RightRollerMotor ( RightRollerMotorPort  , 	RollerGearset, true );
+		// pros::MotorGroup RollerMotor { Motors::LeftRollerMotor ,Motors::RightRollerMotor};
 		
 
 		const int LeftIntakerMotorPort      = 12;
 		const int RightIntakerMotorPort     = 2 ;
-		const pros::motor_gearset_e_t IntakerGearset = pros::E_MOTOR_GEAR_BLUE;
+		const pros::motor_gearset_e_t IntakerGearset = pros::E_MOTOR_GEAR_GREEN;
 		pros::Motor   LeftIntakerMotor( LeftIntakerMotorPort  , IntakerGearset , true );
 		pros::Motor   RightIntakerMotor(RightIntakerMotorPort , IntakerGearset , false );
 		pros::MotorGroup IntakerMotor { Motors::LeftIntakerMotor,Motors::RightIntakerMotor};
@@ -145,7 +145,7 @@ namespace RopoDevice{
 		RopoDevice::Chassis.SetVelocityLimits(600);
 		Sensors::Inertial.reset(true);
 		while(Sensors::Inertial.is_calibrating())pros::delay(20);
-		pros::delay(200);
+		pros::delay(700);
 		Motors::LeftMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::LeftMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::LeftMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);

@@ -43,6 +43,7 @@ namespace RopoThrower{
         bool IfReady();
         State GetThrowerStatus();
         void set_is_disable(bool _is_disable);
+        double get_thrower_position();
 
     };
     ThrowerModule::ThrowerModule(pros::MotorGroup *Mtrs) {
@@ -75,9 +76,9 @@ namespace RopoThrower{
                 This -> ThrowerPosition = 0;
                 for(double i : PositionVector) This -> ThrowerPosition += i;
                 This -> ThrowerPosition = This -> ThrowerPosition/ 2.0 * ThrowerRatio;
-                while(This -> ThrowerPosition >=  360)This -> ThrowerPosition -= 360;
+                while(This -> ThrowerPosition >  360)This -> ThrowerPosition -= 360;
                 while(This -> ThrowerPosition <= 0)This -> ThrowerPosition += 360;
-
+                pros::delay(10);
                 switch(This -> ThrowerState){
                     case HIDDEN:
                         if(This -> ThrowerAimState == HIDE) {
@@ -85,10 +86,8 @@ namespace RopoThrower{
                             This -> ifReady = true;
                         }
                         else if(This -> ThrowerAimState == WAIT || This -> ThrowerAimState == THROW) {
-                            // if(This -> ThrowerPosition < WaitingPosition){
-                            //     This -> Motors -> move_voltage(FullSpeedVoltage);
-                            // }
                             This -> Motors -> move_voltage(FullSpeedVoltage);
+                            //pros::delay(500);
                             This -> ThrowerState = WAITING;
                         }
                         break;
@@ -117,7 +116,7 @@ namespace RopoThrower{
                             
                         } 
                         else if(This -> ThrowerAimState == THROW) {
-                            This -> Motors -> move_voltage(FullSpeedVoltage);
+                            This -> Motors -> move_voltage(FullSpeedVoltage+2000);
                             This -> ifReady = false;
                             pros::delay(400);
                             This -> ifReady = false;
@@ -142,6 +141,7 @@ namespace RopoThrower{
         ThrowerAimState = WAIT; 
         is_disable = false;
     }
+    double ThrowerModule::get_thrower_position() { return ThrownPosition;}
     bool ThrowerModule::IfReady() { return ifReady;}
     State ThrowerModule::GetThrowerStatus() { return ThrowerState;}
     void ThrowerModule::set_is_disable(bool _is_disable) { is_disable = _is_disable; }

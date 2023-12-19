@@ -14,8 +14,8 @@ namespace RopoPosition{
 
     class Position{
         private:
-            static constexpr double WheelRad = 0.041275;    //轮子半径
-            static constexpr double ChassisRatio = 7.0 / 5.0;  //底盘宽度
+            static constexpr double WheelRad = 0.034925;    //轮子半径
+            static constexpr double ChassisRatio = 6.0 / 5.0;  //底盘宽度
             static constexpr double Pi = 3.1415;
             pros::Motor_Group *LeftMotor;                  //指向左边三个电机的指针
             pros::Motor_Group *RightMotor;                 //指向右边电机的指针

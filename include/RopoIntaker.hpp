@@ -31,7 +31,7 @@ namespace RopoIntaker{
                     } 
                     else if (This -> now_status == true && This -> target_status == false){
                         This -> Motors -> move_voltage(HidingVoltage );
-                        pros::delay(1000);
+                        pros::delay(200);
                         This -> now_status = false;
                     } 
                     else if (This -> now_status == false && This -> target_status == false){
