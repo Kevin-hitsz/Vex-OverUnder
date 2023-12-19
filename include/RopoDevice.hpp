@@ -35,7 +35,7 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 13;
+		const int LeftMotor1Port  	= 17;
 		const int LeftMotor2Port  	= 14;
 		const int LeftMotor3Port  	= 18;
 		const int LeftMotor4Port    = 19;

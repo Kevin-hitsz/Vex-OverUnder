@@ -43,6 +43,7 @@ namespace RopoChassis{
 			Vector (*GetCurPosition)();
 			Vector AimPosition;
 			FloatType DegErrorTolerance;
+			FloatType Sign;
 			bool Arrived, DistantArrived, DegreeArrived, TempDegreeArrived;
 
 			pros::Task* BackgroundTask;
@@ -110,7 +111,7 @@ namespace RopoChassis{
 								TempChassisVelocity[2] = FastDegRegulator.Update(DeltaDegree - CurrentPosition[3]) * 0.8 / ( This->SampleTime / 1000.0 );
 							}
 							if((!This->DistantArrived) && This->TempDegreeArrived){
-								TempChassisVelocity[1] = DistanceRegulator.Update(DeltaDirection) / ( This->SampleTime / 1000.0 );
+								TempChassisVelocity[1] = DistanceRegulator.Update(This->Sign * DeltaDirection) / ( This->SampleTime / 1000.0 );
 								// WTF?
 								// if(DeltaDegree > 90 ) DeltaDegree -= 180;
 								// else if(DeltaDegree < -90 ) DeltaDegree += 180;
@@ -172,10 +173,14 @@ namespace RopoChassis{
 			}
 			void AutoMovePosAbs(FloatType AimX, FloatType AimY){
 				AimPosition[1] = AimX, AimPosition[2] = AimY, AutoMoveType = MovePosAbs,FastDegRegulator.Reset(),DistanceRegulator.Reset(), Arrived = false;
+				auto CurrentPosition = GetCurPosition();
+				Sign = RopoMath::Sign(RopoMath::DeltaDirection(AimPosition[1], AimPosition[2], CurrentPosition[1], CurrentPosition[2]));
 				while(!Arrived) pros::delay(20);
 			}
 			void AutoMovePosAbs(FloatType AimX, FloatType AimY, FloatType Degree){
 				AimPosition[1] = AimX, AimPosition[2] = AimY, AutoMoveType = MovePosAbs,FastDegRegulator.Reset(),DistanceRegulator.Reset(), Arrived = false;
+				auto CurrentPosition = GetCurPosition();
+				Sign = RopoMath::Sign(RopoMath::DeltaDirection(AimPosition[1], AimPosition[2], CurrentPosition[1], CurrentPosition[2]));
 				while(!Arrived) pros::delay(20);
 				AutoRotateAbs(Degree);
 			}

@@ -2,6 +2,7 @@
 #ifndef ROPO_MATH_MISC_HPP
 #define ROPO_MATH_MISC_HPP
 
+#include "RopoApi.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -78,8 +79,10 @@ namespace RopoMath{
 	}
 
 	template<class T>inline T DeltaDegree(T DeltaX,T DeltaY) {
-		// Get Delta Vector Degree from X 
-		return 180 / Pi * atan2(DeltaY,DeltaX);
+		// Get Delta Vector Degree from X
+		FloatType Deg = atan2(DeltaY,DeltaX);
+		 
+		return 180 / Pi * Deg;
 	}
 }
 

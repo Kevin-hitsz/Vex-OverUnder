@@ -524,7 +524,8 @@ void competition_initialize() {}
 
 void autonomous(){
 	// RopoDevice::Chassis.AutoRotateAbs(30);
- 	RopoDevice::Chassis.AutoMovePosAbs(0.5,0.5);
+ 	RopoDevice::Chassis.AutoMovePosAbs(0.5,0.5,0);
+	RopoDevice::Chassis.AutoMovePosAbs(0.1,0.1,0);
 }
 
 void opcontrol() {
