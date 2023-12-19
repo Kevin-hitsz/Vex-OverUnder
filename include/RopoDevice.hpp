@@ -2,7 +2,6 @@
 #ifndef ROPO_DEVICE_HPP
 #define ROPO_DEVICE_HPP
 
-#include "RopoDevice.hpp"
 #include "pros/imu.hpp"
 #include "pros/adi.hpp"
 #include "pros/motors.hpp"
@@ -28,7 +27,7 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 7;
+		const int InertialPort = 2;
 		pros::IMU Inertial(InertialPort);
 
 	}			
@@ -36,14 +35,14 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 4;
-		const int LeftMotor2Port  	= 11;
-		const int LeftMotor3Port  	= 12;
-		const int LeftMotor4Port    = ;
-		const int RightMotor1Port	= 10;
-		const int RightMotor2Port	= 20;
-		const int RightMotor3Port	= 19;
-		const int RightMotor4Port   = ;
+		const int LeftMotor1Port  	= 5;
+		const int LeftMotor2Port  	= 6;
+		const int LeftMotor3Port  	= 7;
+		const int LeftMotor4Port    = 8;
+		const int RightMotor1Port	= 13;
+		const int RightMotor2Port	= 14;
+		const int RightMotor3Port	= 16;
+		const int RightMotor4Port   = 18;
 		
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -83,8 +82,8 @@ namespace RopoDevice{
 			// RightMotor3.move_voltage(Velocity * RatioParam);
 		}
 
-		const int LeftLiftMotorPort		= 5;
-		const int RightLiftMotorPort    = 9;
+		const int LeftLiftMotorPort		= 10;
+		const int RightLiftMotorPort    = 19;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );

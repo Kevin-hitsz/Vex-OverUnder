@@ -2,7 +2,6 @@
 #ifndef ROPO_MATH_MISC_HPP
 #define ROPO_MATH_MISC_HPP
 
-#include "pros/distance.hpp"
 #include <algorithm>
 #include <cmath>
 
