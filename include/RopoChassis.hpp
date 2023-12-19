@@ -21,7 +21,7 @@ namespace RopoChassis{
 			static constexpr float ChassisParameter = (0.295+0.295)/2; // 0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.05,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.001,0.0002,0.00000,0.006,-1e7,0.10,0.3};
 			inline static RopoControl::PIDRegulator FastDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
 			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
 			//0.004,0.004,0.000
@@ -111,7 +111,8 @@ namespace RopoChassis{
 								TempChassisVelocity[2] = FastDegRegulator.Update(DeltaDegree - CurrentPosition[3]) * 0.8 / ( This->SampleTime / 1000.0 );
 							}
 							if((!This->DistantArrived) && This->TempDegreeArrived){
-								TempChassisVelocity[1] = DistanceRegulator.Update(This->Sign * DeltaDirection) / ( This->SampleTime / 1000.0 );
+								FloatType DistantDelta = This->Sign * DeltaDirection;
+								TempChassisVelocity[1] = DistanceRegulator.Update(DistantDelta) / ( This->SampleTime / 1000.0);
 								// WTF?
 								// if(DeltaDegree > 90 ) DeltaDegree -= 180;
 								// else if(DeltaDegree < -90 ) DeltaDegree += 180;
@@ -119,7 +120,11 @@ namespace RopoChassis{
 								// if(DeltaDistance < 0.2) TempChassisVelocity[2] = 0;
 								TempChassisVelocity[2] = 0;
 							}
-							if(This->DistantArrived && This->TempDegreeArrived) TempChassisVelocity[1] = TempChassisVelocity[2] = 0, This->Arrived=true;
+							if(This->DistantArrived && This->TempDegreeArrived){
+								TempChassisVelocity[1] = TempChassisVelocity[2] = 0;
+								This->Arrived=true;
+								This->AutoMoveType == Disable;
+							}
 						}
 						if(This->AutoMoveType == Rotate){
 							This->Arrived = false;
@@ -128,11 +133,16 @@ namespace RopoChassis{
 							if(!This->DegreeArrived){
 								TempChassisVelocity[2] = SlowDegRegulator.Update(Delta[3]) * 0.8 / ( This->SampleTime / 1000.0 );	// *0.8
 							}
-							else TempChassisVelocity[2] = 0, This->Arrived = true;
+							else{
+								TempChassisVelocity[2] = 0;
+								This->Arrived = true;
+								This->AutoMoveType == Disable;
+							}
 						}
 						
 						// Debug
-						Value1 = TempChassisVelocity[1],Value2 = TempChassisVelocity[2];
+						Value1 = AimPosition[1];
+						Value2 = TempChassisVelocity[2];
 						This->OpenLoopMove(TempChassisVelocity);
 					}					
 					LastMoveType = This->AutoMoveType;
