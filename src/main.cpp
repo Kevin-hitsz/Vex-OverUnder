@@ -521,9 +521,10 @@ void competition_initialize() {}
 // 	RopoDevice::Chassis.MoveVelocity(0,0);
 // }
 
-// void autonomous(){
-// 	autonomous_2();
-// }
+void autonomous(){
+	// RopoDevice::Chassis.AutoRotateAbs(30);
+ 	RopoDevice::Chassis.AutoMovePosAbs(0.5,0.5);
+}
 
 void opcontrol() {
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
@@ -538,7 +539,7 @@ void opcontrol() {
 	RopoController::AxisValueCast WVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_RIGHT_X,RopoController::Linear);
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::ChangeLift);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Lift);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1,RopoController::Rising,ControllerModule::ChangeCatch);
@@ -564,7 +565,7 @@ void opcontrol() {
 			ChassisMove = true;
 		}
 
-		pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
+		pros::lcd::print(1,"V:%.1f %.1f",XInput,WInput);
 		pros::delay(4);
 	}
 }
