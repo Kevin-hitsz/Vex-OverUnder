@@ -60,15 +60,11 @@ namespace ControllerModule{
 		RopoDevice::Intaker_Motor::MyIntaker.SetStayHidingMode(false);
 		ifHide = true;
 	}
-	int cnt = 0;
+	
 	void Wait(void){
-		if (cnt >= 1){
 			RopoDevice::Thrower_Motor::MyThrower.Wait();
 			RopoDevice::Intaker_Motor::MyIntaker.SetStayHidingMode(true);
 			ifHide = false;
-		}
-		cnt ++;
-		
 	}
 
 	void ChangeHideAndWait(void){
@@ -79,26 +75,19 @@ namespace ControllerModule{
 			Hide();
 		}
 	}
-	
-	void L1RisingFuction(void){
-		
-		ControllerModule::Wait();
-		pros::delay(200);
-		while(RopoDevice::Thrower_Motor::MyThrower.IfReady() == false){
-			pros::delay(20);
+	int cnt = 0;
+	void L1FallingFunction(void){
+		if (cnt >= 1){
+			
+			Hide();
 		}
-		pros::delay(40);
-		ControllerModule::Throw();
-		pros::delay(600);
-		RopoDevice::Thrower_Motor::MyThrower.set_is_disable(true);
-		RopoDevice::Motors::ThrowerMotor.move_voltage(-2500);
-		pros::delay(450);
-		ifHide = false;
-		
+		cnt ++;
 	}
+
+	
 	static bool L1Pressing = false;
 	pros::Task* L1PressingTask;
-	static void L1RisingFuction2(void){
+	static void L1RisingFunction2(void){
 		while (L1Pressing == true) {
 			if (L1Pressing == true) {
 				RopoDevice::Chassis.MoveVelocity(-0.3,0);
@@ -110,9 +99,6 @@ namespace ControllerModule{
 				pros::delay(200);
 				ControllerModule::Throw();
 				pros::delay(500);
-				// RopoDevice::Thrower_Motor::MyThrower.set_is_disable(true);
-				// RopoDevice::Motors::ThrowerMotor.move_voltage(-2500);
-				// pros::delay(450);
 				ControllerModule::Wait();
 				ifHide = false;
 			}
@@ -126,7 +112,7 @@ namespace ControllerModule{
 		bool *p = static_cast<bool *>(param);
 		(*p) ^= 1;
 		delete L1PressingTask;
-		L1PressingTask = new pros::Task(L1RisingFuction2);
+		L1PressingTask = new pros::Task(L1RisingFunction2);
 	}
 
 
@@ -144,12 +130,6 @@ namespace ControllerModule{
 		}
 	}
 	void Intake(void){
-		// if(RopoDevice::Intaker_Motor::MyIntaker.GetIntakeMode() == false){
-		// 	ChangeIntakerHideMode();
-		// }
-		// if(RopoDevice::Intaker_Motor::MyIntaker.GetRestingMode()){
-		// 	RopoDevice::Intaker_Motor::MyIntaker.ChangeRestMode();
-		// }
 		RopoDevice::Intaker_Motor::MyIntaker.SetRestMode(false);
 		RopoDevice::Intaker_Motor::MyIntaker.SetIntakeStatus(true);
 	}
@@ -449,24 +429,25 @@ void autonomous_2() {
 	}
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
 	pros::delay(340);
-	// RopoDevice::Chassis.MoveVelocity(-0.25,0);
-	// pros::delay(400);
-	/*
+	RopoDevice::Chassis.MoveVelocity(-0.25,0);
+	pros::delay(400);
+	
 	for(int i = 0; i < 11; i++){
 		
+		RopoDevice::Chassis.MoveVelocity(-0.3,0);
 		ControllerModule::Wait();
 		pros::delay(200);
 		while(RopoDevice::Thrower_Motor::MyThrower.IfReady() == false){
 			pros::delay(20);
 		}
-		pros::delay(40);
+		pros::delay(200);
 		ControllerModule::Throw();
 		pros::delay(500);
-		RopoDevice::Thrower_Motor::MyThrower.set_is_disable(true);
-		RopoDevice::Motors::ThrowerMotor.move_voltage(-2500);
-		pros::delay(450);
-
+		
 	}
+	RopoDevice::Thrower_Motor::MyThrower.set_is_disable(true);
+	RopoDevice::Motors::ThrowerMotor.move_voltage(2400);
+	pros::delay(200);
 	RopoDevice::Position_Motor::MyPosition.SetXAndY(0, 0);
 	ControllerModule::Intake();
 	pros::delay(100);
@@ -479,17 +460,20 @@ void autonomous_2() {
 	ControllerModule::Wait();
 	pros::delay(400);
 	ControllerModule::IntakerRest();
-	RopoDevice::Chassis.MoveVelocity(1,0);
-	pros::delay(350);
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(0.5,0.4);
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0.8,1);
 	pros::delay(520);
 	RopoDevice::Chassis.MoveVelocity(1.8,0);
-	pros::delay(430);
+	pros::delay(330);
+	RopoDevice::Chassis.MoveVelocity(0.4,0);
+	pros::delay(40);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-
+	//-------end-----------
 	ControllerModule::autoend = true;
-	pros::delay(300);
-	*/
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(30);
 }
@@ -516,13 +500,10 @@ void test(){
 
 }
 
-
-
 void autonomous(){
-	//autonomous_2();
-	test();
+	autonomous_2();
+	//test();
 }
-
 
 void opcontrol() {
 	RopoDevice::DeviceInitOp2();

@@ -7,7 +7,7 @@
 namespace RopoThrower{
 
     const double ThrownPosition = 0.0;//120.0
-    const double WaitingPosition = 340.0;//210.0
+    const double WaitingPosition = 330.0;//210.0
     const double HidingPosition = 0.0;
     const double ThrowerRatio = 1.0 / 3.0 ;// /18.0
     const int FullSpeedVoltage = 12000;
@@ -82,7 +82,7 @@ namespace RopoThrower{
                 switch(This -> ThrowerState){
                     case HIDDEN:
                         if(This -> ThrowerAimState == HIDE) {
-                            This -> Motors -> move_voltage(-FullSpeedVoltage*0.3);
+                            This -> Motors -> move_voltage(-FullSpeedVoltage*0.8);
                             This -> ifReady = true;
                         }
                         else if(This -> ThrowerAimState == WAIT || This -> ThrowerAimState == THROW) {
