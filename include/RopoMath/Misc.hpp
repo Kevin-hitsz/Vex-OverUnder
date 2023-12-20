@@ -73,7 +73,7 @@ namespace RopoMath{
 
 	template<class T>inline T DeltaDirection(T AimX,T AimY,T CurX,T CurY){
 		// Get Delta Distance from (CurX,CurY) to (AimX,AimY) with Direction
-		T DeltaX = AimX - CurY;
+		T DeltaX = AimX - CurX;
 		T DeltaY = AimY - CurY;
 		return Sign(Distance(AimX,AimY) - Distance(CurX, CurY)) * sqrt(DeltaX * DeltaX + DeltaY * DeltaY);
 	}
