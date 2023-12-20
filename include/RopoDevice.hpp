@@ -27,7 +27,7 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 20;
+		const int InertialPort = 17;
 		pros::IMU Inertial(InertialPort);
 
 	}			
