@@ -23,7 +23,7 @@ namespace RopoChassis{
 
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.001,0.0002,0.00000,0.006,-1e7,0.10,0.3};
 			inline static RopoControl::PIDRegulator FastDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000018,0.00001,0.00001,0.0015,-1e7,2,0.3};
 			//0.004,0.004,0.000
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
