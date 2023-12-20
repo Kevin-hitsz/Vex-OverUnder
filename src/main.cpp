@@ -13,6 +13,18 @@ namespace ControllerModule{
 		(*p) ^= 1;
 	}
 
+	void Up(){
+		RopoDevice::LiftMotors.Up();
+	}
+
+	void Down(){
+		RopoDevice::LiftMotors.Down();
+	}
+
+	void Disable(){
+		RopoDevice::LiftMotors.Disable();
+	}
+
 	void Push(){
 		RopoDevice::ThreeWire::ExternPneumatic.set_value(true);
 	}
@@ -317,110 +329,112 @@ void competition_initialize() {}
 // 	RopoDevice::Chassis.MoveVelocity(0,0);
 // }
 
-// void autonomous_2() {
-// 	// ------- Stage 1 - Catch the triball under the lift bar -------
-// 	RopoDevice::LiftMotors.Hold();
-// 	pros::delay(300);
-// 	RopoDevice::Chassis.MoveVelocity(1.7,0);
-// 	pros::delay(540);
+void autonomous_2() {
+	// ------- Stage 1 - Catch the triball under the lift bar -------
+	RopoDevice::LiftMotors.Hold();
+	pros::delay(300);
+	RopoDevice::Chassis.AutoMovePosAbs(0.79,0.021);
+	RopoDevice::Chassis.MoveVelocity(1.0,1.1);
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 	
-// 	RopoDevice::Chassis.MoveVelocity(1.9,1.1);
-// 	pros::delay(1100);
-// 	RopoDevice::Chassis.MoveVelocity(0,0);
-// 	RopoDevice::Position_Motor::MyPosition.Set_XY(1.83,0.822);
-// 	pros::delay(700);
-// 	RopoDevice::Chassis.MoveVelocity(-1,0);
-// 	pros::delay(450);
+	// RopoDevice::Chassis.MoveVelocity(1.3,1.2);
+	// pros::delay(1100);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// RopoDevice::Position_Motor::MyPosition.Set_XY(1.83,0.822);
+	// pros::delay(700);
+	// RopoDevice::Chassis.MoveVelocity(-1,0);
+	// pros::delay(450);
 
-// 	// ------- Stage 2 - Catch the union triball -------
-// 	RopoDevice::LiftMotors.Hide();
-// 	RopoDevice::Chassis.MoveVelocity(0,0);
-// 	pros::delay(300);
+	// ------- Stage 2 - Catch the union triball -------
+	// RopoDevice::LiftMotors.Hide();
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(300);
 
-// 	//RopoDevice::Chassis.AutoMovePosAbs(1.57,0.303,-50.0);	// 1.63
-// 	RopoDevice::Chassis.AutoMovePosAbs(1.66,0.232,-46.0);	// 1.63
-// 	while (!RopoDevice::Chassis.IfArrived()){
-// 		pros::delay(20);
-// 	}
-// 	RopoDevice::Chassis.MoveVelocity(0.3,0);
-// 	pros::delay(300);
-// 	RopoDevice::Chassis.MoveVelocity(0,0);
-// 	pros::delay(100);
-// 	RopoDevice::LiftMotors.Hold();
-// 	pros::delay(1200);
-// 	RopoDevice::Chassis.MoveVelocity(-0.4,0);
-// 	pros::delay(100);
-// 	RopoDevice::LiftMotors.Pull();
-// 	pros::delay(500);
-// 	RopoDevice::LiftMotors.Hold();
-// 	pros::delay(50);
+	// //RopoDevice::Chassis.AutoMovePosAbs(1.57,0.303,-50.0);	// 1.63
+	// RopoDevice::Chassis.AutoMovePosAbs(1.66,0.232,-46.0);	// 1.63
+	// while (!RopoDevice::Chassis.IfArrived()){
+	// 	pros::delay(20);
+	// }
+	// RopoDevice::Chassis.MoveVelocity(0.3,0);
+	// pros::delay(300);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(100);
+	// RopoDevice::LiftMotors.Hold();
+	// pros::delay(1200);
+	// RopoDevice::Chassis.MoveVelocity(-0.4,0);
+	// pros::delay(100);
+	// RopoDevice::LiftMotors.Pull();
+	// pros::delay(500);
+	// RopoDevice::LiftMotors.Hold();
+	// pros::delay(50);
 
-// 	//
-// 	RopoDevice::Chassis.AutoMovePosAbs(1.86,0.95,90.0);	// y 0.98
-// 	while (!RopoDevice::Chassis.IfArrived()){
-// 		pros::delay(20);
-// 	}
+	//
+	// RopoDevice::Chassis.AutoMovePosAbs(1.86,0.95,90.0);	// y 0.98
+	// while (!RopoDevice::Chassis.IfArrived()){
+	// 	pros::delay(20);
+	// }
 
-// 	RopoDevice::Position_Motor::MyPosition.Set_XY(1.86, 1.002);
+	// RopoDevice::Position_Motor::MyPosition.Set_XY(1.86, 1.002);
 
-// 	RopoDevice::Chassis.MoveVelocity(-0.7,0);
-// 	pros::delay(450);
+	// RopoDevice::Chassis.MoveVelocity(-0.7,0);
+	// pros::delay(450);
 
-// 	//
-// 	RopoDevice::LiftMotors.Hide();
-// 	pros::delay(500);
-// 	RopoDevice::Chassis.AutoMovePosAbs(0.85,1.202,190.0);	// 1.63
-// 	while (!RopoDevice::Chassis.IfArrived()){
-// 		pros::delay(20);
-// 	}
-// 	RopoDevice::LiftMotors.Pull();
-// 	pros::delay(500);
-// 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
-// 	pros::delay(300);
-// 	RopoDevice::LiftMotors.Hold();
+	// //
+	// RopoDevice::LiftMotors.Hide();
+	// pros::delay(500);
+	// RopoDevice::Chassis.AutoMovePosAbs(0.85,1.202,190.0);	// 1.63
+	// while (!RopoDevice::Chassis.IfArrived()){
+	// 	pros::delay(20);
+	// }
+	// RopoDevice::LiftMotors.Pull();
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	// pros::delay(300);
+	// RopoDevice::LiftMotors.Hold();
 	
-// 	RopoDevice::Chassis.MoveVelocity(0,-5);
-// 	pros::delay(100);
-// 	RopoDevice::Chassis.MoveVelocity(0,-4);
-// 	pros::delay(700);
+	// RopoDevice::Chassis.MoveVelocity(0,-5);
+	// pros::delay(100);
+	// RopoDevice::Chassis.MoveVelocity(0,-4);
+	// pros::delay(700);
 
-// 	RopoDevice::LiftMotors.Hide();
-// 	pros::delay(500);
-// 	RopoDevice::Chassis.AutoMovePosAbs(0.77,1.480,120.0);	// 1.63
-// 	while (!RopoDevice::Chassis.IfArrived()){
-// 		pros::delay(20);
-// 	}
-// 	RopoDevice::LiftMotors.Pull();
-// 	pros::delay(500);
-// 	RopoDevice::Chassis.MoveVelocity(-0.5,-0.5);
-// 	pros::delay(300);
-// 	RopoDevice::LiftMotors.Hold();
-// 	RopoDevice::Chassis.MoveVelocity(0,-5);
-// 	pros::delay(100);
-// 	RopoDevice::Chassis.MoveVelocity(0,-4);
-// 	pros::delay(700);
-// 	//
+	// RopoDevice::LiftMotors.Hide();
+	// pros::delay(500);
+	// RopoDevice::Chassis.AutoMovePosAbs(0.77,1.480,120.0);	// 1.63
+	// while (!RopoDevice::Chassis.IfArrived()){
+	// 	pros::delay(20);
+	// }
+	// RopoDevice::LiftMotors.Pull();
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(-0.5,-0.5);
+	// pros::delay(300);
+	// RopoDevice::LiftMotors.Hold();
+	// RopoDevice::Chassis.MoveVelocity(0,-5);
+	// pros::delay(100);
+	// RopoDevice::Chassis.MoveVelocity(0,-4);
+	// pros::delay(700);
+	// //
 
-// 	pros::delay(300);
-// 	RopoDevice::LiftMotors.Hide();
-// 	pros::delay(500);
-// 	// RopoDevice::Chassis.AutoMovePosAbs(1.40, 1.542, 0);
-// 	// while (!RopoDevice::Chassis.IfArrived()){
-// 	// 	pros::delay(20);
-// 	// }
-// 	// RopoDevice::Chassis.MoveVelocity(0.4,0);
-// 	// pros::delay(500);
-// 	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(300);
+	// RopoDevice::LiftMotors.Hide();
+	// pros::delay(500);
+	// // RopoDevice::Chassis.AutoMovePosAbs(1.40, 1.542, 0);
+	// // while (!RopoDevice::Chassis.IfArrived()){
+	// // 	pros::delay(20);
+	// // }
+	// // RopoDevice::Chassis.MoveVelocity(0.4,0);
+	// // pros::delay(500);
+	// // RopoDevice::Chassis.MoveVelocity(0,0);
 
-// 	RopoDevice::Chassis.AutoMovePosAbs(0.68,0.540,-128.1);	// 1.63
-// 	while (!RopoDevice::Chassis.IfArrived()){
-// 		pros::delay(20);
-// 	}
-// 	RopoDevice::LiftMotors.Pull();
-// 	pros::delay(500);
+	// RopoDevice::Chassis.AutoMovePosAbs(0.68,0.540,-128.1);	// 1.63
+	// while (!RopoDevice::Chassis.IfArrived()){
+	// 	pros::delay(20);
+	// }
+	// RopoDevice::LiftMotors.Pull();
+	// pros::delay(500);
 
-// 	RopoDevice::Chassis.MoveVelocity(0,0);
-// }
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+}
 
 // void skill() {
 // 	//------- Stage 1 - Catch the triball under the lift bar -------
@@ -626,8 +640,10 @@ void opcontrol() {
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::ChangeLift);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Lift);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::Up);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Falling, ControllerModule::Disable);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Down);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Disable);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1,RopoController::Rising,ControllerModule::ChangeCatch);
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Push);
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Falling, ControllerModule::Pull);

@@ -17,10 +17,10 @@
 
 namespace RopoDevice{
 	namespace ThreeWire{
-		const char ExternPneumaticPort = 'B';
+		const char ExternPneumaticPort = 'A';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char CatchPneumaticPort  = 'A';
+		const char CatchPneumaticPort  = 'H';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 	}
@@ -42,7 +42,7 @@ namespace RopoDevice{
 		const int RightMotor1Port	= 4;
 		const int RightMotor2Port	= 2;
 		const int RightMotor3Port	= 6;
-		const int RightMotor4Port   = 8;
+		const int RightMotor4Port   = 10;
 		
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -82,8 +82,8 @@ namespace RopoDevice{
 			// RightMotor3.move_voltage(Velocity * RatioParam);
 		}
 
-		const int LeftLiftMotorPort		= 15;
-		const int RightLiftMotorPort    = 5;
+		const int LeftLiftMotorPort		= 13;
+		const int RightLiftMotorPort    = 3;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
