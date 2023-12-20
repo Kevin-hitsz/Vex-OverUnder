@@ -35,13 +35,13 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 17;
+		const int LeftMotor1Port  	= 12;
 		const int LeftMotor2Port  	= 14;
 		const int LeftMotor3Port  	= 18;
 		const int LeftMotor4Port    = 19;
-		const int RightMotor1Port	= 4;
-		const int RightMotor2Port	= 2;
-		const int RightMotor3Port	= 6;
+		const int RightMotor1Port	= 3;
+		const int RightMotor2Port	= 4;
+		const int RightMotor3Port	= 5;
 		const int RightMotor4Port   = 10;
 		
 
@@ -82,8 +82,8 @@ namespace RopoDevice{
 			// RightMotor3.move_voltage(Velocity * RatioParam);
 		}
 
-		const int LeftLiftMotorPort		= 13;
-		const int RightLiftMotorPort    = 3;
+		const int LeftLiftMotorPort		= 11;
+		const int RightLiftMotorPort    = 1;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
