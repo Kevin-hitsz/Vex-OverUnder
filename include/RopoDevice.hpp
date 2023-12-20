@@ -27,7 +27,7 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 20;
+		const int InertialPort = 17;
 		pros::IMU Inertial(InertialPort);
 
 	}			
@@ -35,14 +35,14 @@ namespace RopoDevice{
 	// Code 
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 17;
+		const int LeftMotor1Port  	= 12;
 		const int LeftMotor2Port  	= 14;
 		const int LeftMotor3Port  	= 18;
 		const int LeftMotor4Port    = 19;
-		const int RightMotor1Port	= 4;
-		const int RightMotor2Port	= 2;
-		const int RightMotor3Port	= 6;
-		const int RightMotor4Port   = 8;
+		const int RightMotor1Port	= 3;
+		const int RightMotor2Port	= 4;
+		const int RightMotor3Port	= 5;
+		const int RightMotor4Port   = 10;
 		
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -109,7 +109,7 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
-	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetPosition , 1 );
+	RopoChassis::TankChassis Chassis( &Motors::RightWheelMove , &Motors::LeftWheelMove , &GetPosition , 1 );
 
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
@@ -124,6 +124,8 @@ namespace RopoDevice{
 		Motors::RightMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Position_Motor::MyPosition.initial();
 	}
 

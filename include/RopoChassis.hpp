@@ -12,12 +12,12 @@
 
 namespace RopoChassis{
 	// Debug
-	FloatType Value1 = 0,Value2 = 0,Value3 = 0;
-	bool Flag = false;
+	//FloatType Value1 = 0,Value2 = 0,Value3 = 0;
+	//bool Flag = false;
 	// Code
 	class TankChassis{
 		private:
-			static constexpr float WheelRad = 0.041275;
+			static constexpr float WheelRad = 0.034925;
 			static constexpr float ChassisParameter = (0.295+0.295)/2; // 0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
@@ -49,7 +49,7 @@ namespace RopoChassis{
 			pros::Task* BackgroundTask;
 
 			void OpenLoopMove(const Vector& Velocity) {
-				const FloatType ChassisRatio = 3.0 / 2.0;
+				const FloatType ChassisRatio = 56.0 / 44.0;
 				const FloatType radTorpm = 600 / 62.83;				// 1 degree / 2pi * 60s
 				static Vector _Velocity(RopoMath::ColumnVector,2);
 				_Velocity = Velocity;
@@ -132,7 +132,7 @@ namespace RopoChassis{
 						}
 						
 						// Debug
-						Value1 = TempChassisVelocity[1],Value2 = TempChassisVelocity[2];
+						//Value1 = TempChassisVelocity[1],Value2 = TempChassisVelocity[2];
 						This->OpenLoopMove(TempChassisVelocity);
 					}					
 					LastMoveType = This->AutoMoveType;
