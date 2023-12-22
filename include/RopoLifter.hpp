@@ -10,8 +10,8 @@ namespace RopoLifter{
     // Params
     const double HoldingPosition = 103.0;//120.0
     const double PullingPosition = 90.0;//210.0
-    const double HiddenPosition = -40.0;
-    const double WaitingPosition = 60.0;
+    const double HiddenPosition = -45.0;
+    const double WaitingPosition = 50.0;
     const double LifterRatio = 1.0;  
     const int FullSpeedVoltage = 6000;
     const int Deltatime = 20;
