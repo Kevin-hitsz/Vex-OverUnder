@@ -12,18 +12,18 @@
 
 namespace RopoChassis{
 	// Debug
-	FloatType Value1 = 0,Value2 = 0,Value3 = 0;
-	bool Flag = false;
+	//FloatType Value1 = 0,Value2 = 0,Value3 = 0;
+	//bool Flag = false;
 	// Code
 	class TankChassis{
 		private:
-			static constexpr float WheelRad = 0.041275;
+			static constexpr float WheelRad = 0.034925;
 			static constexpr float ChassisParameter = (0.295+0.295)/2; // 0.2855
 			static constexpr float DefaultVelocityLimits = 600;
 
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.001,0.0002,0.00000,0.006,-1e7,0.10,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.05,0.3};
 			inline static RopoControl::PIDRegulator FastDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000018,0.00001,0.00001,0.0015,-1e7,2,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
 			//0.004,0.004,0.000
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
@@ -49,7 +49,7 @@ namespace RopoChassis{
 			pros::Task* BackgroundTask;
 
 			void OpenLoopMove(const Vector& Velocity) {
-				const FloatType ChassisRatio = 3.0 / 2.0;
+				const FloatType ChassisRatio = 56.0 / 44.0;
 				const FloatType radTorpm = 600 / 62.83;				// 1 degree / 2pi * 60s
 				static Vector _Velocity(RopoMath::ColumnVector,2);
 				_Velocity = Velocity;
@@ -111,20 +111,14 @@ namespace RopoChassis{
 								TempChassisVelocity[2] = FastDegRegulator.Update(DeltaDegree - CurrentPosition[3]) * 0.8 / ( This->SampleTime / 1000.0 );
 							}
 							if((!This->DistantArrived) && This->TempDegreeArrived){
-								FloatType DistantDelta = This->Sign * DeltaDirection;
-								TempChassisVelocity[1] = DistanceRegulator.Update(DistantDelta) / ( This->SampleTime / 1000.0);
-								// WTF?
-								// if(DeltaDegree > 90 ) DeltaDegree -= 180;
-								// else if(DeltaDegree < -90 ) DeltaDegree += 180;
-								// TempChassisVelocity[2] = DeltaDegree / 45.0 ;
-								// if(DeltaDistance < 0.2) TempChassisVelocity[2] = 0;
-								TempChassisVelocity[2] = 0;
+								TempChassisVelocity[1] = DistanceRegulator.Update(This->Sign * DeltaDirection) / ( This->SampleTime / 1000.0 );
+								if(DeltaDegree > 90 ) DeltaDegree -= 180;
+								else if(DeltaDegree < -90 ) DeltaDegree += 180;
+								TempChassisVelocity[2] = DeltaDegree / 540.0 ;
+								if(fabs(DeltaDirection) < 0.2) TempChassisVelocity[2] = 0;
+								// TempChassisVelocity[2] = 0;
 							}
-							if(This->DistantArrived && This->TempDegreeArrived){
-								TempChassisVelocity[1] = TempChassisVelocity[2] = 0;
-								This->Arrived=true;
-								This->AutoMoveType == Disable;
-							}
+							if(This->DistantArrived && This->TempDegreeArrived) TempChassisVelocity[1] = TempChassisVelocity[2] = 0, This->Arrived=true;
 						}
 						if(This->AutoMoveType == Rotate){
 							This->Arrived = false;
@@ -133,16 +127,11 @@ namespace RopoChassis{
 							if(!This->DegreeArrived){
 								TempChassisVelocity[2] = SlowDegRegulator.Update(Delta[3]) * 0.8 / ( This->SampleTime / 1000.0 );	// *0.8
 							}
-							else{
-								TempChassisVelocity[2] = 0;
-								This->Arrived = true;
-								This->AutoMoveType == Disable;
-							}
+							else TempChassisVelocity[2] = 0, This->Arrived = true;
 						}
 						
 						// Debug
-						Value1 = AimPosition[1];
-						Value2 = TempChassisVelocity[2];
+						//Value1 = TempChassisVelocity[1],Value2 = TempChassisVelocity[2];
 						This->OpenLoopMove(TempChassisVelocity);
 					}					
 					LastMoveType = This->AutoMoveType;
