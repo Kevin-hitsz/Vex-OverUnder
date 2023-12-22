@@ -94,6 +94,9 @@ namespace ControllerModule{
 			if(SlowModeFlag == true) 
 				MasterController.print(2,1,"SlowModeOn!"),
 				pros::delay(10);
+			if(SlowModeFlag == false) 
+				MasterController.print(2,1,"           "),
+				pros::delay(10);
 			//MasterController.print(3,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
 		}
 	}
