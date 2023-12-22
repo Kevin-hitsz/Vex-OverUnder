@@ -79,6 +79,11 @@ namespace ControllerModule{
 		}
 	}
 
+	bool SlowModeFlag = false;
+	void SlowModeSwitch(){
+		SlowModeFlag ^= 1;
+	}
+
 	void ControllerPrint(){
 		while(true) {
 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -462,6 +467,7 @@ void opcontrol() {
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X  , RopoController::Rising,  autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X  , RopoController::Rising,  ControllerModule::SlowModeSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::ChangeLift);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::Hide);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, ControllerModule::Pull);
@@ -472,6 +478,8 @@ void opcontrol() {
 	ButtonDetectLine.Enable();
 
 	while (true) {
+		if(ControllerModule::SlowModeFlag == true) 
+			RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Ln);
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
 		FloatType RopoWc = RopoWcLimit-XInput*0.6;			
