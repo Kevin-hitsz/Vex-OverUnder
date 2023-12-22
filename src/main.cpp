@@ -157,7 +157,6 @@ void autonomous_1() {
 
 // 	//RopoDevice::Chassis.AutoMovePosAbs(1.57,0.303,-50.0);	// 1.63
 	RopoDevice::Chassis.AutoMovePosAbs(1.69,0.373,-53.0);	// 1.63
-	RopoDevice::Chassis.AutoMovePosAbs(1.69,0.373,-53.0);	// 1.63
 // 	while (!RopoDevice::Chassis.IfArrived()){
 // 		pros::delay(20);
 // 	}
