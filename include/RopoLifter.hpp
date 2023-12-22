@@ -14,7 +14,7 @@ namespace RopoLifter{
     const double WaitingPosition = 50.0;
     const double LifterRatio = 1.0;  
     const int FullSpeedVoltage = 6000;
-    const int Deltatime = 20;
+    const int Deltatime = 5;
 
     typedef enum{
         HIDDEN = 0,         //when lifter is hidden in the robot
