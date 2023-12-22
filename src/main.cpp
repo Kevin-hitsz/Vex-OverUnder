@@ -55,7 +55,6 @@ namespace ControllerModule{
 	}
 
 	void Pull(){
-	void Pull(){
 		RopoDevice::LiftMotors.Pull();
 		catch_1 = 2;
 	}
@@ -70,10 +69,6 @@ namespace ControllerModule{
 		catch_1 = 3;
 	}
 
-	void Wait(){
-		RopoDevice::LiftMotors.Wait();
-		catch_1 = 3;
-	}
 
 	void ChangeLift(){
 		if (catch_1 == 1) {
@@ -113,41 +108,6 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous_1() {
-	// ------- Stage 1 - Catch the triball under the lift bar -------
-	// RopoDevice::LiftMotors.Hold();
-	// pros::delay(300);
-	// RopoDevice::Chassis.MoveVelocity(1.5,0);
-	// pros::delay(700);
-		// ---
-		//向前推球进网
-		RopoDevice::LiftMotors.Hold();
-
-		pros::delay(300);
-		RopoDevice::Chassis.MoveVelocity(1.2,0.3);
-		pros::delay(1200);
-
-		RopoDevice::Chassis.AutoMovePosAbs(1.71,0.471,72.3);
-
-
-		// RopoDevice::Chassis.AutoMovePosAbs(1.92,0.941,72.3);
-		RopoDevice::Chassis.MoveVelocity(0.8,0);
-		pros::delay(800);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		RopoDevice::Position_Motor::MyPosition.Set_XY(1.92,0.941);
-		// RopoDevice::Chassis.AutoMovePosAbs(1.71,0.471,-45);
-		// ---
-		pros::delay(800);
-		RopoDevice::Chassis.MoveVelocity(-0.4,-0.2);
-		pros::delay(1200);
-
-	// RopoDevice::Chassis.MoveVelocity(1.9,1.5);
-	// pros::delay(1100);
-	// RopoDevice::Chassis.MoveVelocity(0,0);
-	// RopoDevice::Position_Motor::MyPosition.Set_XY(1.83,0.822);
-	// pros::delay(700);
-	// RopoDevice::Chassis.MoveVelocity(-1,0);
-	// pros::delay(450);
 void autonomous_1() {
 	// ------- Stage 1 - Catch the triball under the lift bar -------
 	// RopoDevice::LiftMotors.Hold();
