@@ -362,7 +362,7 @@ void autonomous_2() {
 	// ------- Stage 1 - Catch the triball under the lift bar -------
 	RopoDevice::LiftMotors.Hold();
 
-	pros::delay(300);
+	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(1.2,0.3);
 	pros::delay(1200);
 
