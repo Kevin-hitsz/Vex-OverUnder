@@ -83,10 +83,17 @@ namespace RopoController{
 				MyButton(_Button),TriggerType(_TriggerType),Callback(nullptr),CallbackType(false),Parameter(nullptr),
 				PressTime(_PressTime),BackgroundTask(nullptr),Flag(false),DoubleClickFlag(false),BeginTime(-1){
 				Callback = (void *)_Callback;
+				if(TriggerType == Falling){
+					Flag = true;
+				}
 			}
 			ButtonTaskCore(pros::controller_digital_e_t _Button, ButtonTriggerType _TriggerType, void (*_Callback)(void *), void *_Parameter, int _PressTime):
 				MyButton(_Button),TriggerType(_TriggerType),Callback(nullptr),CallbackType(true),Parameter(_Parameter),
 				PressTime(_PressTime),BackgroundTask(nullptr),Flag(false),DoubleClickFlag(false),BeginTime(-1){
+				if(TriggerType == Falling){
+					Flag = true;
+				}
+				
 				Callback = (void *)_Callback;
 			}
 			~ButtonTaskCore(){delete BackgroundTask;}

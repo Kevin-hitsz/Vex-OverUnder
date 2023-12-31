@@ -7,7 +7,7 @@
 namespace RopoThrower{
 
     const double ThrownPosition = 0.0;//120.0
-    const double WaitingPosition = 330.0;//210.0
+    const double WaitingPosition = 334.0;//210.0
     const double HidingPosition = 0.0;
     const double ThrowerRatio = 1.0 / 3.0 ;// /18.0
     const int FullSpeedVoltage = 12000;
@@ -50,7 +50,7 @@ namespace RopoThrower{
         ThrowerState = HIDDEN;
         ThrowerAimState = HIDE;
         Motors = Mtrs;
-        is_disable = false;
+        is_disable = true;
         ThrowerPosition = 0;
         ThrowerTask = new pros::Task(ThrowerModule::ThrowerBackGroundFunction,this);
     }
@@ -86,8 +86,8 @@ namespace RopoThrower{
                             This -> ifReady = true;
                         }
                         else if(This -> ThrowerAimState == WAIT || This -> ThrowerAimState == THROW) {
-                            This -> Motors -> move_voltage(FullSpeedVoltage);
-                            //pros::delay(500);
+                            This -> Motors -> move_voltage(FullSpeedVoltage/2.0);
+                            pros::delay(500);
                             This -> ThrowerState = WAITING;
                         }
                         break;
@@ -99,7 +99,7 @@ namespace RopoThrower{
                             This -> ThrowerState = HIDDEN;
                         } 
                         else if( This -> ThrowerAimState == WAIT) {
-                            if ( WaitingPosition - This -> ThrowerPosition < 20 && WaitingPosition - This -> ThrowerPosition > 0 ) {
+                            if ( WaitingPosition - This -> ThrowerPosition < 18 && WaitingPosition - This -> ThrowerPosition > 0 ) {
                                 //This -> Motors -> set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
                                 This -> Motors -> brake();
                                 This -> Motors -> move_voltage(0);

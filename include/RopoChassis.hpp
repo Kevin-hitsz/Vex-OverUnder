@@ -28,7 +28,7 @@ namespace RopoChassis{
 			static constexpr float DefaultVelocityLimits = 600;
 
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.001,0.00000,0.0006,-1e7,0.15,0.3};		//
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000072,0.00019,0.000101,0.0040,-1e7,1,0.4};		//
+			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000072,0.00019,0.000101,0.0040,-1e7,1.6,0.4};		//
 			//0.00001,0.00012,0.0004
 			RopoControl::TankChassisCore Core;
 			void (*MotorMove[2])(FloatType);
