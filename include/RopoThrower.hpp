@@ -7,7 +7,7 @@
 namespace RopoThrower{
 
     const double ThrownPosition = 0.0;//120.0
-    const double WaitingPosition = 334.0;//210.0
+    const double WaitingPosition = 325.0;//210.0
     const double HidingPosition = 0.0;
     const double ThrowerRatio = 1.0 / 3.0 ;// /18.0
     const int FullSpeedVoltage = 12000;
