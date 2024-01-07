@@ -377,46 +377,8 @@ void autonomous_2() {
 }
 
 void test(){
-	RopoDevice::DeviceInitOp2();
-	for(int i = 1;i<=3;i++){
-		ControllerModule::Wait();
-		pros::delay(200);
-		while(RopoDevice::Thrower_Motor::MyThrower.IfReady() == false){
-			pros::delay(20);
-		}
-		pros::delay(200);
-		
-		RopoDevice::Chassis.MoveVelocity(1,0);
-		pros::delay(300);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		pros::delay(50);
-		RopoDevice::Chassis.MoveVelocity(0.1,-4.0);
-		pros::delay(210);
-		ControllerModule::Throw();
-		pros::delay(100);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		pros::delay(350);
 
-		RopoDevice::Chassis.MoveVelocity(0,4.0);
-		pros::delay(290);
-		RopoDevice::Chassis.AutoRotateAbs(0);
-		pros::delay(300);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		pros::delay(50);
-		RopoDevice::Thrower_Motor::MyThrower.set_is_disable(true);
-		pros::delay(100);
-		RopoDevice::Motors::ThrowerMotor.move_voltage(-2400);
-		RopoDevice::Chassis.MoveVelocity(-1.0,0);
-
-		pros::delay(300);
-		RopoDevice::Chassis.MoveVelocity(-0.3,0);
-		pros::delay(250);
-	}
-	// RopoDevice::Chassis.AutoRotateAbs(-123);
-	// RopoDevice::Chassis.MoveVelocity(1.8,0);
-	// pros::delay(700);
-
-}
+}		
 
 void autonomous(){
 	autonomous_2();
@@ -425,9 +387,6 @@ void autonomous(){
 
 void opcontrol() {
 	RopoDevice::DeviceInitOp2();
-	// if(pros::competition::is_connected() == true){
-	// 	ControllerModule::Hide();
-	// }
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	pros::Task *DisplayTask = new pros::Task(ControllerModule::Display);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -460,6 +419,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Falling ,  [](void)->void{
 		RopoDevice::Motors::ThrowerMotor.move_voltage(-2000);
 	});	
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising ,  ControllerModule::L1RisingFunction2);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising ,  ControllerModule::Push );
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Falling,  ControllerModule::Pull );
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A   , RopoController::Rising ,  RopoDevice::DeviceInitOp2);
@@ -469,6 +429,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, ControllerModule::IntakerRest);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, ControllerModule::ChangeIntakerHideMode);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::ChangeIntakerHideMode);
+	
 	ButtonDetectLine.Enable();
 	while (true) {
 		RopoApi::FloatType XInput =  XVelocityInput.GetAxisValue();
@@ -486,7 +447,6 @@ void opcontrol() {
 			RopoDevice::Chassis.MoveVelocity(Velocity);
 			ChassisMove = true;
 		}
-		//pros::lcd::set_background_color(0,100,0);
 		pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
 		pros::delay(5);
 	}
