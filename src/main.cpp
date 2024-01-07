@@ -419,7 +419,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Falling ,  [](void)->void{
 		RopoDevice::Motors::ThrowerMotor.move_voltage(-2000);
 	});	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising ,  ControllerModule::L1RisingFunction2);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::DoubleEdge ,  ControllerModule::L1BoolSwitch,&ControllerModule::L1Pressing);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising ,  ControllerModule::Push );
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Falling,  ControllerModule::Pull );
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A   , RopoController::Rising ,  RopoDevice::DeviceInitOp2);
