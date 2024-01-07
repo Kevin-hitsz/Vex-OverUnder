@@ -43,6 +43,10 @@ namespace RopoDevice{
 		const int OpenMvPort = 4;
 		RopoSensor::OpenMv myOpenMv(OpenMvPort,115200,10);
 
+		const int receiveID = 1;
+		const int sendID = 2;
+		RopoSensor::EncodingDisk encodingDisk(receiveID,115200,sendID,115200,10);
+
 	}			
 	
 	// Code 

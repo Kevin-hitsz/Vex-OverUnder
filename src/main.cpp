@@ -134,7 +134,7 @@ namespace ControllerModule{
 		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
 		MasterController1.rumble("-.-.-");
 		RopoApi::FloatType aa = pros::millis();
-		while(pros::millis()-aa<55000){
+		while(pros::millis()-aa<45000){
 			pros::delay(100);
 		}
 		MasterController1.rumble("-.-.-");
