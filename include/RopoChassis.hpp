@@ -138,7 +138,7 @@ namespace RopoChassis{
 
 								if(!This->moveReverse)
 								{
-									if(DeltaDis/aimDistance>0.2)
+									if(DeltaDis/aimDistance>0.1)
 										DeltaRotation -= CurrentPosition[3];
 									else
 										DeltaRotation=IniPosition[3]-CurrentPosition[3];
