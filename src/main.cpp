@@ -46,41 +46,41 @@ namespace ControllerModule{
 		MasterController1.rumble("-.-.-");
 	}
 	int catch_1 = 0;
-	// void Hold(){
-	// 	RopoDevice::LiftMotors.Hold();
-	// 	catch_1 = 1;
-	// }
-
-	// void Lift(){
-	// 	RopoDevice::LiftMotors.Wait();
-	// 	catch_1 = 2;
-	// }
-
-	// void Hide(){
-	// 	RopoDevice::LiftMotors.Hide();
-	// 	catch_1 = 0;
-	// }
-
-	// void ChangeLift(){
-	// 	if (catch_1 == 1) {
-	// 		Hide();
-	// 	} else {
-	// 		Hold();
-	// 	}
+	void Hold(){
+		RopoDevice::LiftMotors.Hold();
+		catch_1 = 1;
 	}
 
-// 	void ControllerPrint(){
-// 		while(true) {
-// 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
-// 			MasterController.print(0,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_yaw());
-// 			pros::delay(10); 
-// 			MasterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::Position_Motor::MyPosition.Get_X(),RopoDevice::Position_Motor::MyPosition.Get_Y());
-// 			pros::delay(10); 
-// 			MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
-// 			pros::delay(10);
-// 		}
-// 	}
-// }
+	void Lift(){
+		RopoDevice::LiftMotors.Wait();
+		catch_1 = 2;
+	}
+
+	void Hide(){
+		RopoDevice::LiftMotors.Hide();
+		catch_1 = 0;
+	}
+
+	void ChangeLift(){
+		if (catch_1 == 1) {
+			Hide();
+		} else {
+			Hold();
+		}
+	}
+
+	// void ControllerPrint(){
+	// 	while(true) {
+	// 		pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
+	// 		MasterController.print(0,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_yaw());
+	// 		pros::delay(10); 
+	// 		MasterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::Position_Motor::MyPosition.Get_X(),RopoDevice::Position_Motor::MyPosition.Get_Y());
+	// 		pros::delay(10); 
+	// 		MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
+	// 		pros::delay(10);
+	// 	}
+	// }
+}
 
 void initialize() {
 	pros::lcd::initialize();
@@ -100,22 +100,8 @@ void autonomous(){}
 void opcontrol()
 {
 
-	// RopoDevice::Chassis.AutoDirectMove(1,0,false);
-	// pros::delay(3000);
-	// RopoDevice::Chassis.AutoRotateAbs(180);
-	// pros::delay(3000);
-	// RopoDevice::Chassis.AutoRotateAbs(0);
-	// pros::delay(3000);
-	// RopoDevice::Chassis.AutoDirectMove(0,0,true);
-	// pros::delay(4000);
-	
-	// RopoDevice::Chassis.MoveVelocity(0.48,-0.5);
-	// pros::delay(2500);
+		
 
-	// // 断点
-	// while(1) pros::delay(1000);
-
-	
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	// pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -126,14 +112,16 @@ void opcontrol()
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
 	RopoController::AxisValueCast WVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_RIGHT_X,RopoController::Linear);
+
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
+
 	MasterController.clear();
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::ChangeLift);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Lift);
+
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::ChangeLift);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Lift);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1,RopoController::Rising,ControllerModule::ChangeCatch);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Push);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Falling, ControllerModule::Pull);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Push);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Falling, ControllerModule::Pull);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, ControllerModule::Switch);
 	ButtonDetectLine.Enable();
 
@@ -154,7 +142,7 @@ void opcontrol()
 			ChassisMove = true;
 		}
 
-		//pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
+		pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
 		pros::delay(4);
 	}
 }

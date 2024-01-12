@@ -93,8 +93,8 @@ namespace RopoDevice{
 	}
 
 
-//创建运球模块
-	// RopoLifter::LifterModule LiftMotors(&Motors::LiftMotor);
+// 创建运球模块
+	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor,Motors::RightLiftMotor);
 
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_yaw();
