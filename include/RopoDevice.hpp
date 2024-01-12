@@ -16,70 +16,64 @@
 #include "RopoLifter.hpp"
 
 namespace RopoDevice{
+
+	//创建三线接口
 	namespace ThreeWire{
-		const char ExternPneumaticPort = 'A';
+		const char ExternPneumaticPort = 'B';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char CatchPneumaticPort  = 'H';
+		const char CatchPneumaticPort  = 'A';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 	}
 
-
+//创建惯性传感器
 	namespace Sensors{
 		const int InertialPort = 17;
 		pros::IMU Inertial(InertialPort);
-
 	}			
 	
-	// Code 
+	// 创建电机
 	namespace Motors{
 
-		const int LeftMotor1Port  	= 12;
-		const int LeftMotor2Port  	= 14;
-		const int LeftMotor3Port  	= 18;
-		const int LeftMotor4Port    = 19;
-		const int RightMotor1Port	= 3;
-		const int RightMotor2Port	= 4;
-		const int RightMotor3Port	= 5;
-		const int RightMotor4Port   = 9;
+		const int LeftChassisMotor1Port  	= 12;
+		const int LeftChassisMotor2Port  	= 14;
+		const int LeftChassisMotor3Port  	= 18;
+        const int LeftChassisMotor4Port  	= 19;
+		const int RightChassisMotor1Port	= 3;
+		const int RightChassisMotor2Port	= 4;
+		const int RightChassisMotor3Port	= 5;
+		const int RightChassisMotor4Port	= 9;
 		
-
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
-		pros::Motor      LeftMotor1 ( LeftMotor1Port  , 	ChassisGearset, false );
-		pros::Motor      LeftMotor2 ( LeftMotor2Port  , 	ChassisGearset, false );
-		pros::Motor      LeftMotor3 ( LeftMotor3Port  , 	ChassisGearset, false );
-		pros::Motor      LeftMotor4 ( LeftMotor4Port  , 	ChassisGearset, false );
-		pros::Motor      RightMotor1( RightMotor1Port ,		ChassisGearset, false);
-		pros::Motor      RightMotor2( RightMotor2Port ,		ChassisGearset, false);
-		pros::Motor      RightMotor3( RightMotor3Port ,		ChassisGearset, false);
-		pros::Motor      RightMotor4( RightMotor3Port ,		ChassisGearset, false);
-		pros::MotorGroup LeftMotor { Motors::LeftMotor1 , Motors::LeftMotor2 , Motors::LeftMotor3 , Motors::LeftMotor4   };
-		pros::MotorGroup RightMotor{ Motors::RightMotor1, Motors::RightMotor2, Motors::RightMotor3, Motors::RightMotor4  };
+		pros::Motor      LeftChassisMotor1 (LeftChassisMotor1Port  , 	ChassisGearset, false);
+		pros::Motor      LeftChassisMotor2 (LeftChassisMotor2Port  , 	ChassisGearset, false);
+		pros::Motor      LeftChassisMotor3 (LeftChassisMotor3Port  , 	ChassisGearset, false);
+        pros::Motor      LeftChassisMotor4 (LeftChassisMotor4Port  , 	ChassisGearset, false);
+        
 
-		const FloatType ChassisRatio = 56.0 / 44.0;		// 减速比
+		pros::Motor      RightChassisMotor1(RightChassisMotor1Port ,	ChassisGearset, false);
+		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, false);
+		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, false);
+        pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
+        
+
+		const FloatType ChassisRatio = 56.0 /44.0;
 		bool ChassisControllerMode = false;
 		void LeftWheelMove	(FloatType Velocity){
-			LeftMotor1.move_velocity(-Velocity );
-			LeftMotor2.move_velocity(-Velocity );
-			LeftMotor3.move_velocity(-Velocity );
-			LeftMotor4.move_velocity(-Velocity );
-			// constexpr FloatType RatioParam = 20;
-			// LeftMotor1.move_voltage(-Velocity * RatioParam);
-			// LeftMotor2.move_voltage(-Velocity * RatioParam);
-			// LeftMotor3.move_voltage(-Velocity * RatioParam);
+			LeftChassisMotor1.move_velocity(-Velocity );
+			LeftChassisMotor2.move_velocity(-Velocity );
+			LeftChassisMotor3.move_velocity(-Velocity );
+			LeftChassisMotor4.move_velocity(-Velocity );
 		}
 
 		void RightWheelMove (FloatType Velocity){
-			RightMotor1.move_velocity(Velocity );
-			RightMotor2.move_velocity(Velocity );
-			RightMotor3.move_velocity(Velocity );
-			RightMotor4.move_velocity(Velocity );
-			// constexpr FloatType RatioParam = 20;
-			// RightMotor1.move_voltage(Velocity * RatioParam);
-			// RightMotor2.move_voltage(Velocity * RatioParam);
-			// RightMotor3.move_voltage(Velocity * RatioParam);
+			RightChassisMotor1.move_velocity(Velocity );
+			RightChassisMotor2.move_velocity(Velocity );
+			RightChassisMotor3.move_velocity(Velocity );
+			RightChassisMotor4.move_velocity(Velocity );
+			
 		}
 
 		const int LeftLiftMotorPort		= 11;
@@ -87,19 +81,26 @@ namespace RopoDevice{
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
-		pros::MotorGroup LiftMotor { Motors::LeftLiftMotor ,Motors::RightLiftMotor};
+		
 	}
 
+
+
+	// 创建定位模块
 	namespace Position_Motor{
-		RopoPosition::Position MyPosition(&Motors::LeftMotor,&Motors::RightMotor,&Sensors::Inertial);
+		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 ,
+            Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
 	}
 
-	RopoLifter::LifterModule LiftMotors(&Motors::LiftMotor);
+
+//创建运球模块
+	// RopoLifter::LifterModule LiftMotors(&Motors::LiftMotor);
 
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_yaw();
 	}
 
+// 坐标获取函数
 	RopoMath::Vector<FloatType> GetPosition(){
 		RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
 		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
@@ -108,37 +109,46 @@ namespace RopoDevice{
 
 		return PositionVector;
 	}
+    
+	//	创建底盘
+	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetPosition , 1 );
 
-	RopoChassis::TankChassis Chassis( &Motors::RightWheelMove , &Motors::LeftWheelMove , &GetPosition , 1 );
 
+
+
+
+
+
+
+//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
-		Sensors::Inertial.reset(true);
-		while(Sensors::Inertial.is_calibrating())pros::delay(20);
-		pros::delay(200);
-		Motors::LeftMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-		Position_Motor::MyPosition.initial();
+        Sensors::Inertial.reset(true);
+        while(Sensors::Inertial.is_calibrating())pros::delay(20);
+        	pros::delay(200);
+        	Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        	Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        	Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+			Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+			
+        	Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        	Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        	Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        	Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        	
+			Position_Motor::MyPosition.initial();
 	}
 
 	void MotorsInit(){
-		Motors::LeftMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		
+		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	}

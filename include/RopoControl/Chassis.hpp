@@ -28,8 +28,8 @@ namespace RopoControl{
 				// _Parameter = ( gamma * WheelDistance ) / 2.0 (m)
 				// _WheelRad (m)
 				ParameterMatrix(2,2),VelocityLimits(_VelocityLimits){
-				ParameterMatrix[1][1] = 1, ParameterMatrix[1][2] = _Parameter;
-				ParameterMatrix[2][1] = 1, ParameterMatrix[2][2] = -_Parameter;
+				ParameterMatrix[1][1] = 1, ParameterMatrix[1][2] = _Parameter/2;
+				ParameterMatrix[2][1] = 1, ParameterMatrix[2][2] = -_Parameter/2;
 				ParameterMatrix = ParameterMatrix * (1.0 / (_WheelRad));
 			}
 			~TankChassisCore(){}
