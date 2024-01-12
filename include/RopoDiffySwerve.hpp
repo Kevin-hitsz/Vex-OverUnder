@@ -7,9 +7,9 @@
 namespace RopoDiffySwerve{
     class DiffySwerve{
         private:
-            static constexpr FloatType SpinRatio = 450.0 / 600; // Wheel Rpm / Motor Rpm
-            static constexpr FloatType AngleRatio = 30.0 / 80.0; // Swerve Angle Rpm / Motor Rpm
-            static constexpr FloatType WheelRadius = 2.75 * 0.0254 / 2.0;// m
+            static constexpr FloatType SpinRatio = 2.0 / 3.0;// 轮速传动比
+            static constexpr FloatType AngleRatio = 1.0 / 3.0; // 轮偏角传动比
+            static constexpr FloatType WheelRadius = 2.75 * 0.0254 / 2.0;// 轮半径
             bool Control_Status = false;
             pros::Motor& Motor_1;
             pros::Motor& Motor_2;
@@ -105,11 +105,11 @@ namespace RopoDiffySwerve{
             
             // 更新状态变量
             void GetStatus(Matrix &Status) {
-                // 轮偏角,Rad
+                // 轮偏角(rad)
                 Status[1][1] = (Motor_1.get_position() + Motor_2.get_position()) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
-                // 偏角速度,Rad/s
+                // 偏角速度(rad/s)
                 Status[2][1] = (Motor_1.get_actual_velocity() + Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 30.0 * AngleRatio;
-                // 轮速,Rad/s
+                // 轮速(rad/s)
                 Status[3][1] = (Motor_1.get_actual_velocity() - Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 30.0 * SpinRatio;
             }
     };
