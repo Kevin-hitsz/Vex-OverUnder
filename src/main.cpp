@@ -100,15 +100,20 @@ void autonomous(){}
 void opcontrol()
 {
 
-	RopoDevice::Chassis.AutoDirectMove(1,0,false);
-	pros::delay(10000);
-	RopoDevice::Chassis.AutoRotateAbs(180);
-	pros::delay(4000);
-	RopoDevice::Chassis.AutoDirectMove(0,0,false);
-	pros::delay(4000);
+	// RopoDevice::Chassis.AutoDirectMove(1,0,false);
+	// pros::delay(3000);
+	// RopoDevice::Chassis.AutoRotateAbs(180);
+	// pros::delay(3000);
+	// RopoDevice::Chassis.AutoRotateAbs(0);
+	// pros::delay(3000);
+	// RopoDevice::Chassis.AutoDirectMove(0,0,true);
+	// pros::delay(4000);
 	
-	// 断点
-	while(1) pros::delay(1000);
+	// RopoDevice::Chassis.MoveVelocity(0.48,-0.5);
+	// pros::delay(2500);
+
+	// // 断点
+	// while(1) pros::delay(1000);
 
 	
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
@@ -149,7 +154,7 @@ void opcontrol()
 			ChassisMove = true;
 		}
 
-		pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
+		//pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
 		pros::delay(4);
 	}
 }
