@@ -49,7 +49,6 @@
 #include "RopoDevice.hpp"
 #include "RopoTask.hpp"
 #include "RopoChassis.hpp"
-#include "RopoPosition.hpp"
 #include"api.h"
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
