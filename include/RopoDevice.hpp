@@ -1,7 +1,5 @@
 // Code : UTF - 8
-#ifndef ROPO_DEVICE_HPP
-#define ROPO_DEVICE_HPP
-
+#pragma once
 #include "RopoDiffySwerve.hpp"
 #include "pros/imu.hpp"
 #include "pros/adi.hpp"
@@ -9,12 +7,10 @@
 #include "pros/motors.hpp"
 #include "RopoMath/Vector.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
-#include "RopoSensor/OpenMv.hpp"
 #include "RopoControl/Regulator.hpp"
 #include "RopoApi.hpp"
 #include "RopoChassis.hpp"
-#include "RopoThrower.hpp"
-#include "RopoLifter.hpp"
+#include <vector>
 
 namespace RopoDevice{
 	namespace ThreeWire{
@@ -33,13 +29,28 @@ namespace RopoDevice{
 
 	}			
 	
-	// Code 
 	namespace Motors{
-		const int LeftFrontMotorPort = 3;
-		const int LeftFrontMotorPort_= 4;
-		pros::Motor LeftFrontMotor(LeftFrontMotorPort,pros::E_MOTOR_GEAR_BLUE,false);
-		pros::Motor LeftFrontMotor_(LeftFrontMotorPort_,pros::E_MOTOR_GEAR_BLUE,false);
-		RopoDiffySwerve::DiffySwerve LeftFrontSwerve(LeftFrontMotor, LeftFrontMotor_);
+		const int LFMotorPort  = 3;
+		const int LFMotorPort_ = 4;
+		const int LBMotorPort  = 5;
+		const int LBMotorPort_ = 6;
+		const int RFMotorPort  = 7;
+		const int RFMotorPort_ = 8;
+		const int RBMotorPort  = 9;
+		const int RBMotorPort_ =10;
+		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, false);
+		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,false);
+		Motor LBMotor (LBMotorPort,pros::E_MOTOR_GEAR_BLUE, true );
+		Motor LBMotor_(LBMotorPort_,pros::E_MOTOR_GEAR_BLUE,true );		
+		Motor RFMotor (RFMotorPort,pros::E_MOTOR_GEAR_BLUE, false);
+		Motor RFMotor_(RFMotorPort_,pros::E_MOTOR_GEAR_BLUE,false);
+		Motor RBMotor (RBMotorPort,pros::E_MOTOR_GEAR_BLUE, true );
+		Motor RBMotor_(RBMotorPort_,pros::E_MOTOR_GEAR_BLUE,true );		
 	}
+
+	Swerve LF(Motors::LFMotor,Motors::LFMotor_);
+	Swerve LB(Motors::LBMotor,Motors::LBMotor_);
+	Swerve RF(Motors::RFMotor,Motors::RFMotor_);
+	Swerve RB(Motors::RBMotor,Motors::RBMotor_);
+	Chassis Chassis(LF,LB,RF,RB);
 }
-#endif

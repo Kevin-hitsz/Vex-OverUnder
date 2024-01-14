@@ -1,14 +1,15 @@
 // Code : UTF - 8
-#ifndef ROPO_API_HPP
-#define ROPO_API_HPP
+#pragma once
 
 #include "RopoMath/Matrix.hpp"
 #include "RopoMath/Vector.hpp"
+#include "pros/motors.hpp"
+#include "pros/rtos.hpp"
 namespace RopoApi{
 	
 }
 typedef double FloatType;
 typedef RopoMath::Matrix<FloatType> Matrix;
 typedef RopoMath::Vector<FloatType> Vector;
-
-#endif //ROPO_API_HPP
+typedef pros::Motor Motor;
+typedef pros::Task Task;

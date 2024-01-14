@@ -18,8 +18,8 @@ namespace RopoDiffySwerve{
             static constexpr FloatType AngleRatio = 1.0 / 3.0; // 轮偏角传动比
             static constexpr FloatType WheelRadius = 2.75 * 0.0254 / 2.0;// 轮半径
             bool Control_Status = false;
-            pros::Motor& Motor_1;
-            pros::Motor& Motor_2;
+            Motor& Motor_1;
+            Motor& Motor_2;
 
             Matrix Status = Matrix(3,1);
             static constexpr float Control_Time = 1; // ms
@@ -82,7 +82,7 @@ namespace RopoDiffySwerve{
         public:
             DiffySwerve(pros::Motor& _Motor_1, pros::Motor& _Motor_2)
 				:Motor_1(_Motor_1), Motor_2(_Motor_2){
-				new pros::Task(Swerve_Control, this);
+				new Task(Swerve_Control, this);
 			}
             ~DiffySwerve(){}
             inline void Control_On(){ Control_Status = true; }                                                               
@@ -129,3 +129,4 @@ namespace RopoDiffySwerve{
             }
     };
 }
+typedef RopoDiffySwerve::DiffySwerve Swerve;

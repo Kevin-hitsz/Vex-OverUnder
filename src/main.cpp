@@ -35,7 +35,7 @@ void opcontrol() {
 	ButtonDetectLine.Enable();
 
 	
-	RopoDevice::Motors::LeftFrontSwerve.Initialize();
+	RopoDevice::LF.Initialize();
 
 	while (true) {
 		FloatType XInput =  XVelocityInput.GetAxisValue();
@@ -53,7 +53,7 @@ void opcontrol() {
 		// 	RopoDevice::Chassis.MoveVelocity(Velocity);
 		// 	ChassisMove = true;
 		// }
-		RopoDevice::Motors::LeftFrontSwerve.SetAimStatus(0.6, RopoMath::Pi/3 );
+		RopoDevice::LF.SetAimStatus(0.6, RopoMath::Pi/3 );
 		// pros::lcd::print(1, "%f,%f,%f", RopoDiffySwerve::V1,RopoDiffySwerve::V2,RopoDiffySwerve::v_error);
 		// pros::lcd::print(2, "%f,%f,%f", RopoDiffySwerve::A,RopoDiffySwerve::A_,RopoDiffySwerve::V);
 
