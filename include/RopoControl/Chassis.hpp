@@ -6,7 +6,7 @@
 #include <cmath>
 
 namespace RopoControl{
-
+	
 	class ChassisCore{
 		protected:
 			bool IfReverse;
@@ -25,8 +25,6 @@ namespace RopoControl{
 			FloatType VelocityLimits;
 		public:
 			TankChassisCore(const FloatType _WheelRad,const FloatType _Parameter,const FloatType _VelocityLimits = 600.0):
-				// _Parameter = ( gamma * WheelDistance ) / 2.0 (m)
-				// _WheelRad (m)
 				ParameterMatrix(2,2),VelocityLimits(_VelocityLimits){
 				ParameterMatrix[1][1] = 1, ParameterMatrix[1][2] = _Parameter/2;
 				ParameterMatrix[2][1] = 1, ParameterMatrix[2][2] = -_Parameter/2;

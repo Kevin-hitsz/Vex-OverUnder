@@ -5,7 +5,12 @@
 #include "Api.hpp"
 
 namespace RopoControl{
-
+	/// @brief 将输入限制在（lowlimit,highlimit）
+	/// @tparam T 
+	/// @param Input 限幅输入
+	/// @param HighLimit 限幅最大值
+	/// @param LowLimit 限幅最小值
+	/// @return 限幅输出
 	template<class T>inline T Limit(T Input, T HighLimit, T LowLimit){
 		return (Input > HighLimit)?(HighLimit):( (Input < LowLimit)?(LowLimit):(Input) );
 	}
@@ -49,6 +54,7 @@ namespace RopoControl{
 		public:
 			PIDRegulator(FloatType _Kp,FloatType _Ki,FloatType _Kd,FloatType _OutputLimitHigh,FloatType _OutputLimitLow,FloatType _ErrorTol,FloatType _JumpTime = 0.03):
 				Kp(_Kp),Ki(_Ki),Kd(_Kd),OutputLimitHigh(_OutputLimitHigh),OutputLimitLow(_OutputLimitLow),ErrorTol(_ErrorTol),JumpTime(_JumpTime),First(true){}
+			
 			virtual FloatType Update(FloatType Error){
 				static FloatType PreError;
 				static FloatType IntError;
@@ -77,6 +83,7 @@ namespace RopoControl{
 				else ArrivedTime = -1 , Arrived = false;
 				return Arrived?0:Limit( Kp * Error + Ki * IntError + Kd * DevError , OutputLimitHigh, OutputLimitLow) ;
 			}
+			
 			virtual void Reset(){First = true,Arrived = false;}
 	};
 

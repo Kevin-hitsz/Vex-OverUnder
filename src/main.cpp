@@ -95,7 +95,9 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void autonomous(){}
+void autonomous(){
+	
+}
 
 void opcontrol()
 {
@@ -141,8 +143,6 @@ void opcontrol()
 			RopoDevice::Chassis.MoveVelocity(Velocity);
 			ChassisMove = true;
 		}
-
-		// pros::lcd::print(1,"Ready!!! V:%.1f %.1f",XInput,WInput);
 		pros::delay(4);
 	}
 }
