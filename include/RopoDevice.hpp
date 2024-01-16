@@ -30,27 +30,27 @@ namespace RopoDevice{
 	}			
 	
 	namespace Motors{
-		const int LFMotorPort  = 3;
-		const int LFMotorPort_ = 4;
-		const int LBMotorPort  = 5;
-		const int LBMotorPort_ = 6;
-		const int RFMotorPort  = 7;
-		const int RFMotorPort_ = 8;
-		const int RBMotorPort  = 9;
-		const int RBMotorPort_ =10;
+		const int LFMotorPort  	= 16;
+		const int LFMotorPort_ 	= 17;
+		const int LBMotorPort  	= 19;
+		const int LBMotorPort_ 	= 20;
+		const int RFMotorPort  	= 15;
+		const int RFMotorPort_ 	= 14;
+		const int RBMotorPort  	= 12;
+		const int RBMotorPort_ 	= 11;
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, false);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,false);
-		Motor LBMotor (LBMotorPort,pros::E_MOTOR_GEAR_BLUE, true );
-		Motor LBMotor_(LBMotorPort_,pros::E_MOTOR_GEAR_BLUE,true );		
+		Motor LBMotor (LBMotorPort,pros::E_MOTOR_GEAR_BLUE, false );
+		Motor LBMotor_(LBMotorPort_,pros::E_MOTOR_GEAR_BLUE,false );		
 		Motor RFMotor (RFMotorPort,pros::E_MOTOR_GEAR_BLUE, false);
 		Motor RFMotor_(RFMotorPort_,pros::E_MOTOR_GEAR_BLUE,false);
-		Motor RBMotor (RBMotorPort,pros::E_MOTOR_GEAR_BLUE, true );
-		Motor RBMotor_(RBMotorPort_,pros::E_MOTOR_GEAR_BLUE,true );		
+		Motor RBMotor (RBMotorPort,pros::E_MOTOR_GEAR_BLUE, false );
+		Motor RBMotor_(RBMotorPort_,pros::E_MOTOR_GEAR_BLUE,false );		
 	}
 
-	Swerve LF(Motors::LFMotor,Motors::LFMotor_);
-	Swerve LB(Motors::LBMotor,Motors::LBMotor_);
-	Swerve RF(Motors::RFMotor,Motors::RFMotor_);
-	Swerve RB(Motors::RBMotor,Motors::RBMotor_);
-	Chassis Chassis(LF,LB,RF,RB);
+	// RopoDiffySwerve::DiffySwerve LF(Motors::LFMotor,Motors::LFMotor_);
+	// RopoDiffySwerve::DiffySwerve LB(Motors::LBMotor,Motors::LBMotor_);
+	// RopoDiffySwerve::DiffySwerve RF(Motors::RFMotor,Motors::RFMotor_);
+	// RopoDiffySwerve::DiffySwerve RB(Motors::RBMotor,Motors::RBMotor_);
+	// Chassis Chassis(LF,LB,RF,RB);
 }
