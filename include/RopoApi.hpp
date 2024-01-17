@@ -8,7 +8,7 @@
 namespace RopoApi{
 	
 }
-typedef double FloatType;
+typedef float FloatType;
 typedef RopoMath::Matrix<FloatType> Matrix;
 typedef RopoMath::Vector<FloatType> Vector;
 typedef pros::Motor Motor;
