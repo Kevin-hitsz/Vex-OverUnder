@@ -14,7 +14,6 @@
 #include "RopoApi.hpp"
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
-#include "RopoThrower.hpp"
 #include "RopoLifter.hpp"
 
 namespace RopoDevice{
@@ -33,6 +32,8 @@ namespace RopoDevice{
 	namespace Sensors{
 		const int InertialPort = 17;
 		pros::IMU Inertial(InertialPort);
+		const int OpenmvPort = 13;
+		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
 	// 创建电机
