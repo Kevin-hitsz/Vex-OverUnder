@@ -7,8 +7,10 @@
 #include "pros/motors.hpp"
 #include "RopoMath/Vector.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
+#include "RopoParameter.hpp"
 #include "RopoSensor/OpenMv.hpp"
 #include "RopoControl/Regulator.hpp"
+#include "RopoGpsAddPosition.hpp"
 #include "RopoApi.hpp"
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
@@ -84,7 +86,10 @@ namespace RopoDevice{
 		
 	}
 
-
+	namespace Gpss{
+		static pros::Gps vexGps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
+						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
+	}
 
 	// 创建定位模块
 	namespace Position_Motor{
@@ -109,9 +114,15 @@ namespace RopoDevice{
 
 		return PositionVector;
 	}
+
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,2);
+
+	Vector GetTransformedPosition(){
+		return gpsAddPosition.GetTransformedPosition();
+	}
     
 	//	创建底盘
-	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetPosition , 1 );
+	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetTransformedPosition , 1 );
 
 
 
