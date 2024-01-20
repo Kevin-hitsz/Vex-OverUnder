@@ -47,8 +47,9 @@ namespace RopoGpsAddPosition {
                     pros::delay(This -> sampleTime);
                     if(This -> updateFlag != 0){
                         This -> cnt_update++;
-                        if(This -> cnt_update >= This -> updateFlag){
+                        if(This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.012){
                             This -> GpsUpdate();
+                            This -> cnt_update = 0;
                         }
                     }
                 }
@@ -93,6 +94,9 @@ namespace RopoGpsAddPosition {
                 return transformedPosition[3];
             }
 
+            void SetUpdateFlag(int updateFlag_) {
+                updateFlag = updateFlag_;
+            }
     };
 }
 

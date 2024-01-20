@@ -22,8 +22,8 @@ namespace RopoChassis{
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
 
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.0024,0.0001,0.00001,0.00075,-0.00075,0.01,0.3};
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.00007,0.000003,0.000001,0.0030,-0.0030,1,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0024 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.01,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,1   ,0.3};
 			
 			RopoControl::TankChassisCore Core;								
 			void (*MotorMove[2])(FloatType);
@@ -102,7 +102,7 @@ namespace RopoChassis{
 						//输入平滑
 						AimPosition[1] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[1],AimPosition[1],10,1000.0 / This->SampleTime);
 						AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],10,1000.0 / This->SampleTime);
-						AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],10,1000.0 / This->SampleTime);
+						AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],15,1000.0 / This->SampleTime);
 						
 						
 						aimDistance=RopoMath::Distance(AimPosition[1]-IniPosition[1],AimPosition[2]-IniPosition[2]);		
@@ -289,9 +289,13 @@ namespace RopoChassis{
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
+				while(!flag) pros::delay(20);
 				while(!flag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,false);
+				//等待到达
+				while(!flag) pros::delay(20);
+				while(!flag) pros::delay(100);
 			}
 
 			
@@ -306,13 +310,16 @@ namespace RopoChassis{
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
+				while(!flag) pros::delay(20);
 				while(!flag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
+				while(!flag) pros::delay(20);
 				while(!flag) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
+				while(!flag) pros::delay(20);
 				while(!flag) pros::delay(100);
 			}
 

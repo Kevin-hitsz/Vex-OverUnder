@@ -74,7 +74,7 @@ namespace RopoPosition{
                 This->RightMotor3.tare_position();
                 This->RightMotor4.tare_position();
                 while(1){
-                    This -> Angle   = This -> MyInterial . get_yaw();
+                    This -> Angle   = - This -> MyInterial . get_yaw();
                     This -> Delta_Distance = This -> Get_Delta_MotorsPosition() / 180*Pi * WheelRad/ChassisRatio;
                     if(This->Angle <= 180.0 && This->Angle >= -180.0)
                     {
