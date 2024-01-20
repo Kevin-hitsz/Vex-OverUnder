@@ -42,18 +42,9 @@ namespace RopoChassis{
                 RF.SetAimStatus(SwerveAimStatus[3][1], SwerveAimStatus[4][1]);
                 LB.SetAimStatus(SwerveAimStatus[5][1], SwerveAimStatus[6][1]);
                 RB.SetAimStatus(SwerveAimStatus[7][1], SwerveAimStatus[8][1]);
-
-                // pros::lcd::print(1,"%.3f,%.3f",SwerveAimStatus[1][1], SwerveAimStatus[2][1]);
-                // pros::lcd::print(2,"%.3f,%.3f",SwerveAimStatus[3][1], SwerveAimStatus[4][1]);
-                // pros::lcd::print(3,"%.3f,%.3f",SwerveAimStatus[5][1], SwerveAimStatus[6][1]);
-                // pros::lcd::print(4,"%.3f,%.3f",SwerveAimStatus[7][1], SwerveAimStatus[8][1]);
             }
             inline void MovingCalculate(){
                 AimStatus_X_Y = Transfer_M * AimStatus;
-                // pros::lcd::print(1,"%.3f,%.3f",AimStatus_X_Y[1][1],AimStatus_X_Y[2][1]);
-		        // pros::lcd::print(2,"%.3f,%.3f",AimStatus_X_Y[1][1],AimStatus_X_Y[2][1]);
-		        // pros::lcd::print(3,"%.3f,%.3f",AimStatus_X_Y[1][1],AimStatus_X_Y[2][1]);
-		        // pros::lcd::print(4,"%.3f,%.3f",AimStatus_X_Y[1][1],AimStatus_X_Y[2][1]);
                 for(int i = 1; i <= 7; i += 2){
                     SwerveAimStatus[i][1] = sqrtf(pow(AimStatus_X_Y[i][1], 2) + pow(AimStatus_X_Y[i+1][1],2));
                     if(SwerveAimStatus[i][1] != 0.0){

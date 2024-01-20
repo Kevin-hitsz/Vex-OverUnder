@@ -7,9 +7,6 @@
 #include "pros/motors.hpp"
 
 namespace RopoDiffySwerve{
-    
-    // FloatType angle_error;
-    // FloatType v_error;
 
     class DiffySwerve{
         private:
@@ -47,7 +44,6 @@ namespace RopoDiffySwerve{
                         
                         Angle_Error -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
                     }
-                    // Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 更改后再次更新
                     
                     // 轮偏角大于90°，则反方向转，且轮转速也对应相反数
                     if (fabsf(Angle_Error) > RopoMath::Pi / 2.0) {
@@ -67,25 +63,14 @@ namespace RopoDiffySwerve{
                     This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
                     This -> Motor_1.move_voltage((int)This -> Voltage[1][1]);
                     This -> Motor_2.move_voltage((int)This -> Voltage[2][1]);
-
-                    // This -> V1 = This->Voltage[1][1];
-                    // This -> V2 = This->Voltage[2][1];
-                    // This -> angle_error = Angle_Error;
-                    // This -> v_error = This ->AimStatus[3][1] - This -> Status[3][1];
                     pros::delay(This -> Control_Time);
                 }
             }
 
         public:
-            // FloatType V1;
-            // FloatType V2;
             FloatType A;
             FloatType A_;
             FloatType V;
-            // FloatType Get_1;
-            // FloatType Get_2;
-            // FloatType angle_error;
-            // FloatType v_error;
 
 
             DiffySwerve(pros::Motor& _Motor_1, pros::Motor& _Motor_2)
@@ -154,12 +139,6 @@ namespace RopoDiffySwerve{
 
                 M1_pos_last = M1_pos_now; M2_pos_last = M2_pos_now;
                 M1_vel_last = M1_vel_now; M2_vel_last = M2_vel_now;
-
-                // Get_1 = Motor_1.get_position();
-                // Get_2 = Motor_2.get_position();
-                A = Status[1][1];
-                A_= Status[2][1];
-                V = Status[3][1];
             }
     };
 }
