@@ -3,6 +3,7 @@
 #include "RopoMath/Matrix.hpp"
 #include "RopoMath/Misc.hpp"
 #include "pros/error.h"
+#include "pros/llemu.hpp"
 #include "pros/motors.hpp"
 
 namespace RopoDiffySwerve{
@@ -13,7 +14,7 @@ namespace RopoDiffySwerve{
     class DiffySwerve{
         private:
             static constexpr float SpinRatio = 2.0 / 3.0;// 轮速传动比
-            static constexpr float AngleRatio = 1.0 / 3.0; // 轮偏角传动比
+            static constexpr float AngleRatio = 2.0 / 5.0; // 轮偏角传动比
             static constexpr float WheelRadius = 2.75 * 0.0254 / 2.0;// 轮半径
             static constexpr float Control_Time = 10; // ms
 
@@ -41,17 +42,17 @@ namespace RopoDiffySwerve{
                     Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 轮偏角误差
 
                     // 轮偏角大于180°，则轮偏角减360°
-                    if (fabs(Angle_Error) > RopoMath::Pi) {
+                    while (fabs(Angle_Error) > RopoMath::Pi) {
                         This -> AimStatus[1][1] -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
                         
-                        // Angle_Error -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
+                        Angle_Error -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
                     }
-                    Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 更改后再次更新
+                    // Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 更改后再次更新
                     
                     // 轮偏角大于90°，则反方向转，且轮转速也对应相反数
                     if (fabsf(Angle_Error) > RopoMath::Pi / 2.0) {
                         This -> AimStatus[1][1] -= RopoMath::Sign(Angle_Error) * RopoMath::Pi;
-                        // at targetPosition, we'll need to reverse our spin direction
+                        // reverse
                         This -> AimStatus[3][1] *= -1.0;
                     }
                     Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 更改后再次更新
@@ -112,7 +113,6 @@ namespace RopoDiffySwerve{
 
                 K[1][1] = -17.0294, K[1][2] = 0.5482; K[1][3] =  -0.4274;
                 K[2][1] = -17.0294; K[2][2] = 0.5482; K[2][3] =   0.4274;
-                // K = 0.8 * K;
 			}                                                              
             inline void SetAimStatus(float _AimSpeed, float _AimAngle) {
 				AimStatus[1][1] = _AimAngle;
@@ -144,6 +144,9 @@ namespace RopoDiffySwerve{
 
                 // 轮偏角(rad)
                 Status[1][1] = (M1_pos_now + M2_pos_now) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
+
+                pros::lcd::print(1, "%f", (M1_pos_now + M2_pos_now) / 2.0 * RopoMath::Pi / 180.0);
+
                 // 偏角速度(rad/s)
                 Status[2][1] = (M1_vel_now + M2_vel_now) / 2.0 * RopoMath::Pi / 30.0 * AngleRatio;
                 // 轮速(rad/s)

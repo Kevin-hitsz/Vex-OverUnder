@@ -45,8 +45,9 @@ void opcontrol() {
 	RopoDevice::LF.Start();
 
 	while (true) {
-		FloatType XInput =  1.8 * XVelocityInput.GetAxisValue();
-		FloatType YInput =  1.8 * YVelocityInput.GetAxisValue();
+		
+		FloatType XInput =  1.5 * XVelocityInput.GetAxisValue();
+		FloatType YInput =  1.5 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -2 * WVelocityInput.GetAxisValue();	
 
 		RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
@@ -61,7 +62,7 @@ void opcontrol() {
 		// RopoDevice::LF.SetAimStatus(AimSpeed, AimAngle);
 
 		// pros::lcd::print(1, "%f,%f,%f", RopoDiffySwerve::V1,RopoDiffySwerve::V2,RopoDiffySwerve::v_error);
-		//pros::lcd::print(2, "%f,%f,%f",RopoDevice::LF.A,RopoDevice::LF.A_,RopoDevice::LF.V);
+		// pros::lcd::print(2, "%f,%f,%f",RopoDevice::LF.A,RopoDevice::LF.A_,RopoDevice::LF.V);
 		// MasterController.print(1,1,"%f,%f",RopoChassis::V2,RopoChassis::O2);
 
 		// pros::lcd::print(1,"%.3f,%.3f",RopoDevice::LF.angle_error,RopoDevice::LF.v_error);
@@ -74,10 +75,10 @@ void opcontrol() {
 		// pros::lcd::print(3,"%.3f,%.3f",RopoDevice::RF.Get_1,RopoDevice::RF.Get_2);
 		// pros::lcd::print(4,"%.3f,%.3f",RopoDevice::RB.Get_1,RopoDevice::RB.Get_2);
 
-		pros::lcd::print(1,"%.3f,%.3f",RopoDevice::LF.A,RopoDevice::LF.V);
-		pros::lcd::print(2,"%.3f,%.3f",RopoDevice::LB.A,RopoDevice::LB.V);
-		pros::lcd::print(3,"%.3f,%.3f",RopoDevice::RF.A,RopoDevice::RF.V);
-		pros::lcd::print(4,"%.3f,%.3f",RopoDevice::RB.A,RopoDevice::RB.V);
+		// pros::lcd::print(1,"%.3f,%.3f",RopoDevice::LF.A,RopoDevice::LF.V);
+		// pros::lcd::print(2,"%.3f,%.3f",RopoDevice::LB.A,RopoDevice::LB.V);
+		// pros::lcd::print(3,"%.3f,%.3f",RopoDevice::RF.A,RopoDevice::RF.V);
+		// pros::lcd::print(4,"%.3f,%.3f",RopoDevice::RB.A,RopoDevice::RB.V);
 		
 		pros::lcd::print(5,"%.3f,%.3f,%.3f",XInput,YInput,WInput);
 
