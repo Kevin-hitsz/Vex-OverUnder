@@ -128,10 +128,6 @@ namespace RopoDevice{
 
 
 
-
-
-
-
 //初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
