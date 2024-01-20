@@ -63,10 +63,10 @@ namespace RopoChassis{
                 Transfer_M[2][1] = 0,Transfer_M[2][2] = 1,Transfer_M[2][3] = - Length * 0.5;
                 Transfer_M[3][1] = 1,Transfer_M[3][2] = 0,Transfer_M[3][3] =   Width  * 0.5;
                 Transfer_M[4][1] = 0,Transfer_M[4][2] = 1,Transfer_M[4][3] = - Length * 0.5;
-                Transfer_M[5][1] = -1,Transfer_M[5][2] = 0,Transfer_M[5][3] =   Width  * 0.5;
-                Transfer_M[6][1] = 0,Transfer_M[6][2] = -1,Transfer_M[6][3] = - Length * 0.5;
-                Transfer_M[7][1] = -1,Transfer_M[7][2] = 0,Transfer_M[7][3] = - Width  * 0.5;
-                Transfer_M[8][1] = 0,Transfer_M[8][2] = -1,Transfer_M[8][3] = - Length * 0.5;
+                Transfer_M[5][1] = -1,Transfer_M[5][2]= 0,Transfer_M[5][3] =   Width  * 0.5;
+                Transfer_M[6][1] = 0,Transfer_M[6][2] =-1,Transfer_M[6][3] = - Length * 0.5;
+                Transfer_M[7][1] = -1,Transfer_M[7][2]= 0,Transfer_M[7][3] = - Width  * 0.5;
+                Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
 
