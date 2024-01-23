@@ -98,13 +98,38 @@ namespace RopoDiffySwervePID{
             }
 
             double get_velocity(){
-                double v1 = motor1.get_actual_velocity() * RopoMath::Pi / 30;
-                double v2 = motor2.get_actual_velocity() * RopoMath::Pi / 30;
+                static float M1_vel_last  = 0, M2_vel_last  = 0, M1_vel_now = 0, M2_vel_now = 0;
+                M1_vel_now = motor1.get_actual_velocity();
+                M2_vel_now = motor2.get_actual_velocity();
+
+                // ERR Solution
+                if(M1_vel_now == PROS_ERR_F) M1_vel_now = M1_vel_last;
+                if(M2_vel_now == PROS_ERR_F) M2_vel_now = M2_vel_last;
+
+                M1_vel_last = M1_vel_now;
+                M2_vel_last = M2_vel_now;
+
+                double v1 = M1_vel_now * RopoMath::Pi / 30;
+                double v2 = M2_vel_now * RopoMath::Pi / 30;
                 return (v1 - v2) * SpinRatio;
             }
             double get_direction(){
-                double theta1 = motor1.get_position() * RopoMath::Pi /180;   
-                double theta2 = motor2.get_position() * RopoMath::Pi /180; 
+                static float M1_pos_basis = 0, M2_pos_basis = 0;
+                static float M1_pos_last  = 0, M2_pos_last  = 0, M1_pos_now = 0, M2_pos_now = 0;
+                M1_pos_now = motor1.get_direction();
+                M2_pos_now = motor2.get_direction();
+
+                // ERR Solution
+                if(M1_pos_now == PROS_ERR_F) M1_pos_now = M1_pos_basis = M1_pos_last;
+                else M1_pos_now += M1_pos_basis;
+                if(M2_pos_now == PROS_ERR_F) M2_pos_now = M2_pos_basis = M2_pos_last;
+                else M2_pos_now += M2_pos_basis;
+
+                M1_pos_last = M1_pos_now;
+                M2_pos_last = M2_pos_now;
+
+                double theta1 = M1_pos_now * RopoMath::Pi /180;   
+                double theta2 = M2_pos_now * RopoMath::Pi /180; 
                 return (theta1 + theta2) * AngleRatio; 
             }
 
