@@ -39,30 +39,30 @@ namespace RopoDevice{
 	// 创建电机
 	namespace Motors{
 
-		const int LeftChassisMotor1Port  	= 12;
-		const int LeftChassisMotor2Port  	= 14;
-		const int LeftChassisMotor3Port  	= 18;
-        const int LeftChassisMotor4Port  	= 19;
-		const int RightChassisMotor1Port	= 3;
-		const int RightChassisMotor2Port	= 4;
-		const int RightChassisMotor3Port	= 5;
-		const int RightChassisMotor4Port	= 9;
+		const int LeftChassisMotor1Port  	= 10;
+		const int LeftChassisMotor2Port  	= 9;
+		const int LeftChassisMotor3Port  	= 5;
+        const int LeftChassisMotor4Port  	= 1;
+		const int RightChassisMotor1Port	= 20;
+		const int RightChassisMotor2Port	= 19;
+		const int RightChassisMotor3Port	= 15;
+		const int RightChassisMotor4Port	= 11;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
 		pros::Motor      LeftChassisMotor1 (LeftChassisMotor1Port  , 	ChassisGearset, false);
-		pros::Motor      LeftChassisMotor2 (LeftChassisMotor2Port  , 	ChassisGearset, false);
-		pros::Motor      LeftChassisMotor3 (LeftChassisMotor3Port  , 	ChassisGearset, false);
+		pros::Motor      LeftChassisMotor2 (LeftChassisMotor2Port  , 	ChassisGearset, true);
+		pros::Motor      LeftChassisMotor3 (LeftChassisMotor3Port  , 	ChassisGearset, true);
         pros::Motor      LeftChassisMotor4 (LeftChassisMotor4Port  , 	ChassisGearset, false);
         
 
 		pros::Motor      RightChassisMotor1(RightChassisMotor1Port ,	ChassisGearset, false);
-		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, false);
-		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, false);
+		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, true);
+		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, true);
         pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
         
 
-		const FloatType ChassisRatio = 56.0 /44.0;
+		const FloatType ChassisRatio = 1.8 / 1.0;
 		bool ChassisControllerMode = false;
 		void LeftWheelMove	(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(-Velocity );
@@ -79,12 +79,15 @@ namespace RopoDevice{
 			
 		}
 
-		const int LeftLiftMotorPort		= 11;
-		const int RightLiftMotorPort    = 1;
+		const int LeftLiftMotorPort		= 3;
+		const int RightLiftMotorPort    = 2;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
-		
+
+		const int IntakeMotorPort = 18;
+		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
+		pros::Motor   IntakeMotor ( IntakeMotorPort, IntakeGearset, false );
 	}
 
 	namespace Gpss{
@@ -157,8 +160,9 @@ namespace RopoDevice{
 		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		// Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		// Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	}
 
 }

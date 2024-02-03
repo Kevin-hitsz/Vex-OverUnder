@@ -4,20 +4,12 @@
 #include "RopoPosition.hpp"
 #include "pros/misc.h"
 #include "pros/rtos.hpp"
-void test();
+// void test();
 namespace ControllerModule {
 
 	void BoolSwitch(void * Parameter){
 		bool *p = static_cast<bool *>(Parameter);
 		(*p) ^= 1;
-	}
-
-	void Push(){
-		RopoDevice::ThreeWire::ExternPneumatic.set_value(true);
-	}
-
-	void Pull(){
-		RopoDevice::ThreeWire::ExternPneumatic.set_value(false);
 	}
 
 	bool externFlag = false;
@@ -69,6 +61,29 @@ namespace ControllerModule {
 		}
 	}
 
+	bool intaker_forward = false;
+	bool intaker_backward = false;
+	void RollIntaker(){
+		if (intaker_forward && !intaker_backward) {
+			RopoDevice::Motors::IntakeMotor.move_velocity(400);
+		}
+		else if (!intaker_forward && intaker_backward) {
+			RopoDevice::Motors::IntakeMotor.move_velocity(-400);
+		}
+		else {
+			RopoDevice::Motors::IntakeMotor.move_velocity(0);
+		}
+	}
+
+	void SwitchIntakerFor(){
+		intaker_forward ^= 1;
+		RollIntaker();
+	}
+
+	void SwitchIntakerBack(){
+		intaker_backward ^= 1;
+		RollIntaker();
+	}
 	// void ControllerPrint(){
 	// 	while(true) {
 	// 		pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -83,11 +98,11 @@ namespace ControllerModule {
 }
 
 void initialize() {
-	pros::lcd::initialize();
-	pros::delay(50);
-	RopoDevice::DeviceInit();
+	// pros::lcd::initialize();
+	// pros::delay(50);
+	// RopoDevice::DeviceInit();
 	RopoDevice::MotorsInit();
-	RopoDevice::Position_Motor::MyPosition.initial();
+	// RopoDevice::Position_Motor::MyPosition.initial();
 }
 
 void disabled() {}
@@ -95,13 +110,13 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	test();
+	// test();
 }
 
 void opcontrol()
 {
 
-	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
+	// pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	// pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
@@ -115,12 +130,10 @@ void opcontrol()
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 
 	MasterController.clear();
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::ChangeLift);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Lift);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::DoubleEdge, ControllerModule::SwitchIntakerFor);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::DoubleEdge, ControllerModule::SwitchIntakerBack);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1,RopoController::Rising,ControllerModule::ChangeCatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, ControllerModule::Switch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Push);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Falling, ControllerModule::Pull);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A  , RopoController::Rising,  RopoAuto::Auto_Find);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
 	ButtonDetectLine.Enable();
@@ -145,9 +158,9 @@ void opcontrol()
 	}
 }
 
-void test() {
-	RopoDevice::Chassis.AutoRotateAbs(90);
-	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
-	RopoDevice::Chassis.AutoPositionMove(0.5,0,-90);
-	RopoDevice::Chassis.AutoPositionMove(0.5,-0.5,-90);
-}
+// void test() {
+// 	RopoDevice::Chassis.AutoRotateAbs(90);
+// 	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
+// 	RopoDevice::Chassis.AutoPositionMove(0.5,0,-90);
+// 	RopoDevice::Chassis.AutoPositionMove(0.5,-0.5,-90);
+// }

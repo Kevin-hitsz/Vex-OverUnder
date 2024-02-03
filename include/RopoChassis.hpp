@@ -17,7 +17,7 @@ namespace RopoChassis{
 	
 	class TankChassis{
 		private:
-			static constexpr float WheelRad = 0.034925;						//轮子半径
+			static constexpr float WheelRad = 0.0508;						//轮子半径
 			static constexpr float ChassisParameter = (0.295+0.295)/2; 		//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
 
@@ -51,7 +51,7 @@ namespace RopoChassis{
 			bool flag;
 			
 			void OpenLoopMove(const Vector& Velocity) {
-				const FloatType ChassisRatio = 56.0 / 44.0;
+				const FloatType ChassisRatio = 1.8 / 1.0;
 				const FloatType radTorpm = 600 / 62.83;				
 				static Vector _Velocity(RopoMath::ColumnVector,2);
 				_Velocity = Velocity;
@@ -111,7 +111,7 @@ namespace RopoChassis{
 						
 						DeltaRotation = RopoMath::DeltaTwoPoint(CurrentPosition[1],CurrentPosition[2],AimPosition[1],AimPosition[2]);
 						Delta[3]=AimPosition[3]-CurrentPosition[3];
-						//防止+180到-180的角度突变
+						//寻找最小转角（注意+180到-180的角度突变）
 						while(Delta[3] >= 180.0) Delta[3] -= 360.0;
 						while(Delta[3] < -180.0) Delta[3] += 360.0;
 						//自动直行状态
