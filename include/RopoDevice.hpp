@@ -30,14 +30,14 @@ namespace RopoDevice{
 	}			
 	
 	namespace Motors{
-		const int LFMotorPort  	= 16;
-		const int LFMotorPort_ 	= 17;
-		const int LBMotorPort  	= 19;
-		const int LBMotorPort_ 	= 20;
-		const int RFMotorPort  	= 15;
-		const int RFMotorPort_ 	= 14;
-		const int RBMotorPort  	= 12;
-		const int RBMotorPort_ 	= 11;
+		const int LFMotorPort  	=  1;
+		const int LFMotorPort_ 	=  2;
+		const int LBMotorPort  	=  3;
+		const int LBMotorPort_ 	=  4;
+		const int RFMotorPort  	=  9;
+		const int RFMotorPort_ 	= 10;
+		const int RBMotorPort  	=  7;
+		const int RBMotorPort_ 	=  8;
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true);
 		Motor LBMotor (LBMotorPort,pros::E_MOTOR_GEAR_BLUE, true);

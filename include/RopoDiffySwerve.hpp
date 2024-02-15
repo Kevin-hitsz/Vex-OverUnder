@@ -10,7 +10,7 @@ namespace RopoDiffySwerve{
 
     class DiffySwerve{
         private:
-            static constexpr float SpinRatio = 2.0 / 3.0;// 轮速传动比
+            static constexpr float SpinRatio = 4.0 / 5.0;// 轮速传动比
             static constexpr float AngleRatio = 2.0 / 5.0; // 轮偏角传动比
             static constexpr float WheelRadius = 2.75 * 0.0254 / 2.0;// 轮半径
             static constexpr float Control_Time = 10; // ms
@@ -61,8 +61,18 @@ namespace RopoDiffySwerve{
                     // Limit Voltage
                     This -> Voltage[1][1] = RopoMath::Limit<float>(This -> Voltage[1][1], 12000.0);
                     This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
+
+                    // 手动解除震荡
+                    if( This -> AimStatus[3][1] == 0.0){
+                        This -> Motor_1.move_voltage(0);
+                        This -> Motor_2.move_voltage(0);
+                        pros::delay(This -> Control_Time);
+                        continue;
+                    }
                     This -> Motor_1.move_voltage((int)This -> Voltage[1][1]);
                     This -> Motor_2.move_voltage((int)This -> Voltage[2][1]);
+                    // This -> x1 = (int)This -> Voltage[1][1];
+                    // This -> x2 = (int)This -> Voltage[2][1];
                     pros::delay(This -> Control_Time);
                 }
             }
@@ -71,6 +81,7 @@ namespace RopoDiffySwerve{
             FloatType A;
             FloatType A_;
             FloatType V;
+            float x1,x2;
 
 
             DiffySwerve(pros::Motor& _Motor_1, pros::Motor& _Motor_2)
@@ -94,7 +105,7 @@ namespace RopoDiffySwerve{
 
                 M2[1][1] = 1;
                 M2[2][1] = -1;
-                M2 = (45.0 / 177.0) * M2;
+                M2 = (75.0 / 354.0) * M2;
 
                 K[1][1] = -17.0294, K[1][2] = 0.5482; K[1][3] =  -0.4274;
                 K[2][1] = -17.0294; K[2][2] = 0.5482; K[2][3] =   0.4274;

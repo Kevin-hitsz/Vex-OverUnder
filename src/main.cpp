@@ -46,13 +46,13 @@ void opcontrol() {
 
 	while (true) {
 		
-		FloatType XInput =  1.5 * XVelocityInput.GetAxisValue();
-		FloatType YInput =  1.5 * YVelocityInput.GetAxisValue();
+		FloatType XInput =  2 * XVelocityInput.GetAxisValue();
+		FloatType YInput =  2 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -2 * WVelocityInput.GetAxisValue();	
-
 		RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
 		
-		pros::lcd::print(5,"%.3f,%.3f,%.3f",XInput,YInput,WInput);
+		// pros::lcd::print(5,"%.3f,%.3f,%.3f",XInput,YInput,WInput);
+		// pros::lcd::print(5,"%.3f,%.3f",RopoDevice::LB.x1,RopoDevice::LB.x2);
 
 		pros::delay(20);
 	}
