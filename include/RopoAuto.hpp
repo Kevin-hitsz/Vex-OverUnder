@@ -101,7 +101,7 @@ namespace RopoAuto{
         }
         if(Go_Flag){
             RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
-            pros::delay(3000);
+            pros::delay(300);
             Go_Flag = 0;
         }
     }

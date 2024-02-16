@@ -61,6 +61,18 @@ namespace ControllerModule {
 		catch_1 = 0;
 	}
 
+    void RollerIn(){
+		RopoDevice::Motors::RollerMotor.move_velocity(-600);
+	}
+	
+	void RollerOut(){
+		RopoDevice::Motors::RollerMotor.move_velocity(600);
+	}
+
+	void RollerStop(){
+		RopoDevice::Motors::RollerMotor.move_velocity(0);
+	}
+
 	void ChangeLift(){
 		if (catch_1 == 1) {
 			Hide();
@@ -69,17 +81,17 @@ namespace ControllerModule {
 		}
 	}
 
-	// void ControllerPrint(){
-	// 	while(true) {
-	// 		pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
-	// 		MasterController.print(0,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_yaw());
-	// 		pros::delay(10); 
-	// 		MasterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::Position_Motor::MyPosition.Get_X(),RopoDevice::Position_Motor::MyPosition.Get_Y());
-	// 		pros::delay(10); 
-	// 		MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
-	// 		pros::delay(10);
-	// 	}
-	// }
+	void ControllerPrint(){
+		while(true) {
+			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
+			MasterController.print(0,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_yaw());
+			pros::delay(10); 
+			MasterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::Position_Motor::MyPosition.Get_X(),RopoDevice::Position_Motor::MyPosition.Get_Y());
+			pros::delay(10); 
+			MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
+			pros::delay(10);
+		}
+	}
 }
 
 void initialize() {
@@ -102,11 +114,11 @@ void opcontrol()
 {
 
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
-	// pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
+	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType VelocityMax = 2.3;
-	FloatType RopoWcLimit = 3.5;
+	FloatType RopoWcLimit = 5;
 	bool ChassisMove = false;
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
@@ -115,20 +127,23 @@ void opcontrol()
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 
 	MasterController.clear();
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::ChangeLift);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::Lift);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1,RopoController::Rising,ControllerModule::ChangeCatch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, ControllerModule::Switch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Push);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Falling, ControllerModule::Pull);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, ControllerModule::ChangeLift);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, ControllerModule::Lift);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2,RopoController::Rising,ControllerModule::ChangeCatch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1,RopoController::Rising,ControllerModule::RollerIn);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1,RopoController::Falling,ControllerModule::RollerStop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2,RopoController::Rising,ControllerModule::RollerOut);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2,RopoController::Falling,ControllerModule::RollerStop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Switch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A  , RopoController::Rising,  RopoAuto::Auto_Find);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
 	ButtonDetectLine.Enable();
 
 	while (true) {
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
-		FloatType RopoWc = RopoWcLimit-XInput*0.6;			
+		FloatType RopoWc = RopoWcLimit-fabs(XInput)*0.8;			
 
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.06 ) {
 			Velocity[1] = Velocity[2] = 0;
