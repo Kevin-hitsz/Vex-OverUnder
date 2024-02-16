@@ -4,7 +4,7 @@
 #include "RopoPosition.hpp"
 #include "pros/misc.h"
 #include "pros/rtos.hpp"
-// void test();
+void test();
 namespace ControllerModule {
 
 	void BoolSwitch(void * Parameter){
@@ -31,11 +31,15 @@ namespace ControllerModule {
 		while(pros::millis()-aa<45000){
 			pros::delay(100);
 		}
+		MasterController1.rumble("-.-");
+		while(pros::millis()-aa<55000){
+			pros::delay(100);
+		}
 		MasterController1.rumble("-.-.-");
 		while(pros::millis()-aa<65000){
 			pros::delay(100);
 		}
-		MasterController1.rumble("-.-.-");
+		MasterController1.rumble("-.-.-.-");
 	}
 	int catch_1 = 0;
 	void Hold(){
@@ -65,10 +69,10 @@ namespace ControllerModule {
 	bool intaker_backward = false;
 	void RollIntaker(){
 		if (intaker_forward && !intaker_backward) {
-			RopoDevice::Motors::IntakeMotor.move_velocity(400);
+			RopoDevice::Motors::IntakeMotor.move_velocity(-500);
 		}
 		else if (!intaker_forward && intaker_backward) {
-			RopoDevice::Motors::IntakeMotor.move_velocity(-400);
+			RopoDevice::Motors::IntakeMotor.move_velocity(500);
 		}
 		else {
 			RopoDevice::Motors::IntakeMotor.move_velocity(0);
@@ -100,7 +104,7 @@ namespace ControllerModule {
 void initialize() {
 	pros::lcd::initialize();
 	pros::delay(50);
-	// RopoDevice::DeviceInit();
+	RopoDevice::DeviceInit();
 	RopoDevice::MotorsInit();
 	RopoDevice::Position_Motor::MyPosition.initial();
 }
@@ -110,7 +114,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	// test();
+	test();
 }
 
 void opcontrol()
@@ -160,9 +164,9 @@ void opcontrol()
 	}
 }
 
-// void test() {
-// 	RopoDevice::Chassis.AutoRotateAbs(90);
-// 	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
-// 	RopoDevice::Chassis.AutoPositionMove(0.5,0,-90);
-// 	RopoDevice::Chassis.AutoPositionMove(0.5,-0.5,-90);
-// }
+void test() {
+	RopoDevice::Chassis.AutoRotateAbs(90);
+	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
+	RopoDevice::Chassis.AutoPositionMove(0.5,0,-90);
+	RopoDevice::Chassis.AutoPositionMove(0.5,-0.5,-90);
+}

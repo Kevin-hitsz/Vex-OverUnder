@@ -8,7 +8,7 @@
 namespace RopoLifter{
 
     // Params
-    const double HoldingPosition = 600.0;
+    const double HoldingPosition = 400.0;
     const double WaitingPosition = 98.0;
     const double HiddenPosition = 0.0;
     const double LifterRatio = 1.0;  

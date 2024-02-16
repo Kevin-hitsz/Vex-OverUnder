@@ -30,7 +30,7 @@ namespace RopoDevice{
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 17;
+		const int InertialPort = 12;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 16;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
@@ -83,9 +83,9 @@ namespace RopoDevice{
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 
-		const int RollerMotorPort		= 18;
-		const pros::motor_gearset_e_t RollerGearset = pros::E_MOTOR_GEAR_BLUE;
-		pros::Motor   RollerMotor ( RollerMotorPort  , 	LiftGearset, false );
+		const int IntakeMotorPort		= 18;
+		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
+		pros::Motor   IntakeMotor ( IntakeMotorPort  , 	IntakeGearset, false );
 		
 	}
 
@@ -136,16 +136,6 @@ namespace RopoDevice{
         Sensors::Inertial.reset(true);
         while(Sensors::Inertial.is_calibrating())pros::delay(20);
 		pros::delay(200);
-		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		
-		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		
 		Position_Motor::MyPosition.initial();
 	}
 

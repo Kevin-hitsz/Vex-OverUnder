@@ -38,16 +38,17 @@ namespace RopoGpsAddPosition {
 				GpsAddPositionModule *This = static_cast<GpsAddPositionModule *>(Parameter);
                 This -> cnt_update = 0;
                 while(true) {
-                    This -> originalPosition = This -> GetCurPosition();
+                    This -> originalPosition = This -> GetCurPosition();//从原函数指针获取的坐标三元素x,y,theta
                     This -> transformedPosition[1] = This -> gpsRelativeX0 + This -> originalPosition[1] - This -> originalX0;
                     This -> transformedPosition[2] = This -> gpsRelativeY0 + This -> originalPosition[2] - This -> originalY0;
-                    This -> transformedPosition[3] = This -> originalPosition[3];
+                    //x,y坐标通过gps是否更新来使得全场定位，gps的全场坐标通过坐标转换，转换为对于车体初始化的相对坐标
+                    This -> transformedPosition[3] = This -> originalPosition[3];//theta直接拿来
 
                     This -> GpsTransformUpdate();
                     pros::delay(This -> sampleTime);
-                    if(This -> updateFlag != 0){
+                    if(This -> updateFlag != 0) {
                         This -> cnt_update++;
-                        if(This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.012){
+                        if(This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.02){
                             This -> GpsUpdate();
                             This -> cnt_update = 0;
                         }
@@ -64,39 +65,26 @@ namespace RopoGpsAddPosition {
             }
 
             void GpsUpdate() {
-                originalX0 = originalPosition[1];
-                originalY0 = originalPosition[2];
-                gpsRelativeX0 = gpsRelativeX;
-                gpsRelativeY0 = gpsRelativeY;
+                    
+                    originalX0 = originalPosition[1];
+                    originalY0 = originalPosition[2];
+                    gpsRelativeX0 = gpsRelativeX;
+                    gpsRelativeY0 = gpsRelativeY;
             }
 
-            FloatType GetGpsTransformRelativePositionX() {
-                return gpsRelativeX;
-            }
+            FloatType GetGpsTransformRelativePositionX() {return gpsRelativeX;}
 
-            FloatType GetGpsTransformRelativePositionY() {
-                return gpsRelativeY;
-            }
+            FloatType GetGpsTransformRelativePositionY() {return gpsRelativeY;}
 
-            Vector GetTransformedPosition() {
-                return transformedPosition;
-            }
+            Vector    GetTransformedPosition() {return transformedPosition;}
 
-            FloatType GetTransformedPositionX() {
-                return transformedPosition[1];
-            }
+            FloatType GetTransformedPositionX() {return transformedPosition[1];}
 
-            FloatType GetTransformedPositionY() {
-                return transformedPosition[2];
-            }
+            FloatType GetTransformedPositionY() {return transformedPosition[2];}
 
-            FloatType GetTransformedPositionTheta() {
-                return transformedPosition[3];
-            }
+            FloatType GetTransformedPositionTheta() {return transformedPosition[3];}
 
-            void SetUpdateFlag(int updateFlag_) {
-                updateFlag = updateFlag_;
-            }
+            void      SetUpdateFlag(int updateFlag_) {updateFlag = updateFlag_;}
     };
 }
 
