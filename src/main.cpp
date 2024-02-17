@@ -88,6 +88,24 @@ namespace ControllerModule {
 		intaker_backward ^= 1;
 		RollIntaker();
 	}
+
+	void TurnAround(){
+		RopoDevice::Chassis.AutoRotateRelative(180);
+	}
+
+	void AutoLift(){
+		RopoDevice::Chassis.MoveVelocity(-0.6,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(-0.3,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		//ChangeCatch();
+		RopoDevice::Chassis.MoveVelocity(0.3,0);
+		pros::delay(500);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+
+	}
+
 	void ControllerPrint(){
 		while(true) {
 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -138,9 +156,10 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2,RopoController::Rising,ControllerModule::ChangeCatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::DoubleEdge, ControllerModule::SwitchIntakerFor);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::DoubleEdge, ControllerModule::SwitchIntakerBack);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, ControllerModule::TurnAround);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Switch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A  , RopoController::Rising,  RopoAuto::Auto_Find);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP  , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
 	ButtonDetectLine.Enable();
 

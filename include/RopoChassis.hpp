@@ -270,6 +270,7 @@ namespace RopoChassis{
 			{
 				SlowDegRegulator.Reset();
 				flag=false;
+				RelativeDegree += (GetCurPosition())[3];
 				if(RelativeDegree > 180 ) RelativeDegree -= 180;
 				if(RelativeDegree < -180 ) RelativeDegree += 180;
 				AimPosition[3] = RelativeDegree;
