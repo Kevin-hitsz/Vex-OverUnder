@@ -52,7 +52,7 @@ namespace RopoMath{
         static const double Delta = 1E-3;
         return Input / (fabs(Input) + Delta);
     }
-	template<class T>inline T LowPassFilter(T Intput, T Last_Input, T CutOff, T Sample_Rate){
+	float LowPassFilter(float Intput, float Last_Input, float CutOff, float Sample_Rate){
         // Cutoff Frequency unit: Hz
         // Sample_Rate unit: Hz
         double K = 2 * Pi * CutOff / Sample_Rate;

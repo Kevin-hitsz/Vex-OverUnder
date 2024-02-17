@@ -63,12 +63,14 @@ namespace RopoDiffySwerve{
                     This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
 
                     // 手动解除震荡
-                    if( This -> AimStatus[3][1] == 0.0){
-                        This -> Motor_1.move_voltage(0);
-                        This -> Motor_2.move_voltage(0);
-                        pros::delay(This -> Control_Time);
-                        continue;
-                    }
+                    // if( This -> AimStatus[3][1] == 0.0){
+                    //     This -> Motor_1.move_voltage(0);
+                    //     This -> Motor_2.move_voltage(0);
+                    //     pros::delay(This -> Control_Time);
+                    //     continue;
+                    // }
+
+                    // Ensure that LowPassFilter function is defined and correctly declared in the RopoMath namespace
                     This -> Motor_1.move_voltage((int)This -> Voltage[1][1]);
                     This -> Motor_2.move_voltage((int)This -> Voltage[2][1]);
                     // This -> x1 = (int)This -> Voltage[1][1];
@@ -86,9 +88,9 @@ namespace RopoDiffySwerve{
 
             DiffySwerve(pros::Motor& _Motor_1, pros::Motor& _Motor_2)
 				:Motor_1(_Motor_1), Motor_2(_Motor_2), Status(3, 1),
-                AimStatus(3, 1), Voltage(2, 1),
+                AimStatus(3, 1), Voltage(2, 1), 
                 K(2, 3), M1(3, 3), M2(2, 1),
-                BackgroundTaskPtr(nullptr) { }
+                BackgroundTaskPtr(nullptr) {}
             ~DiffySwerve(){
                 delete BackgroundTaskPtr;
             }
@@ -107,8 +109,8 @@ namespace RopoDiffySwerve{
                 M2[2][1] = -1;
                 M2 = (75.0 / 354.0) * M2;
 
-                K[1][1] = -17.0294, K[1][2] = 0.5482; K[1][3] =  -0.4274;
-                K[2][1] = -17.0294; K[2][2] = 0.5482; K[2][3] =   0.4274;
+                K[1][1] = -20.0000, K[1][2] = 0.4563; K[1][3] =  -0.3312;
+                K[2][1] = -20.0000, K[2][2] = 0.4563; K[2][3] =   0.3312;
 			}                                                              
             inline void SetAimStatus(float _AimSpeed, float _AimAngle) {
 				AimStatus[1][1] = _AimAngle;
@@ -140,9 +142,6 @@ namespace RopoDiffySwerve{
 
                 // 轮偏角(rad)
                 Status[1][1] = (M1_pos_now + M2_pos_now) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
-
-                pros::lcd::print(1, "%f", (M1_pos_now + M2_pos_now) / 2.0 * RopoMath::Pi / 180.0);
-
                 // 偏角速度(rad/s)
                 Status[2][1] = (M1_vel_now + M2_vel_now) / 2.0 * RopoMath::Pi / 30.0 * AngleRatio;
                 // 轮速(rad/s)
