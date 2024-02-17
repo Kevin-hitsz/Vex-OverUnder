@@ -62,7 +62,7 @@ namespace RopoDevice{
         pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
         
 
-		const FloatType ChassisRatio = 1.8 / 1.0;
+		const FloatType ChassisRatio = 9.0 / 4.0;
 		bool ChassisControllerMode = false;
 		void LeftWheelMove	(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(-Velocity );
