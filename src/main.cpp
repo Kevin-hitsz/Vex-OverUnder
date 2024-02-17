@@ -95,12 +95,22 @@ namespace ControllerModule {
 
 	void AutoLift(){
 		RopoDevice::Chassis.MoveVelocity(-0.6,0);
+		pros::delay(400);
+		RopoDevice::Chassis.MoveVelocity(-0.3,0);
+		pros::delay(500);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		ChangeCatch();
+		RopoDevice::Chassis.MoveVelocity(-0.6,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(-1.2,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(-2.0,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(-1.3,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(-0.6,0);
 		pros::delay(1000);
 		RopoDevice::Chassis.MoveVelocity(-0.3,0);
-		pros::delay(1000);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		//ChangeCatch();
-		RopoDevice::Chassis.MoveVelocity(0.3,0);
 		pros::delay(500);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 
