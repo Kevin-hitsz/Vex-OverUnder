@@ -93,6 +93,10 @@ namespace ControllerModule {
 		RopoDevice::Chassis.AutoRotateRelative(180);
 	}
 
+	void GpsUpdate(){
+		RopoDevice::gpsAddPosition.GpsUpdate();
+	}
+
 	void AutoLift(){
 		RopoDevice::Chassis.MoveVelocity(-0.6,0);
 		pros::delay(400);
@@ -152,7 +156,7 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 2.3;
+	FloatType VelocityMax = 1.8;//1.4
 	FloatType RopoWcLimit = 5;
 	bool ChassisMove = false;
 	
@@ -171,14 +175,14 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A  , RopoController::Rising,  RopoAuto::Auto_Find);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP  , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  RopoDevice::gpsAddPosition.GpsUpdate);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::GpsUpdate);
 
 	ButtonDetectLine.Enable();
 
 	while (true) {
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
-		FloatType RopoWc = RopoWcLimit-fabs(XInput)*0.8;			
+		FloatType RopoWc = RopoWcLimit-fabs(XInput)*1.1;			
 
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.06 ) {
 			Velocity[1] = Velocity[2] = 0;
