@@ -3,13 +3,9 @@
 
 #include "RopoApi.hpp"
 #include "RopoDiffySwerve.hpp"
-#include "pros/llemu.hpp"
 #include <cmath>
 
 namespace RopoChassis{
-    float Vx;
-    float Vy;
-    float W;
     class Chassis{
         private:
             const FloatType Length = 0.3672;

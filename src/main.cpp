@@ -3,7 +3,6 @@
 #include "RopoChassis.hpp"
 #include "RopoController.hpp"
 #include "RopoDevice.hpp"
-#include "RopoDiffySwerve.hpp"
 #include "RopoMath/Misc.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
@@ -118,9 +117,5 @@ void opcontrol() {
 		if(!RopoDevice::Chassis.IsAuto()) RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
 		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::GetPosition()[1][1], RopoDevice::Sensors::GetPosition()[2][1], RopoDevice::Sensors::GetPosition()[3][1] / RopoMath::Pi * 180.0);
 		pros::delay(20);
-		// MasterController.print(1, 0, "%d", RopoFunction::DetectLoader());
-		// pros::delay(20);
-		// MasterController.print(2,0,"%.2f, %.2f, %.2f", RopoChassis::Vx, RopoChassis::Vy, RopoChassis::W);
-		// pros::delay(20);
 	}
 }

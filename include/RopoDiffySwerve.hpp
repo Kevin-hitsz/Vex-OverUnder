@@ -3,7 +3,6 @@
 #include "RopoMath/Matrix.hpp"
 #include "RopoMath/Misc.hpp"
 #include "pros/error.h"
-#include "pros/llemu.hpp"
 #include "pros/motors.hpp"
 
 namespace RopoDiffySwerve{

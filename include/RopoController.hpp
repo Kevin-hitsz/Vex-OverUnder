@@ -2,7 +2,6 @@
 #ifndef ROPO_CONTROLLER_HPP
 #define ROPO_CONTROLLER_HPP
 
-#include "pros/llemu.hpp"
 #include "pros/misc.hpp"
 #include "pros/rtos.hpp"
 #include <vector>
@@ -10,7 +9,6 @@
 #include <cmath>
 
 namespace RopoController{
-
 	typedef enum {
 		Linear = 0,
 		Exp = 1,
