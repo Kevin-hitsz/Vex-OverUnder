@@ -53,7 +53,8 @@ namespace RopoChassis{
         public:
             enum ChassisStatus{
                 opcontrol = 0,
-                autonomous= 1
+                autonomous= 1,
+                freedrive = 2
             }Status;
             Matrix (* UpdatePosition)();
             Chassis(RopoDiffySwerve::DiffySwerve& LF_,RopoDiffySwerve::DiffySwerve& LB_,RopoDiffySwerve::DiffySwerve& RF_,RopoDiffySwerve::DiffySwerve& RB_,Matrix(* p_getposition)())
@@ -92,9 +93,18 @@ namespace RopoChassis{
             }
 
             bool IsAuto(){
-                if(Status == autonomous) return true;
+                if(Status == autonomous && Status == freedrive) return true;
                 else return false;
-            }           
+            }     
+
+            bool IsOpcontrol(){
+                if(Status == opcontrol) return true;
+                else return false;
+            }      
+
+            void FreeDrive(){
+                Status = freedrive;
+            }
     }; 
 }
 typedef RopoChassis::Chassis Chassis;

@@ -77,7 +77,13 @@ void competition_initialize() {}
 void autonomous(){
 	RopoDevice::Chassis.AutoStart();
 	pros::Task * BackgroundTaskPtr = new pros::Task(RopoDevice::PositionControl);
-	RopoDevice::SetPosition(0,0.2,RopoMath::Pi / 2,2000);
+	RopoDevice::SetPosition(0.32,0.40,41.7976 / 180 * RopoMath::Pi,2000);
+	RopoFunction::Extern();
+	RopoDevice::SetPosition(100, 100, 18.62 / 180 * RopoMath::Pi,600);
+	RopoFunction::Recycle();
+	RopoDevice::SetPosition(0.39, 0.37, -54.66 / 180 * RopoMath::Pi, 1500);
+	RopoDevice::SetPosition(0.78, 0.62, -90.21 / 180 * RopoMath::Pi, 2000);
+	RopoDevice::SetPosition(0.23, 0.33, -47.07 / 180 * RopoMath::Pi, 1500);
 
 
 	RopoDevice::Chassis.Autoend();
@@ -114,7 +120,7 @@ void opcontrol() {
 		FloatType XInput =  2 * XVelocityInput.GetAxisValue();
 		FloatType YInput =  2 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -3 * WVelocityInput.GetAxisValue();	
-		if(!RopoDevice::Chassis.IsAuto()) RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
+		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
 		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::GetPosition()[1][1], RopoDevice::Sensors::GetPosition()[2][1], RopoDevice::Sensors::GetPosition()[3][1] / RopoMath::Pi * 180.0);
 		pros::delay(20);
 	}
