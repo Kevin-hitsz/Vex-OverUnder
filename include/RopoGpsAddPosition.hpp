@@ -15,6 +15,7 @@ namespace RopoGpsAddPosition {
             FloatType gpsRelativeX, gpsRelativeY;
             FloatType gpsRelativeX0, gpsRelativeY0;
             FloatType originalX0, originalY0;
+            FloatType originalX, originalY;
             int sampleTime;
             int updateFlag;
             int cnt_update;
@@ -62,12 +63,14 @@ namespace RopoGpsAddPosition {
                 double theta = RopoParameter::ROPO_HEADING_INITIAL;
                 gpsRelativeX =  X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta);
                 gpsRelativeY = -X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta);
+                originalX = originalPosition[1];
+                originalY = originalPosition[2];
             }
 
             void GpsUpdate() {
                     
-                    originalX0 = originalPosition[1];
-                    originalY0 = originalPosition[2];
+                    originalX0 = originalX;
+                    originalY0 = originalY;
                     gpsRelativeX0 = gpsRelativeX;
                     gpsRelativeY0 = gpsRelativeY;
             }

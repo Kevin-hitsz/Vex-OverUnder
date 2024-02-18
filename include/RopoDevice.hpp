@@ -30,7 +30,7 @@ namespace RopoDevice{
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 12;
+		const int InertialPort = 17;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 16;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
@@ -118,7 +118,7 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,2);
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,2,200);
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
