@@ -304,15 +304,14 @@ namespace RopoChassis{
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
 				while(!flag) pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!flag) pros::delay(200);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
 				while(!flag) pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!flag) pros::delay(200);
 			}
 
-			
 			/// @brief 直接使车移动到目标点并旋转至目标角度
 			/// @param AimX 目标X坐标
 			/// @param AimY 目标Y坐标

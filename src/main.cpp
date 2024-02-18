@@ -6,6 +6,7 @@
 #include "pros/rtos.hpp"
 void test();
 void skill();
+void autonomous_1();
 namespace ControllerModule {
 
 	void BoolSwitch(void * Parameter){
@@ -147,13 +148,13 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	skill();
+	autonomous_1();
 }
 
 void opcontrol()
 {
 
-	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
+	//pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
@@ -205,6 +206,63 @@ void test(){
 	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
 	RopoDevice::Chassis.AutoPositionMove(0,0.5,-90);
 	//RopoDevice::Chassis.AutoPositionMove(0.5,-0.5,-90);
+}
+
+void autonomous_1(){
+	// --------- begin ------------
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(500);
+	RopoDevice::Chassis.AutoRotateAbs(-60);
+	pros::delay(1000);
+	ControllerModule::SwitchIntakerBack();//1+
+
+	pros::delay(700);
+	ControllerModule::SwitchIntakerBack();//1-			吐
+
+	ControllerModule::SwitchIntakerFor();//1+
+	RopoDevice::Chassis.AutoPositionMove(0.55,0.35);
+	RopoDevice::Chassis.MoveVelocity(0.2,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(100);
+	ControllerModule::SwitchIntakerFor();//1-			吃
+
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	pros::delay(1000);
+	RopoDevice::Chassis.AutoPositionMove(0.55,0.1);
+
+	ControllerModule::SwitchIntakerBack();//1+
+	pros::delay(700);
+	ControllerModule::SwitchIntakerBack();//1-			吐
+
+	RopoDevice::Chassis.AutoDirectMove(0.55,0.46,true);
+	pros::delay(800);
+	ControllerModule::ChangeLift();		// 放
+	pros::delay(1500);
+
+	RopoDevice::Chassis.MoveVelocity(0.3,0);
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,1);
+	pros::delay(500);
+	RopoDevice::Chassis.AutoRotateAbs(90);
+	pros::delay(1000);
+	ControllerModule::ChangeLift();		// 收
+	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(-0.4,0);
+	pros::delay(600);
+
+	RopoDevice::Chassis.AutoPositionMove(0.62,0.401);
+	RopoDevice::Chassis.AutoRotateAbs(5);
+	pros::delay(1000);
+
+	ControllerModule::SwitchIntakerBack();//1+
+	RopoDevice::Chassis.AutoPositionMove(0.85,0.401);
+	pros::delay(500);
+	ControllerModule::SwitchIntakerBack();//1-
+
+	// --------- end --------------
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 }
 
 void skill(){

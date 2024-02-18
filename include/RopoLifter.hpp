@@ -100,7 +100,7 @@ namespace RopoLifter{
                     case HOLDING:
                         pros::lcd::print(1,"hold");
                         This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);              
-                        This -> LeftMotor.move_absolute(HoldingPosition,65);
+                        This -> LeftMotor.move_absolute(HoldingPosition,120);
                         while (fabs(This->LifterPosition-HoldingPosition) > 3.0)
                         {
                             if (This -> breaktag) break;
