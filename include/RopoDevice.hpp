@@ -35,8 +35,8 @@ namespace RopoDevice{
 		Matrix GetPosition(){
 			Matrix Position(3,1);
 			if(RopoDevice::Sensors::Encoder.IsReading() == true){
-				Position[1][1] = RopoDevice::Sensors::Encoder.GetPosX() / 1000.0;
-				Position[2][1] = RopoDevice::Sensors::Encoder.GetPosY() / 1000.0;
+				Position[2][1] =-RopoDevice::Sensors::Encoder.GetPosX() / 1000.0;
+				Position[1][1] = RopoDevice::Sensors::Encoder.GetPosY() / 1000.0;
 			}
 			Position[3][1] = - RopoDevice::Sensors::Inertial.get_yaw() / 180.0 * RopoMath::Pi;
 			return Position;
@@ -83,4 +83,74 @@ namespace RopoDevice{
 	RopoDiffySwerve::DiffySwerve RF(Motors::RFMotor,Motors::RFMotor_);
 	RopoDiffySwerve::DiffySwerve RB(Motors::RBMotor,Motors::RBMotor_);
 	Chassis Chassis(LF,LB,RF,RB,Sensors::GetPosition);
+
+	bool Position_OK = false;
+    bool Time_Out = false;
+    static constexpr float ControlTime = 20; // ms
+    FloatType XYMinError = 0.01;
+    FloatType ThetaMinError = 0.01;
+    int counter_for_error = 0;
+    const int max_counter = 50;
+    int counter_for_time = 0;
+    int max_time = 1000; // ms
+    Matrix AimPosition = Matrix(3,1);
+    Matrix Velocity = Matrix(3,1); 
+    Matrix ActualPosition = Matrix(3,1);
+    Matrix PositionError = Matrix(3,1);
+    Matrix Kp = Matrix(3,3);
+    Matrix Ki = Matrix(3,3);
+    Matrix Integrator = Matrix(3,1);
+    Matrix Parameter = Matrix(3,3);
+
+    void PositionControl(){
+        Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 5;
+        while(Chassis.Status == Chassis.ChassisStatus::autonomous){
+        ActualPosition = Chassis.UpdatePosition();
+        PositionError = AimPosition - ActualPosition;
+        // 限定作用域 
+        if(fabsf(PositionError[3][1]) > RopoMath::Pi) PositionError[3][1] -= 2 * RopoMath::Pi * RopoMath::Sign(PositionError[3][1]);
+        // 减少震荡
+        if(fabsf(PositionError[1][1]) < XYMinError && fabsf(PositionError[2][1]) < XYMinError && fabsf(PositionError[3][1]) < ThetaMinError){
+            counter_for_error++;
+            if (counter_for_error > max_counter){
+                Position_OK = true;
+                counter_for_error = max_counter;
+            }
+        }else{
+            counter_for_error = 0;
+            Position_OK = false;
+        }
+        if(Position_OK) Velocity[1][1] = Velocity[2][1] = Velocity[3][1] = 0;
+        else{
+            Velocity = Kp * PositionError;
+            Velocity[1][1] = fabsf(Velocity[1][1]) > 1.2 ? 1.2 * RopoMath::Sign(Velocity[1][1]) : Velocity[1][1];
+            Velocity[2][1] = fabsf(Velocity[2][1]) > 1.2 ? 1.2 * RopoMath::Sign(Velocity[2][1]) : Velocity[2][1];
+            Velocity[3][1] = fabsf(Velocity[3][1]) > (1.5 * RopoMath::Pi) ? (1.5 * RopoMath::Pi * RopoMath::Sign(Velocity[3][1])) : Velocity[3][1];
+            // Rotaion Matrix
+            Parameter[1][1] = cosf(ActualPosition[3][1]) , Parameter[1][2] = sinf(ActualPosition[3][1]) , Parameter[1][3] = 0;
+            Parameter[2][1] =-sinf(ActualPosition[3][1]) , Parameter[2][2] = cosf(ActualPosition[3][1]) , Parameter[2][3] = 0;
+            Parameter[3][1] = 0                          , Parameter[3][2] = 0                          , Parameter[3][3] = 1;
+            Velocity = Parameter * Velocity;
+        }
+		Velocity[2][1] = -Velocity[2][1];
+        Chassis.SetAimStatus(Velocity);
+
+
+        if(counter_for_time * ControlTime > max_time) Time_Out = true;
+        counter_for_time++;
+        pros::delay(ControlTime);
+        }
+    }
+    void SetPosition(FloatType x, FloatType y, FloatType theta, int _max_time){
+        counter_for_time = 0;
+        counter_for_error = 0;
+        Integrator[1][1] = Integrator[2][1] = Integrator[3][1] = 0;
+        max_time = _max_time;
+        Position_OK = false;
+        Time_Out = false;
+        AimPosition[1][1] = x;
+        AimPosition[2][1] = y;
+        AimPosition[3][1] = theta;
+        while (!Position_OK && !Time_Out) pros::delay(20);
+    }
 }
