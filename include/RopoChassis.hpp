@@ -7,6 +7,9 @@
 #include <cmath>
 
 namespace RopoChassis{
+    float Vx;
+    float Vy;
+    float W;
     class Chassis{
         private:
             const FloatType Length = 0.3672;
@@ -75,7 +78,7 @@ namespace RopoChassis{
             void PositionControl(){
                 Kp[1][1] = 1; Kp[2][2] = 1; Kp[3][3] = 5;
                 Ki[1][1] = 1; Ki[2][2] = 1; Ki[3][3] = 100;
-                while( Status == autonomous ){
+                while(Status == autonomous){
                 ActualPosition = UpdatePosition();
                 PositionError = AimPosition - ActualPosition;
                 // 限定作用域 
@@ -103,15 +106,12 @@ namespace RopoChassis{
                 Parameter[3][1] = 0 , Parameter[3][2] = 0 , Parameter[3][3] = 1;
                 Velocity = Parameter * Velocity;
                 SetAimStatus(Velocity);
+                Vx = Velocity[1][1];
+                Vy = Velocity[2][1];
+                W = Velocity[3][1];
 
                 if(counter_for_time * ControlTime > max_time) Time_Out = true;
                 counter_for_time++;
-                // MasterController.print(0,0,"%.1f %.1f %.1f", AimPosition[1][1], 
-                // AimPosition[2][1], AimPosition[3][1]);
-                // sprintf(RopoDevice::Sensors::debugger.SendBuffer.Message,"%f, %f, 
-                // %f, %f, %f, %f, %f, %f, %f\n", RopoDevice::AimPosition[1][1], ActualPosition[1][1], Velocity[1][1], RopoDevice::AimPosition[2][1], ActualPosition[2][1], 
-                // Velocity[2][1], RopoDevice::AimPosition[3][1], ActualPosition[3][1], 
-                // Velocity[3][1]);
                 pros::delay(ControlTime);
                 }
             }
@@ -142,6 +142,19 @@ namespace RopoChassis{
 
             void SetAimStatus(Matrix const AimStatus_){
                 AimStatus = AimStatus_;
+            }
+
+            void AutoStart(){
+                Status = autonomous;
+            }
+
+            void Autoend(){
+                Status = opcontrol;
+            }
+
+            bool IsAuto(){
+                if(Status == autonomous) return true;
+                else return false;
             }
 
             void SetPosition(FloatType x, FloatType y, FloatType theta, int _max_time){

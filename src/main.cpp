@@ -76,7 +76,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	RopoDevice::Chassis.SetPosition(2,2,0.0,2000);
+	RopoDevice::Chassis.AutoStart();
+	RopoDevice::Chassis.SetPosition(0.2,0,0.0,2000);
 }
 
 void opcontrol() {
@@ -90,7 +91,7 @@ void opcontrol() {
 	RopoController::AxisValueCast WVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_RIGHT_X,RopoController::Linear);
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::DoubleClick, autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising, autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Intake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Outtake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, RopoFunction::StopIn);
@@ -109,10 +110,12 @@ void opcontrol() {
 		FloatType XInput =  2 * XVelocityInput.GetAxisValue();
 		FloatType YInput =  2 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -3 * WVelocityInput.GetAxisValue();	
-		RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
-		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::GetPosition()[1][1], RopoDevice::Sensors::GetPosition()[2][1], RopoDevice::Sensors::GetPosition()[3][1] / RopoMath::Pi * 180.0);
-		pros::delay(20);
-		MasterController.print(1, 0, "%d", RopoFunction::DetectLoader());
+		if(!RopoDevice::Chassis.IsAuto()) RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
+		// MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::GetPosition()[1][1], RopoDevice::Sensors::GetPosition()[2][1], RopoDevice::Sensors::GetPosition()[3][1] / RopoMath::Pi * 180.0);
+		// pros::delay(20);
+		// MasterController.print(1, 0, "%d", RopoFunction::DetectLoader());
+		// pros::delay(20);
+		MasterController.print(2,0,"%.2f, %.2f, %.2f", RopoChassis::Vx, RopoChassis::Vy, RopoChassis::W);
 		pros::delay(20);
 	}
 }
