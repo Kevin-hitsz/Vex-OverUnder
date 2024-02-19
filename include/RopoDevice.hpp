@@ -14,6 +14,8 @@
 #include "RopoPosition.hpp"
 #include "RopoThrower.hpp"
 #include "RopoLifter.hpp"
+#include "RopoSensor/OpenMv.hpp"
+#include "pros/gps.hpp"
 
 namespace RopoDevice{
 
@@ -27,10 +29,20 @@ namespace RopoDevice{
 
 	}
 
-//创建惯性传感器
+//创建传感器
 	namespace Sensors{
+		//惯性传感器
 		const int InertialPort = 17;
 		pros::IMU Inertial(InertialPort);
+
+		//创建OpenMv
+		const int OpMvPort = 16;
+		RopoSensor::OpenMv Opmv(OpMvPort,115200,10);
+		
+		//创建gps
+		const int GpsPort=0;
+		pros::Gps gps(GpsPort);
+
 	}			
 	
 	// 创建电机
@@ -83,7 +95,7 @@ namespace RopoDevice{
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true );
 		
 	}
-
+	
 
 
 	// 创建定位模块
@@ -114,7 +126,7 @@ namespace RopoDevice{
 	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetPosition , 1 );
 
 
-
+	
 
 
 

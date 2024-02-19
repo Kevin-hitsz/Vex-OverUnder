@@ -96,18 +96,42 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	
+
+	while(1)
+	{
+		
+		RopoAuto::Auto_Find();
+		ControllerModule::ChangeLift();
+		pros::delay(600);
+		RopoDevice::Chassis.AutoPositionMove(1,0,90);
+		
+		ControllerModule::ChangeLift();
+		pros::delay(500);
+		RopoDevice::Chassis.MoveVelocity(0.3,0);
+		pros::delay(1000);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(100);
+		RopoDevice::Chassis.MoveVelocity(-0.3,0);
+		pros::delay(500);
+		
+		pros::delay(600);
+	}
+
 }
+
 
 void opcontrol()
 {
 
-		
-
-	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
+	autonomous();
+	while(1) pros::delay(1000);
+	
+	// pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	// pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
+
+
 	FloatType VelocityMax = 2.3;
 	FloatType RopoWcLimit = 3.5;
 	bool ChassisMove = false;
@@ -128,6 +152,9 @@ void opcontrol()
 	ButtonDetectLine.Enable();
 
 	while (true) {
+		
+	
+
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
 		FloatType RopoWc = RopoWcLimit-XInput*0.6;			

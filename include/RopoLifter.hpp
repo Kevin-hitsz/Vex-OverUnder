@@ -160,7 +160,7 @@ namespace RopoLifter{
                 }
             }
             pros::delay(Deltatime);
-            pros::lcd::print(2,"%f,%f",PositionVector[1],PositionVector[2]);
+            // pros::lcd::print(2,"%f,%f",PositionVector[1],PositionVector[2]);
         }
     }
     void   LifterModule::Hold()    { LifterState = HOLDING; ifReady = false; breaktag = true;}

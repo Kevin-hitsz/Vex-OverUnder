@@ -292,6 +292,7 @@ namespace RopoChassis{
 				while(!flag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,false);
+				while(!flag) pros::delay(100);
 			}
 
 			
