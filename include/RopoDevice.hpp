@@ -21,7 +21,7 @@ namespace RopoDevice{
 
 	//创建三线接口
 	namespace ThreeWire{
-		const char ExternPneumaticPort = 'B';
+		const char ExternPneumaticPort = 'H';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
 		const char CatchPneumaticPort  = 'A';
