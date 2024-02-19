@@ -23,11 +23,11 @@ namespace RopoParameter {
 	static constexpr double GPS_HEADING_INITIAL_0 = 180;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
-	static constexpr double GPSX_OFFSET = 0.0;
+	static constexpr double GPSX_OFFSET = -0.05;
 	static constexpr double GPSY_OFFSET = 0.0931;
 
 
-	// //skill
+	//skill
 	// static constexpr double FIELD_HEADING_INITIAL = 0.0;//比赛场地相对于战队场地，逆时针为+
 	// static constexpr double ROPO_HEADING_INITIAL  = -90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
@@ -40,7 +40,7 @@ namespace RopoParameter {
 	// static constexpr double GPS_HEADING_INITIAL_0 = 270;
 	// static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
-	// static constexpr double GPSX_OFFSET = 0.0;
+	// static constexpr double GPSX_OFFSET = -0.05;
 	// static constexpr double GPSY_OFFSET = 0.0931;
 
 };

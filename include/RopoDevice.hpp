@@ -103,9 +103,8 @@ namespace RopoDevice{
 
 // 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor);
-
 	FloatType GetHeading(){
-		return -RopoDevice::Sensors::Inertial.get_yaw();
+		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 
 	}
 
 // 坐标获取函数
@@ -114,11 +113,11 @@ namespace RopoDevice{
 		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
 		PositionVector[2] =  RopoDevice::Position_Motor::MyPosition.Get_Y();
 		PositionVector[3] =  GetHeading();
-
+		PositionVector[3] = (int((PositionVector[3] + 180.0 +14400) * 100.0) % 36000) / 100.0 - 180.0;
 		return PositionVector;
 	}
 
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,2);
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,10);
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
