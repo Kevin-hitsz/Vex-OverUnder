@@ -313,8 +313,14 @@ void skill(){
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0,-5);
 	pros::delay(1000);		
-	RopoDevice::Chassis.AutoRotateAbs(145);
+	RopoDevice::Chassis.AutoRotateAbs(150);
 	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0.8,-2);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(1000);
 	//10
 	RopoDevice::Chassis.MoveVelocity(0,0);
 
