@@ -46,27 +46,21 @@ namespace RopoFunction{
 		RopoDevice::Motors::ClimberMotor1.move_velocity(0);
 		RopoDevice::Motors::ClimberMotor2.move_velocity(0);
 	}
+	void ShooterInit(){
+		RopoDevice::Motors::ShooterMotor.move_velocity(30);
+	}
+	void ShooterStopInit(){
+		RopoDevice::Motors::ShooterMotor.move_velocity(0);
+	}
 	bool DetectLoader(){
-		if(RopoDevice::Motors::ShooterMotor.get_torque() < 0.4) return false;
+		if(RopoDevice::Motors::ShooterMotor.get_torque() < 0.2) return false;
 		else return true;
 	}
 	void ReLoad(){
-		while(1){
-			if(DetectLoader() == false){
-				RopoDevice::Motors::ShooterMotor.move_velocity(30);
-			}
-			else {
-				RopoDevice::Motors::ShooterMotor.move_velocity(30); 
-				pros::delay(3000);
-				RopoDevice::Motors::ShooterMotor.brake();
-				break;
-			}
-		}
+		RopoDevice::Motors::ShooterMotor.move_relative(3600, 150);
 	}
 	void Shoot(){
-		RopoDevice::Motors::ShooterMotor.move_velocity(30);
-		pros::delay(1000);
-		RopoDevice::Motors::ShooterMotor.move_velocity(0);
+		RopoDevice::Motors::ShooterMotor.move_relative(500, 150);
 	}
 }
 
@@ -77,13 +71,24 @@ void competition_initialize() {}
 void autonomous(){
 	RopoDevice::Chassis.AutoStart();
 	pros::Task * BackgroundTaskPtr = new pros::Task(RopoDevice::PositionControl);
+	pros::delay(1000);
 	RopoDevice::SetPosition(0.32,0.40,41.7976 / 180 * RopoMath::Pi,2000);
 	RopoFunction::Extern();
 	RopoDevice::SetPosition(100, 100, 18.62 / 180 * RopoMath::Pi,600);
 	RopoFunction::Recycle();
 	RopoDevice::SetPosition(0.39, 0.37, -54.66 / 180 * RopoMath::Pi, 1500);
-	RopoDevice::SetPosition(0.78, 0.62, -90.21 / 180 * RopoMath::Pi, 2000);
+	RopoDevice::SetPosition(0.82, 0.62, -90.21 / 180 * RopoMath::Pi, 2000);
 	RopoDevice::SetPosition(0.23, 0.33, -47.07 / 180 * RopoMath::Pi, 1500);
+
+	for(int i = 0; i < 10; i++){
+		RopoFunction::Shoot();
+		pros::delay(800);
+		RopoFunction::ReLoad();
+		pros::delay(2000);
+	}
+	RopoDevice::SetPosition(0, 0, 0.0 / 180 * RopoMath::Pi, 1500);
+	RopoDevice::SetPosition(0, -1.31, 0, 2000);
+	RopoDevice::SetPosition(0, -1.02, 0.0 / 180 * RopoMath::Pi, 4000);
 
 
 	RopoDevice::Chassis.Autoend();
@@ -112,14 +117,16 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, RopoFunction::ClimberStop);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::ClimberUp);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Falling, RopoFunction::ClimberStop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::ShooterInit);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Falling, RopoFunction::ShooterStopInit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::Shoot);
 	ButtonDetectLine.Enable();
 
 	while (true) {
-		FloatType XInput =  2 * XVelocityInput.GetAxisValue();
-		FloatType YInput =  2 * YVelocityInput.GetAxisValue();
-		FloatType WInput = -3 * WVelocityInput.GetAxisValue();	
+		FloatType XInput =  3 * XVelocityInput.GetAxisValue();
+		FloatType YInput =  3 * YVelocityInput.GetAxisValue();
+		FloatType WInput = -5 * WVelocityInput.GetAxisValue();	
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.SetAimStatus(XInput, YInput, WInput);
 		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::GetPosition()[1][1], RopoDevice::Sensors::GetPosition()[2][1], RopoDevice::Sensors::GetPosition()[3][1] / RopoMath::Pi * 180.0);
 		pros::delay(20);
