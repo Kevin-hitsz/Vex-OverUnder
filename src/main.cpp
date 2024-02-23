@@ -57,10 +57,10 @@ namespace RopoFunction{
 		else return true;
 	}
 	void ReLoad(){
-		RopoDevice::Motors::ShooterMotor.move_relative(3600, 150);
+		RopoDevice::Motors::ShooterMotor.move_relative(3600, 200);
 	}
 	void Shoot(){
-		RopoDevice::Motors::ShooterMotor.move_relative(500, 150);
+		RopoDevice::Motors::ShooterMotor.move_relative(500, 200);
 	}
 }
 
@@ -104,15 +104,18 @@ void autonomous(){
 	RopoDevice::SetPosition(0.82, 0.62, -90.21 / 180 * RopoMath::Pi, 2000);
 	RopoDevice::SetPosition(0.23, 0.33, -47.07 / 180 * RopoMath::Pi, 1500);
 
-	for(int i = 0; i < 10; i++){
+	for(int i = 0; i < 11; i++){
 		RopoFunction::Shoot();
 		pros::delay(800);
 		RopoFunction::ReLoad();
-		pros::delay(1000);
+		pros::delay(800);
 	}
+	RopoFunction::Shoot();
+	RopoDevice::SetPosition(0.26, 0.30, -47.07 / 180 * RopoMath::Pi, 800);
 	RopoDevice::SetPosition(0, 0, 0.0 / 180 * RopoMath::Pi, 1500);
-	RopoDevice::SetPosition(0, -1.31, 0, 2000);
-	RopoDevice::SetPosition(0, -1.02, 0.0 / 180 * RopoMath::Pi, 4000);
+	RopoDevice::SetPosition(-0.03, -1.45, 0, 3500);
+	RopoDevice::SetPosition(-0.03, -1.02, 0.0 / 180 * RopoMath::Pi, 2000);
+
 
 
 	RopoDevice::Chassis.Autoend();
