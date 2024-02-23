@@ -8,7 +8,7 @@
 namespace RopoLifter{
 
     // Params
-    const double HoldingPosition = 510.0;
+    const double HoldingPosition = 470.0;   // 510
     const double WaitingPosition = 98.0;
     const double HiddenPosition = 0.0;
     const double LifterRatio = 1.0;  
@@ -100,7 +100,7 @@ namespace RopoLifter{
                     case HOLDING:
                         pros::lcd::print(1,"hold");
                         This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);              
-                        This -> LeftMotor.move_absolute(HoldingPosition,120);
+                        This -> LeftMotor.move_absolute(HoldingPosition,200);
                         while (fabs(This->LifterPosition-HoldingPosition) > 3.0)
                         {
                             if (This -> breaktag) break;

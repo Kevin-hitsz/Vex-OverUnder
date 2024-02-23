@@ -20,10 +20,10 @@ namespace RopoDevice{
 
 	//创建三线接口
 	namespace ThreeWire{
-		const char ExternPneumaticPort = 'B';
+		const char ExternPneumaticPort = 'A';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char CatchPneumaticPort  = 'A';
+		const char CatchPneumaticPort  = 'B';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 	}
@@ -104,7 +104,7 @@ namespace RopoDevice{
 // 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor);
 	FloatType GetHeading(){
-		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 
+		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 	// 修正每圈6度的误差
 	}
 
 // 坐标获取函数
@@ -149,7 +149,7 @@ namespace RopoDevice{
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
 		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	}
 
 	void ChassisHold(){
