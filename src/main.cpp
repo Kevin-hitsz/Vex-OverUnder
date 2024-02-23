@@ -108,13 +108,21 @@ void autonomous(){
 		RopoFunction::Shoot();
 		pros::delay(800);
 		RopoFunction::ReLoad();
-		pros::delay(800);
+		pros::delay(1800);
 	}
-	RopoFunction::Shoot();
+
 	RopoDevice::SetPosition(0.26, 0.30, -47.07 / 180 * RopoMath::Pi, 800);
 	RopoDevice::SetPosition(0, 0, 0.0 / 180 * RopoMath::Pi, 1500);
-	RopoDevice::SetPosition(-0.03, -1.80, 0, 3500);
-	RopoDevice::SetPosition(-0.03, -1.02, 0.0 / 180 * RopoMath::Pi, 2000);
+	RopoDevice::SetPosition(-0.06, -1.86, 0, 4000);
+	RopoDevice::SetPosition(-0.06, -1.86, -179.0 / 180 * RopoMath::Pi, 1500);
+	RopoFunction::Extern();
+	RopoDevice::SetPosition(0.49, -2.21, -180.0 / 180 * RopoMath::Pi, 2000);
+	RopoFunction::Recycle();
+	RopoDevice::SetPosition(0.16, -2.16, -180.0 / 180 * RopoMath::Pi, 1500);
+	RopoDevice::SetPosition(0.55, -2.49, 90.0 / 180 *RopoMath::Pi, 1500);
+
+
+
 
 
 
