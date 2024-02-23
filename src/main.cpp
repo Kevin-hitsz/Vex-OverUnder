@@ -93,7 +93,7 @@ void skill() {
 }
 
 void autonomous(){
-	pros::delay(2000);
+	pros::delay(3000);
 	RopoDevice::Chassis.AutoStart();
 	pros::Task * BackgroundTaskPtr = new pros::Task(RopoDevice::PositionControl);
 	RopoDevice::SetPosition(0.32,0.40,41.7976 / 180 * RopoMath::Pi,2000);
@@ -108,7 +108,7 @@ void autonomous(){
 		RopoFunction::Shoot();
 		pros::delay(800);
 		RopoFunction::ReLoad();
-		pros::delay(2000);
+		pros::delay(1000);
 	}
 	RopoDevice::SetPosition(0, 0, 0.0 / 180 * RopoMath::Pi, 1500);
 	RopoDevice::SetPosition(0, -1.31, 0, 2000);
@@ -146,6 +146,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::Shoot);
 	ButtonDetectLine.Enable();
+	RopoDevice::Chassis.Autoend();
 
 	while (true) {
 		FloatType XInput =  3 * XVelocityInput.GetAxisValue();
