@@ -68,6 +68,30 @@ void disabled() {}
 
 void competition_initialize() {}
 
+void skill() {
+	RopoDevice::Chassis.AutoStart();
+	pros::Task * BackgroundTaskPtr = new pros::Task(RopoDevice::PositionControl);
+	RopoDevice::SetPosition(0.32,0.40,41.7976 / 180 * RopoMath::Pi,2000);
+	RopoDevice::SetPosition(100, 100, 18.62 / 180 * RopoMath::Pi,600);
+	RopoDevice::SetPosition(0.39, 0.37, -54.66 / 180 * RopoMath::Pi, 1500);
+	RopoDevice::SetPosition(0.82, 0.62, -90.21 / 180 * RopoMath::Pi, 2000);
+	RopoDevice::SetPosition(0.23, 0.33, -47.07 / 180 * RopoMath::Pi, 1500);
+
+	for(int i = 0; i < 20; i++){
+		RopoFunction::Shoot();
+		pros::delay(800);
+		RopoFunction::ReLoad();
+		pros::delay(2000);
+	}
+	RopoDevice::SetPosition(0, 0, 0.0 / 180 * RopoMath::Pi, 1500);
+	RopoDevice::SetPosition(0, -1.31, 0, 2000);
+	RopoDevice::SetPosition(0, -1.02, 0.0 / 180 * RopoMath::Pi, 4000);
+
+
+	RopoDevice::Chassis.Autoend();
+	delete BackgroundTaskPtr;
+}
+
 void autonomous(){
 	pros::delay(2000);
 	RopoDevice::Chassis.AutoStart();
@@ -115,12 +139,12 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Falling, RopoFunction::Recycle);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, RopoFunction::ClimberDown);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, RopoFunction::ClimberStop);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::ClimberUp);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Falling, RopoFunction::ClimberStop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::ClimberUp);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Falling, RopoFunction::ClimberStop);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::ShooterInit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Falling, RopoFunction::ShooterStopInit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::ReLoad);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::Shoot);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::Shoot);
 	ButtonDetectLine.Enable();
 
 	while (true) {
