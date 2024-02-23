@@ -119,13 +119,7 @@ void autonomous(){
 	RopoDevice::SetPosition(0.49, -2.21, -180.0 / 180 * RopoMath::Pi, 2000);
 	RopoFunction::Recycle();
 	RopoDevice::SetPosition(0.16, -2.16, -180.0 / 180 * RopoMath::Pi, 1500);
-	RopoDevice::SetPosition(0.55, -2.49, 90.0 / 180 *RopoMath::Pi, 1500);
-
-
-
-
-
-
+	RopoDevice::SetPosition(0.55, -2.53, 90.0 / 180 *RopoMath::Pi, 1500);
 	RopoDevice::Chassis.Autoend();
 	delete BackgroundTaskPtr;
 }
