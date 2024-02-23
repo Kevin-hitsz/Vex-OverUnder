@@ -69,9 +69,9 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
+	pros::delay(2000);
 	RopoDevice::Chassis.AutoStart();
 	pros::Task * BackgroundTaskPtr = new pros::Task(RopoDevice::PositionControl);
-	pros::delay(1000);
 	RopoDevice::SetPosition(0.32,0.40,41.7976 / 180 * RopoMath::Pi,2000);
 	RopoFunction::Extern();
 	RopoDevice::SetPosition(100, 100, 18.62 / 180 * RopoMath::Pi,600);
