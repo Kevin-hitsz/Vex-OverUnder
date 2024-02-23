@@ -113,7 +113,7 @@ void autonomous(){
 	RopoFunction::Shoot();
 	RopoDevice::SetPosition(0.26, 0.30, -47.07 / 180 * RopoMath::Pi, 800);
 	RopoDevice::SetPosition(0, 0, 0.0 / 180 * RopoMath::Pi, 1500);
-	RopoDevice::SetPosition(-0.03, -1.45, 0, 3500);
+	RopoDevice::SetPosition(-0.03, -1.80, 0, 3500);
 	RopoDevice::SetPosition(-0.03, -1.02, 0.0 / 180 * RopoMath::Pi, 2000);
 
 
