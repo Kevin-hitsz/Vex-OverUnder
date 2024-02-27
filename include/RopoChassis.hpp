@@ -132,40 +132,38 @@ namespace RopoChassis{
 								DisRes = DistanceRegulator.Update(DeltaDis);
 								TempChassisVelocity[1] = (This->moveReverse?-1:1)*(DisRes / ( This->SampleTime / 1000.0) );
 								
-								//前90%路程车体方向锁定指向末位置，后10%路程车体方向锁定为初始方向，防止末位置方向抖动
+								//前90%路程车体方向锁定指向末位置，后20%路程车体方向锁定为初始方向，防止末位置方向抖动
 
 								if(!This->moveReverse)
 								{
 									if(DeltaDis/aimDistance>0.2)
 										DeltaRotation -= CurrentPosition[3];
 									else
-										DeltaRotation=IniPosition[3]-CurrentPosition[3];
+										//DeltaRotation=IniPosition[3]-CurrentPosition[3];
+										DeltaRotation = 0;
 
-									
 									while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
 									while(DeltaRotation < -180.0) DeltaRotation += 360.0;
 								}
 								else
-								{
-									if(DeltaRotation>90)
-										DeltaRotation-=180;
-									else if(DeltaRotation<-90)
-										DeltaRotation+=180;
+								{	
+									DeltaRotation += 180;
+									if(DeltaRotation>180)
+										DeltaRotation-=360;
 
-									if(DeltaDis/aimDistance>0.1)
+									if(DeltaDis/aimDistance>0.2)
 										DeltaRotation -= CurrentPosition[3];
 									else
-										DeltaRotation=IniPosition[3]-CurrentPosition[3];
+										//DeltaRotation=IniPosition[3]-CurrentPosition[3];
+										DeltaRotation = 0;
 
-									
 									while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
 									while(DeltaRotation < -180.0) DeltaRotation += 360.0;
 								}
 								
-								
 								//方向锁定
-								TempChassisVelocity[2] = DeltaRotation * (This->moveReverse?-1:1) * 0.02 ;
-
+								//TempChassisVelocity[2] = DeltaRotation * (This->moveReverse?-1:1) * 0.02 ;
+								TempChassisVelocity[2] = DeltaRotation * 0.02 ;
 								
 
 							}
@@ -303,12 +301,12 @@ namespace RopoChassis{
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(200);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(200);
 			}
 
@@ -318,12 +316,12 @@ namespace RopoChassis{
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(200);
 				
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(200);
 			}
 
@@ -338,16 +336,16 @@ namespace RopoChassis{
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(100);
 			}
 
@@ -358,16 +356,16 @@ namespace RopoChassis{
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
-				while(!flag) pros::delay(20);
+				pros::delay(20);
 				while(!flag) pros::delay(100);
 			}
 	};
