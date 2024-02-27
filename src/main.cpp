@@ -149,7 +149,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	autonomous_1();
+	autonomous_2();
 }
 
 void opcontrol()
@@ -175,12 +175,16 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::DoubleEdge, ControllerModule::SwitchIntakerBack);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, ControllerModule::TurnAround);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, ControllerModule::ChangeCatch);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  RopoAuto::Auto_Find);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous_2);
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP  , RopoController::Rising,  autonomous);
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::GpsUpdate);
 
 	ButtonDetectLine.Enable();
+	RopoDevice::ChassisCoast();
+	ControllerModule::intaker_backward = false;
+	ControllerModule::intaker_forward = false;
+	RopoDevice::Motors::IntakeMotor.move_velocity(0);
 
 	while (true) {
 		FloatType XInput =  XVelocityInput.GetAxisValue();
@@ -244,36 +248,38 @@ void autonomous_1(){
 	pros::delay(300);
 	ControllerModule::SwitchIntakerFor();//1-
 
-	RopoDevice::Chassis.MoveVelocity(-0.22,0);
-	pros::delay(250);						//		先吃再吐
+	RopoDevice::Chassis.MoveVelocity(-0.20,0);
+	pros::delay(300);						//		先吃再吐
 	ControllerModule::SwitchIntakerBack();//1+
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(300);
+	pros::delay(600);
 
-	RopoDevice::Chassis.MoveVelocity(0.6,0.2);
-	pros::delay(1600);
+	RopoDevice::Chassis.MoveVelocity(0.65,0.2);
+	pros::delay(1700);
 	ControllerModule::SwitchIntakerBack();//1-
 
 	// --------- stage 2 --------
+	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(300);
 	RopoDevice::gpsAddPosition.GpsUpdate();
 	pros::delay(150);
 
 	ControllerModule::SwitchIntakerFor();//1+
-	RopoDevice::Chassis.AutoPositionMove(1.70, 0.42);
+	RopoDevice::Chassis.AutoPositionMove(1.72, 0.40);
 	pros::delay(300);	
 
 	RopoDevice::Chassis.MoveVelocity(-0.2,0);
 	pros::delay(300);
 		
-	RopoDevice::Chassis.AutoPositionMove(1.8, 0.9);
+	RopoDevice::Chassis.AutoPositionMove(1.75, 0.9);
 	pros::delay(300);	
 	ControllerModule::SwitchIntakerFor();//1-
 	RopoDevice::Chassis.AutoRotateAbs(0);
-	pros::delay(400);
+	pros::delay(600);
 	ControllerModule::ExternSwitch();//+
-	pros::delay(300);
+	pros::delay(100);
 	
 	RopoDevice::Chassis.MoveVelocity(0.75,-0.3);
 	pros::delay(1200);
@@ -293,10 +299,10 @@ void autonomous_1(){
 
 	RopoDevice::Chassis.AutoRotateAbs(135);
 	pros::delay(1000);
-	RopoDevice::Chassis.MoveVelocity(-0.6,0);
-	pros::delay(1000);
-	RopoDevice::Chassis.MoveVelocity(-0.2,0);
-	pros::delay(500);
+	RopoDevice::Chassis.MoveVelocity(-0.65,0);
+	pros::delay(900);
+	RopoDevice::Chassis.MoveVelocity(-0.3,0);
+	pros::delay(300);
 
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::ChangeLift();	// 放
@@ -358,28 +364,106 @@ void autonomous_2(){
 	pros::delay(700);
 	ControllerModule::SwitchIntakerBack();//1-			吐
 
-	RopoDevice::Chassis.AutoPositionMove(0.62,0.401);
+	RopoDevice::Chassis.AutoPositionMove(0.62,0.39);	// 0.401
 	RopoDevice::Chassis.AutoRotateAbs(3);
 	pros::delay(500);
 
 	ControllerModule::ExternSwitch();//+
 	pros::delay(500);
+	ControllerModule::ExternSwitch();//-			打走
 
-	// ------- stage 1.5 -------
 	ControllerModule::SwitchIntakerFor();//1+
-	RopoDevice::Chassis.AutoPositionMove(0.845,0.401);
+	RopoDevice::Chassis.AutoPositionMove(0.85,0.39);	// 0.401
 	pros::delay(300);
 	ControllerModule::SwitchIntakerFor();//1-
 
-	RopoDevice::Chassis.MoveVelocity(-0.22,0);
+	RopoDevice::Chassis.MoveVelocity(-0.20,0);
 	pros::delay(250);						//		先吃再吐
 	ControllerModule::SwitchIntakerBack();//1+
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(300);
-
-	RopoDevice::Chassis.MoveVelocity(0.3,0);
 	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(1500);
+
+	RopoDevice::Chassis.MoveVelocity(0.6,0.2);
+	pros::delay(1600);
+
+	// --------- stage 2 --------
+	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(0.6,0.2);
+	pros::delay(800);
 	ControllerModule::SwitchIntakerBack();//1-
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(300);
+	RopoDevice::gpsAddPosition.GpsUpdate();
+	RopoDevice::Chassis.MoveVelocity(-0.3,0);
+	pros::delay(300);
+	ControllerModule::SwitchIntakerFor();//1+
+	RopoDevice::Chassis.AutoPositionMove(1.72, 0.40);	// !!!!!!
+	pros::delay(300);	
+	
+	RopoDevice::Chassis.MoveVelocity(-0.2,0);
+	pros::delay(300);
+		
+	RopoDevice::Chassis.AutoPositionMove(1.79, 0.85);
+	pros::delay(300);	
+	ControllerModule::SwitchIntakerFor();//1-
+	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(400);
+	ControllerModule::ExternSwitch();//+
+	pros::delay(300);
+	
+	RopoDevice::Chassis.MoveVelocity(0.75,-0.3);
+	pros::delay(1000);
+
+	// --------- stage 3 ----------
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(300);
+	RopoDevice::gpsAddPosition.GpsUpdate();
+	
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	pros::delay(250);
+	ControllerModule::ExternSwitch();//-
+	ControllerModule::SwitchIntakerFor();//1+
+	RopoDevice::Chassis.AutoPositionMove(1.75, 0.94);	//// !!!
+	ControllerModule::ExternSwitch();//+
+	RopoDevice::Chassis.MoveVelocity(-0.6,0.1);
+	pros::delay(2000);
+
+	RopoDevice::Chassis.MoveVelocity(0.5,0);
+	pros::delay(600);
+	ControllerModule::ExternSwitch();//-
+	RopoDevice::Chassis.AutoRotateAbs(3);
+	pros::delay(1500);
+	ControllerModule::SwitchIntakerFor();//1-
+	ControllerModule::SwitchIntakerBack();//1+
+	RopoDevice::Chassis.MoveVelocity(0.5,0);
+	pros::delay(500);
+	
+	ControllerModule::SwitchIntakerBack();//1-
+
+	// --------- stage 4 ----------
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(300);
+	RopoDevice::gpsAddPosition.GpsUpdate();
+
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	pros::delay(500);
+	RopoDevice::Chassis.AutoPositionMove(1.9, 0.23);
+	RopoDevice::Chassis.AutoRotateAbs(75);
+	pros::delay(1500);
+	ControllerModule::ExternSwitch();//+
+	RopoDevice::Chassis.MoveVelocity(0.8, -1);
+	pros::delay(1500);
+
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.6, 0);
+	pros::delay(600);
+
+	RopoDevice::Chassis.MoveVelocity(-0.6,0.6);
+	pros::delay(800);
+
+	// --------- end --------------
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 }
