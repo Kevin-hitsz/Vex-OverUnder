@@ -154,7 +154,7 @@ void autonomous(){
 
 void opcontrol()
 {
-	RopoDevice::ChassisConst();
+	RopoDevice::ChassisCoast();
 	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
