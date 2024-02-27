@@ -139,6 +139,30 @@ namespace RopoDevice{
 	}
 
 	void MotorsInit(){
+		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+
+		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+	}
+
+	void ChassisConst(){
+		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_CONST);
+	}
+
+	void ChassisBrake(){
 		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
@@ -146,10 +170,6 @@ namespace RopoDevice{
 		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-
-		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	}
 
 	void ChassisHold(){
