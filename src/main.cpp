@@ -21,9 +21,9 @@ namespace ControllerModule {
 	}
 
 	bool locktag = false;
-	void ChangeCatch(){
+	void ChangeExtern(){
 		locktag ^= 1;
-		RopoDevice::ThreeWire::CatchPneumatic.set_value(locktag);
+		RopoDevice::ThreeWire::ExternPneumatic.set_value(locktag);
 	}
 
 	void RumbleMe(){
@@ -67,28 +67,40 @@ namespace ControllerModule {
 		}
 	}
 
-	bool intaker_forward = false;
-	bool intaker_backward = false;
-	void RollIntaker(){
-		if (intaker_forward && !intaker_backward) {
-			RopoDevice::Motors::IntakeMotor.move_velocity(-500);
-		}
-		else if (!intaker_forward && intaker_backward) {
-			RopoDevice::Motors::IntakeMotor.move_velocity(500);
-		}
-		else {
-			RopoDevice::Motors::IntakeMotor.move_velocity(0);
-		}
+	bool wing_status = false;
+	bool spade_status = true;
+	void TogetherPush(){
+		wing_status = true;
+		spade_status = false;
+		RopoDevice::ThreeWire::WingPneumatic.set_value(true);
+		RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
+	}
+	void TogetherUnpush(){
+		wing_status = false;
+		spade_status = true;
+		RopoDevice::ThreeWire::WingPneumatic.set_value(false);
+		RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
+	}
+	void WingPush(){
+		wing_status = true;
+	}
+	void WingUnpush(){
+		wing_status = false;
 	}
 
-	void SwitchIntakerFor(){
-		intaker_forward ^= 1;
-		RollIntaker();
+	bool intaker_status = false;    
+	void Intake(){
+		RopoDevice::Motors::IntakeMotor.move_velocity(-500);
+		RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
 	}
+	void Outtake(){
+		RopoDevice::Motors::IntakeMotor.move_velocity(500);
+		pros::delay(400);
+		intaker_status = false;
+		RopoDevice::ThreeWire::IntakerPneumatic.set_value(false);
+		pros::delay(200);
+		RopoDevice::Motors::IntakeMotor.move_velocity(0);
 
-	void SwitchIntakerBack(){
-		intaker_backward ^= 1;
-		RollIntaker();
 	}
 
 	void TurnAround(){
@@ -105,7 +117,7 @@ namespace ControllerModule {
 		RopoDevice::Chassis.MoveVelocity(-0.3,0);
 		pros::delay(500);
 		RopoDevice::Chassis.MoveVelocity(0,0);
-		ChangeCatch();
+		ChangeExtern();
 		RopoDevice::Chassis.MoveVelocity(-0.6,0);
 		pros::delay(1000);
 		RopoDevice::Chassis.MoveVelocity(-1.2,0);
@@ -171,11 +183,15 @@ void opcontrol()
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 
 	MasterController.clear();
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, ControllerModule::ChangeLift);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2,RopoController::Rising,ControllerModule::ChangeCatch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::DoubleEdge, ControllerModule::SwitchIntakerFor);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::DoubleEdge, ControllerModule::SwitchIntakerBack);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, ControllerModule::TurnAround);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, ControllerModule::Intake);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, ControllerModule::Outtake);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2,RopoController::Rising,ControllerModule::ChangeLift);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2,RopoController::Falling,ControllerModule::ChangeLift);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, ControllerModule::WingPush);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Falling, ControllerModule::WingUnpush);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, ControllerModule::TogetherPush);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, ControllerModule::TogetherUnpush);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, ControllerModule::ChangeExtern);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, ControllerModule::Switch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A  , RopoController::Rising,  RopoAuto::Auto_Find);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP  , RopoController::Rising,  autonomous);
@@ -213,59 +229,6 @@ void test(){
 
 void autonomous_1(){
 	// --------- begin ------------
-	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(500);
-	RopoDevice::Chassis.AutoRotateAbs(-60);
-	pros::delay(1000);
-	ControllerModule::SwitchIntakerBack();//1+
-
-	pros::delay(700);
-	ControllerModule::SwitchIntakerBack();//1-			吐
-
-	ControllerModule::SwitchIntakerFor();//1+
-	RopoDevice::Chassis.AutoPositionMove(0.55,0.35);
-	RopoDevice::Chassis.MoveVelocity(0.2,0);
-	pros::delay(200);
-	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	pros::delay(100);
-	ControllerModule::SwitchIntakerFor();//1-			吃
-
-	RopoDevice::Chassis.AutoRotateAbs(-90);
-	pros::delay(1000);
-	RopoDevice::Chassis.AutoPositionMove(0.55,0.1);
-
-	ControllerModule::SwitchIntakerBack();//1+
-	pros::delay(700);
-	ControllerModule::SwitchIntakerBack();//1-			吐
-
-	RopoDevice::Chassis.AutoDirectMove(0.55,0.46,true);
-	pros::delay(800);
-	ControllerModule::ChangeLift();		// 放
-	pros::delay(1500);
-
-	RopoDevice::Chassis.MoveVelocity(0.3,0);
-	pros::delay(1000);
-	RopoDevice::Chassis.MoveVelocity(0,1);
-	pros::delay(500);
-	RopoDevice::Chassis.AutoRotateAbs(90);
-	pros::delay(1000);
-	ControllerModule::ChangeLift();		// 收
-	pros::delay(800);
-	RopoDevice::Chassis.MoveVelocity(-0.4,0);
-	pros::delay(600);
-
-	RopoDevice::Chassis.AutoPositionMove(0.62,0.401);
-	RopoDevice::Chassis.AutoRotateAbs(5);
-	pros::delay(1000);
-
-	ControllerModule::SwitchIntakerBack();//1+
-	RopoDevice::Chassis.AutoPositionMove(0.85,0.401);
-	pros::delay(500);
-	ControllerModule::SwitchIntakerBack();//1-
-
-	// --------- end --------------
-	pros::delay(300);
-	RopoDevice::Chassis.MoveVelocity(0,0);
 }
 
 void skill(){
