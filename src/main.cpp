@@ -68,18 +68,18 @@ namespace ControllerModule {
 	}
 
 	bool wing_status = false;
-	bool spade_status = true;
+	bool spade_status = false;
 	void TogetherPush(){
-		wing_status = true;
+		wing_status = false;
 		spade_status = false;
 		RopoDevice::ThreeWire::WingPneumatic.set_value(true);
-		RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
+		RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
 	}
 	void TogetherUnpush(){
-		wing_status = false;
+		wing_status = true;
 		spade_status = true;
 		RopoDevice::ThreeWire::WingPneumatic.set_value(false);
-		RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
+		RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
 	}
 	void WingPush(){
 		wing_status = true;
