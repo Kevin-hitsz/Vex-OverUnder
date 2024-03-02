@@ -202,7 +202,7 @@ void opcontrol()
 		} 
 		else {
 			RopoDevice::Chassis.StartChassisOpControll();//底盘MoveType设置为OpMove
-			RopoDevice::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
+			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
 			ChassisMove = true;
 		}
 		pros::delay(4);
