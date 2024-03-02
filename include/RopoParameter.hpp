@@ -27,7 +27,7 @@ namespace RopoParameter {
 	static constexpr double GPSY_OFFSET = 0.0931;
 
 
-	//skill
+	//skill gps
 	// static constexpr double FIELD_HEADING_INITIAL = 0.0;//比赛场地相对于战队场地，逆时针为+
 	// static constexpr double ROPO_HEADING_INITIAL  = -90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
@@ -42,6 +42,13 @@ namespace RopoParameter {
 	
 	// static constexpr double GPSX_OFFSET = 0.0;
 	// static constexpr double GPSY_OFFSET = 0.0931;
+
+	//Chassis
+	static constexpr double CHASSIS_PARAMETER = 0.262; 				//车体宽度
+	static constexpr double WHEEL_RAD = 0.0508;						//轮子半径
+	static constexpr double CHASSIS_RATIO = 9.0 / 4.0;	      		//减速比
+	static constexpr double CHASSIS_SPPED_MAX= 600;					//底盘电机最高转速
+	static constexpr double RAD_TO_RPM= CHASSIS_SPPED_MAX / 62.83;		//角速度转化为rpm
 
 };
 

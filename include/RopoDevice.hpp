@@ -60,23 +60,35 @@ namespace RopoDevice{
 		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, true);
 		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, true);
         pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
-        
-
-		const FloatType ChassisRatio = 9.0 / 4.0;
-		bool ChassisControllerMode = false;
-		void LeftWheelMove	(FloatType Velocity){
+		
+		void LeftWheelMove(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(-Velocity );
 			LeftChassisMotor2.move_velocity(-Velocity );
 			LeftChassisMotor3.move_velocity(-Velocity );
 			LeftChassisMotor4.move_velocity(-Velocity );
 		}
 
-		void RightWheelMove (FloatType Velocity){
+		void RightWheelMove(FloatType Velocity){
 			RightChassisMotor1.move_velocity(Velocity );
 			RightChassisMotor2.move_velocity(Velocity );
 			RightChassisMotor3.move_velocity(Velocity );
 			RightChassisMotor4.move_velocity(Velocity );
 			
+		}
+
+		FloatType LV,RV,Kv;//Kv为速度大于600时的缩小比例
+		void MoveOpControll(FloatType CM, FloatType DM){
+			CM = CM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
+			DM = DM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
+			LV = CM - DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
+			RV = CM + DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
+			if(fabs(LV) > RopoParameter::CHASSIS_SPPED_MAX || fabs(RV) > RopoParameter::CHASSIS_SPPED_MAX) {
+				Kv = RopoParameter::CHASSIS_SPPED_MAX / fmax(fabs(LV),fabs(RV));
+				LV *= Kv;
+				RV *= Kv;
+			}
+			LeftWheelMove(LV);
+			RightWheelMove(RV);
 		}
 
 		const int LeftLiftMotorPort		= 4;
@@ -150,17 +162,6 @@ namespace RopoDevice{
 
 		Motors::LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-	}
-
-	void ChassisCoast(){
-		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	}
 
 	void ChassisBrake(){
