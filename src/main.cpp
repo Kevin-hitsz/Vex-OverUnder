@@ -197,7 +197,7 @@ void opcontrol()
 		FloatType RopoVx = VelocityMax-fabs(WInput) * 0.68;	
 
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.03 && ChassisMove == true) {
-			RopoDevice::MoveOpControll(0.0, 0.0);
+			RopoDevice::Motors::MoveOpControll(0.0, 0.0);
 			ChassisMove = false;
 		} 
 		else {
