@@ -28,7 +28,9 @@ namespace RopoChassis{
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2};
 			//0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2
-			RopoControl::TankChassisCore Core;								
+			RopoControl::TankChassisCore Core;		
+			
+									
 			void (*MotorMove[2])(FloatType);
 			Vector ChassisVelocity;
 			Vector MotorVelocity;
