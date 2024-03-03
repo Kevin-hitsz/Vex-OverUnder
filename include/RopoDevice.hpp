@@ -138,9 +138,6 @@ namespace RopoDevice{
 	//	创建底盘
 	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetTransformedPosition , 1 );
 
-
-
-
 //初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);

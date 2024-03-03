@@ -477,7 +477,7 @@ void autonomous_2(){
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	RopoDevice::Chassis.AutoPositionMove(0.55,-0.07,45);
+	RopoDevice::Chassis.AutoPositionMove(0.2,-0.07,45);
 	RopoDevice::Chassis.AutoPositionMoveBack(0.55,-0.60,-180);
 	RopoDevice::Chassis.AutoPositionMoveBack(0.55,-0.07,0);
 	RopoDevice::Chassis.AutoPositionMove(0,0,0);

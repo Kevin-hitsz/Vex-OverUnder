@@ -21,10 +21,10 @@ namespace RopoChassis{
 			static constexpr float WheelRad = RopoParameter::WHEEL_RAD;						//轮子半径
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
-			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.001;  //加速过程每SampleTime的增加的速度
-			static constexpr float AccelerationVelocityLimits = 0.7;
+			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.0025;  //加速过程每SampleTime的增加的速度
+			static constexpr float AccelerationVelocityLimits = 1.3;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.00075,-0.00075,0.02,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2};
 			//0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2
@@ -143,8 +143,14 @@ namespace RopoChassis{
 									
 									//pid计算直行控制量
 									DisRes = DistanceRegulator.Update(DeltaDis);
-									TempChassisVelocity[1] = (This->moveReverse?-1:1)*(DisRes / ( This->SampleTime / 1000.0) );
-									
+									if( (This->AccelerationProcessSpeed < DisRes / ( This->SampleTime / 1000.0)) && DeltaDis/aimDistance>0.2){
+										TempChassisVelocity[1] = (This->moveReverse?-1:1)*This->AccelerationProcessSpeed;
+										This->AccelerationProcessSpeed += This->DeltaVelocity_in_AccelerationProcess;
+										if(This->AccelerationProcessSpeed > This->AccelerationVelocityLimits)This->AccelerationProcessSpeed = This->AccelerationVelocityLimits;
+									}
+									else{
+										TempChassisVelocity[1] = (This->moveReverse?-1:1)*(DisRes / ( This->SampleTime / 1000.0) );
+									}
 									//前90%路程车体方向锁定指向末位置，后20%路程车体方向锁定为初始方向，防止末位置方向抖动
 
 									if(!This->moveReverse)
@@ -226,7 +232,7 @@ namespace RopoChassis{
 				MotorMove{  RightMotorMove,LeftMotorMove},
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
 				AutoMoveType(DetectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
-				DisArrived(false),DegArrived(false),
+				DisArrived(false),DegArrived(false),AccelerationProcessSpeed(0),
 				BackgroundTask(nullptr),moveReverse(false),flag(true){
 				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
 			}
@@ -254,6 +260,7 @@ namespace RopoChassis{
 			/// @brief 设置底盘为手动赛模式，该模式底盘模块不会操控底盘电机，此时底盘模块只会等待
 			void StartChassisOpControll(){
 				MoveType = OpMove;
+				flag = true;
 			}
 
 			/// @brief 设置底盘为自动赛模式，该模式底盘模块会操控底盘电机
@@ -310,6 +317,7 @@ namespace RopoChassis{
 			/// @param move 是否倒车，必须与目标坐标匹配
 			void AutoDirectMove(FloatType AimX, FloatType AimY,bool move)
 			{
+				AccelerationProcessSpeed = 0;
 				DistanceRegulator.Reset();
 				moveReverse=move;
 				flag=false;
