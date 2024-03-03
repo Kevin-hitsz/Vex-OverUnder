@@ -385,6 +385,27 @@ namespace RopoChassis{
 				while(!flag) pros::delay(100);
 			}
 
+			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
+			{
+				FloatType nowTime = pros::millis();
+
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,false);
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				//旋转至目标角度
+				AutoRotateAbs(Theta);
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+			}
+
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta)
 			{
 				
@@ -403,6 +424,27 @@ namespace RopoChassis{
 				AutoRotateAbs(Theta);
 				pros::delay(20);
 				while(!flag) pros::delay(100);
+			}
+
+			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
+			{
+				FloatType nowTime = pros::millis();
+
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,true);
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				//旋转至目标角度
+				AutoRotateAbs(Theta);
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
 			}
 	};
 }
