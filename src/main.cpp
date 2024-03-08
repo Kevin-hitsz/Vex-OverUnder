@@ -8,6 +8,7 @@ void autonomous_1();
 void autonomous_2();
 void test();
 void skill();
+void autonomous_3();
 namespace ControllerModule {
 
 	void BoolSwitch(void * Parameter){
@@ -178,8 +179,8 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::TurnAround);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, ControllerModule::ChangeCatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous_2);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising,  autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y  , RopoController::Rising,  autonomous_3);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising,  test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::GpsUpdate);
 
@@ -477,8 +478,73 @@ void autonomous_2(){
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	RopoDevice::Chassis.AutoPositionMove(0.2,-0.07,45);
-	RopoDevice::Chassis.AutoPositionMoveBack(0.55,-0.60,-180);
-	RopoDevice::Chassis.AutoPositionMoveBack(0.55,-0.07,0);
-	RopoDevice::Chassis.AutoPositionMove(0,0,0);
+	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	// pros::delay(2000);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(200);
+	ControllerModule::Hide();
+	//RopoDevice::Chassis.AutoPositionMove(-1.2,0.0,0);
+	// RopoDevice::Chassis.AutoPositionMove(0.2,-0.07,45);
+	// RopoDevice::Chassis.AutoPositionMoveBack(0.55,-0.60,-180);
+	// RopoDevice::Chassis.AutoPositionMoveBack(0.55,-0.07,0);
+	// RopoDevice::Chassis.AutoPositionMove(0,0,0);
+}
+
+void autonomous_3(){
+	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	// //RopoDevice::gpsAddPosition.GpsUpdate();
+	// ControllerModule::Hold();
+	// pros::delay(1000);
+	// for (int i =0;i<4;i++)
+	// {
+	// 	ControllerModule::Hold();
+	// 	pros::delay(1000);
+	// 	RopoDevice::Chassis.AutoRotateAbs(45);
+	// 	pros::delay(1000);
+	// 	RopoDevice::Chassis.AutoRotateAbs(0);
+	// 	pros::delay(1500);
+	// 	//RopoDevice::Chassis.AutoPositionMove(0.0,0.0,0.0);
+	// 	RopoDevice::Chassis.MoveVelocity(-0.2,0);
+	// 	pros::delay(300);	
+	// 	RopoDevice::Chassis.MoveVelocity(0,0);
+	// 	pros::delay(200);
+	// }
+	// RopoDevice::Chassis.MoveVelocity(0.0,1.2);
+	// pros::delay(1900);
+	// // ControllerModule::Hide();
+	// // pros::delay(500);
+	// RopoDevice::Chassis.AutoPositionMoveBack(0.21,-0.52,135);
+	// // ControllerModule::Hold();
+	// // pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	// pros::delay(2000);
+	// // RopoDevice::Chassis.MoveVelocity(0.4,0.);
+	// // pros::delay(1000);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(200);
+	
+	//ControllerModule::Hide();
+	//pros::delay(500);
+
+	RopoDevice::Chassis.AutoRotateAbs(-130);     //需要改成0
+	pros::delay(1000);
+	
+	RopoDevice::Chassis.MoveVelocity(0.2,0.0);
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	pros::delay(200);
+
+	ControllerModule::ExternSwitch();//+
+	pros::delay(500);	
+
+	RopoDevice::Chassis.MoveVelocity(0.2,0.0);
+	pros::delay(1000);
+	// RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	// pros::delay(200);
+
+	RopoDevice::Chassis.MoveVelocity(0.2,0.44);
+	pros::delay(1500);
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	pros::delay(200);
+
 }
