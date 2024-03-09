@@ -404,6 +404,7 @@ namespace RopoChassis{
 				AutoRotateAbs(Theta);
 				pros::delay(20);
 				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				flag = true;
 			}
 
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta)
@@ -445,6 +446,7 @@ namespace RopoChassis{
 				AutoRotateAbs(Theta);
 				pros::delay(20);
 				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				flag = true;
 			}
 	};
 }
