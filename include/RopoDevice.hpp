@@ -37,23 +37,23 @@ namespace RopoDevice{
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 16;
+		const int InertialPort = 19;		// 19
 		pros::IMU Inertial(InertialPort);
-		const int OpenmvPort = 19;
+		const int OpenmvPort = 16;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
 	// 创建电机
-	namespace Motors{
+	namespace Motors{	
 
-		const int LeftChassisMotor1Port  	= 1;
-		const int LeftChassisMotor2Port  	= 3;
-		const int LeftChassisMotor3Port  	= 4;
-        const int LeftChassisMotor4Port  	= 6;
+		const int LeftChassisMotor1Port  	= 3;	// 3
+		const int LeftChassisMotor2Port  	= 1;	// 1
+		const int LeftChassisMotor3Port  	= 9;	// 9
+        const int LeftChassisMotor4Port  	= 6;	
 		const int RightChassisMotor1Port	= 13;
 		const int RightChassisMotor2Port	= 12;
-		const int RightChassisMotor3Port	= 17;
-		const int RightChassisMotor4Port	= 15;
+		const int RightChassisMotor3Port	= 15;	// 15
+		const int RightChassisMotor4Port	= 17;	// 17
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
