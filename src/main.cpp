@@ -173,8 +173,8 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 2.1;//1.4
-	FloatType RopoWcLimit = 7;
+	FloatType VelocityMax = 1.4;//1.4
+	FloatType RopoWcLimit = 5;
 	bool ChassisMove = false;
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
@@ -205,7 +205,7 @@ void opcontrol()
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
 		FloatType RopoWc = RopoWcLimit-fabs(XInput) * 0.0;			
-		FloatType RopoVx = VelocityMax-fabs(WInput) * 0.5;	
+		FloatType RopoVx = VelocityMax-fabs(WInput) * 0.0;	
 
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.03) {
 			if(ChassisMove == true){
