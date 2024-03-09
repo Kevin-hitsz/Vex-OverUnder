@@ -168,7 +168,7 @@ void autonomous(){
 
 void opcontrol()
 {
-
+	autonomous();
 	//pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -233,6 +233,19 @@ void test(){
 void autonomous_1(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 	// --------- begin ------------
+	RopoDevice::Chassis.AutoDirectMove(1.1,0,0);
+	while(!RopoDevice::Chassis.IfArrived()){
+		pros::delay(20);
+	}
+	RopoDevice::Chassis.AutoRotateAbs(90);
+	while(!RopoDevice::Chassis.IfArrived()){
+		pros::delay(20);
+	}
+	ControllerModule::WingPush();
+	RopoDevice::Chassis.AutoDirectMove(1.1,-0.6,1);
+	while(!RopoDevice::Chassis.IfArrived()){
+		pros::delay(20);
+	}
 }
 
 void skill(){
