@@ -492,47 +492,60 @@ void test(){
 
 void autonomous_3(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	// //RopoDevice::gpsAddPosition.GpsUpdate();
-	// ControllerModule::Hold();
-	// pros::delay(1000);
-	// for (int i =0;i<4;i++)
-	// {
-	// 	ControllerModule::Hold();
-	// 	pros::delay(1000);
-	// 	RopoDevice::Chassis.AutoRotateAbs(45);
-	// 	pros::delay(1000);
-	// 	RopoDevice::Chassis.AutoRotateAbs(0);
-	// 	pros::delay(1500);
-	// 	//RopoDevice::Chassis.AutoPositionMove(0.0,0.0,0.0);
-	// 	RopoDevice::Chassis.MoveVelocity(-0.2,0);
-	// 	pros::delay(300);	
-	// 	RopoDevice::Chassis.MoveVelocity(0,0);
-	// 	pros::delay(200);
-	// }
-	// RopoDevice::Chassis.MoveVelocity(0.0,1.2);
-	// pros::delay(1900);
-	// // ControllerModule::Hide();
-	// // pros::delay(500);
-	// RopoDevice::Chassis.AutoPositionMoveBack(0.21,-0.52,135);
-	// // ControllerModule::Hold();
-	// // pros::delay(500);
-	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
-	// pros::delay(2000);
-	// // RopoDevice::Chassis.MoveVelocity(0.4,0.);
-	// // pros::delay(1000);
-	// RopoDevice::Chassis.MoveVelocity(0,0);
-	// pros::delay(200);
-	
-	//ControllerModule::Hide();
-	//pros::delay(500);
+	// RopoDevice::gpsAddPosition.GpsUpdate();
+	// pros::delay(100);
+	ControllerModule::Hold();
+	pros::delay(1000);
+	for (int i =0;i<2;i++)
+	{
+		ControllerModule::Hold();
+		pros::delay(400);
+		RopoDevice::Chassis.AutoRotateAbs(45);
+		pros::delay(400);
+		RopoDevice::Chassis.AutoRotateAbs(0);
+		pros::delay(400);
+		//RopoDevice::Chassis.AutoPositionMove(0.0,0.0,0.0);
+		RopoDevice::Chassis.MoveVelocity(-0.2,0);
+		pros::delay(300);	
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(200);
+	}
+	ControllerModule::Hide();
+	pros::delay(500);
 
-	RopoDevice::Chassis.AutoRotateAbs(-130);     //需要改成0
+	RopoDevice::Chassis.MoveVelocity(0.0,-0.75);
 	pros::delay(1000);
-	
-	RopoDevice::Chassis.MoveVelocity(0.2,0.0);
+	// ControllerModule::Hide();
+	// pros::delay(500);
+	ControllerModule::SwitchIntakerBack();
+	pros::delay(300);
+
+	RopoDevice::Chassis.AutoPositionMove(0.1,-0.41,-45);
 	pros::delay(1000);
-	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	// ControllerModule::Hold();
+	// pros::delay(500);
+	RopoDevice::Chassis.MoveVelocity(0.6,0);
+	pros::delay(2000);
+	// RopoDevice::Chassis.MoveVelocity(0.4,0.);
+	// pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
+	ControllerModule::SwitchIntakerBack();
+	pros::delay(300);
+
+	RopoDevice::Chassis.AutoPositionMove(1.26,-1.40);
+
+
+
+	
+
+	RopoDevice::Chassis.AutoRotateAbs(0);     //需要改成0
+	pros::delay(1000);
+
+	// RopoDevice::Chassis.MoveVelocity(0.2,0.0);
+	// pros::delay(1000);
+	// RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	// pros::delay(200);
 
 	ControllerModule::ExternSwitch();//+
 	pros::delay(500);	
@@ -542,9 +555,72 @@ void autonomous_3(){
 	// RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 	// pros::delay(200);
 
-	RopoDevice::Chassis.MoveVelocity(0.2,0.44);
-	pros::delay(1500);
+	RopoDevice::Chassis.MoveVelocity(0.2,0.3);
+	pros::delay(1100);
+
+
+
+	RopoDevice::Chassis.MoveVelocity(0.2,0.2);
+	pros::delay(500);
+
+	ControllerModule::ExternSwitch();//+
+	pros::delay(500);
+
+	RopoDevice::Chassis.MoveVelocity(0.7,0.1);
+	pros::delay(500);
+
 	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 	pros::delay(200);
+
+	ControllerModule::SwitchIntakerBack();
+	pros::delay(300);
+
+	ControllerModule::SwitchIntakerBack();
+	pros::delay(200);
+
+	RopoDevice::Chassis.MoveVelocity(-0.2,-0.1);
+	pros::delay(1800);
+	
+	RopoDevice::Chassis.AutoPositionMove(1.99,-1.34,45);
+
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(600);
+
+	RopoDevice::Chassis.MoveVelocity(-0.3,0);
+	pros::delay(1000);
+
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(600);
+
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	pros::delay(200);
+
+	RopoDevice::Chassis.MoveVelocity(-0.3,0);
+	pros::delay(1000);	
+
+	RopoDevice::Chassis.AutoPositionMove(1.8,-0.5,45);
+	pros::delay(1000);
+
+	RopoDevice::Chassis.AutoPositionMove(2.1,-0.1,-45);
+	pros::delay(1000);
+	//1.60 -0.02  第二个位置
+	//1.21 -0.54 第一个位置  //1.19 -0.51 
+	ControllerModule::ExternSwitch();//+
+	pros::delay(500);	
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(600);
+
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(200);
+
+	RopoDevice::Chassis.MoveVelocity(-0.6,0);
+	pros::delay(800);
+
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(600);
+
+	ControllerModule::ExternSwitch();//+
+	pros::delay(500);	
+
 
 }
