@@ -62,7 +62,7 @@ namespace RopoChassis{
             AimStatus(3, 1), SwerveAimStatus(8, 1), AimStatus_X_Y(8, 1),
             Transfer_M(8, 3), BackgroundTaskPtr(nullptr) {
                 LF.Initialize(); RF.Initialize(); LB.Initialize(); RB.Initialize();
-                LF.Start(); RF.Start(); LB.Start(); RB.Start();
+                //LF.Start(); RF.Start(); LB.Start(); RB.Start();
                 Transfer_M[1][1] = 1,Transfer_M[1][2] = 0,Transfer_M[1][3] = - Width  * 0.5;
                 Transfer_M[2][1] = 0,Transfer_M[2][2] = 1,Transfer_M[2][3] = - Length * 0.5;
                 Transfer_M[3][1] = 1,Transfer_M[3][2] = 0,Transfer_M[3][3] =   Width  * 0.5;

@@ -9,96 +9,90 @@ namespace RopoDiffySwerve{
 
     class DiffySwerve{
         private:
-            static constexpr float SpinRatio = 4.0 / 5.0;// 轮速传动比
-            static constexpr float AngleRatio = 2.0 / 5.0; // 轮偏角传动比
-            static constexpr float WheelRadius = 2.75 * 0.0254 / 2.0;// 轮半径
-            static constexpr float Control_Time = 10; // ms
+            // System
+            static constexpr float SpinRatio = 450.0 / 600.0; // Wheel Rpm / Motor Rpm
+            static constexpr float AngleRatio = 20.0 / 45.0; // Swerve Angle Rpm / Motor Rpm
+            static constexpr float WheelRadius = 2.75 * 0.0254 / 2.0; // unit: m
+            bool Control_Status = false; // start to control or not
+            pros::Motor& Motor_1; // Motor No.1
+            pros::Motor& Motor_2; // Motor No.2
 
-            Motor& Motor_1;
-            Motor& Motor_2;
+            // Status parameters
+            Matrix Status = Matrix(3,1); // include Speed and Angle
 
-            Matrix Status;
-            Matrix AimStatus;   // [alpha, alpha_dot, V]    
-            Matrix Voltage;
-            Matrix K;           // Gain Matrix
-            Matrix M1;          // Assitant Matrix
-            Matrix M2;          // Assitant Matrix
-
-            pros::Task *BackgroundTaskPtr;
+            // Control parameters
+            static constexpr float Control_Time = 15; // unit: ms
+            Matrix AimStatus = Matrix(3,1); // include AimSpeed and AimAngle    
+            Matrix Voltage = Matrix(2, 1); // Drive voltage
+            Matrix K = Matrix(2, 3); // Gain Matrix
+            Matrix M1 = Matrix(3, 3); // Assitant Matrix
+            Matrix M2 = Matrix(2, 1); // Assitant Matrix
 
             static void Swerve_Control(void* param){
                 if(param == nullptr) return;
                 DiffySwerve *This = static_cast<DiffySwerve *>(param);
 
                 float Angle_Error = 0;
-
+                
+                // L
                 while(1){
-                    This -> UpdateStatus(This -> Status);
-                    
-                    Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 轮偏角误差
-
-                    // 轮偏角大于180°，则轮偏角减360°
-                    while (fabs(Angle_Error) > RopoMath::Pi) {
-                        This -> AimStatus[1][1] -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
+                    // Only start to control the swerve when the Control_Status is True
+                    if(This -> Control_Status){
+                        // Get the status
+                        This -> UpdateStatus(This -> Status);
                         
-                        Angle_Error -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
+                        Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1];
+
+                        // if the current values are more than half a rotation apart, move target Angle
+                        // one rotation closer to currentPosition so it is within half a rotation apart
+                        while(fabsf(Angle_Error) > RopoMath::Pi){
+                            This -> AimStatus[1][1] -= RopoMath::Sign(Angle_Error) * 2.0 * RopoMath::Pi;
+                            Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1];
+                        }
+
+                        // move targetPosition a half rotation closer to currentPosition if necessary
+                        if(fabsf(Angle_Error) > RopoMath::Pi / 2.0){
+                            This -> AimStatus[1][1] -= RopoMath::Sign(Angle_Error) * RopoMath::Pi;
+                            // at targetPosition, we'll need to reverse our spin direction
+                            This -> AimStatus[3][1] *= -1.0;
+                        }
+                        Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1];
+                        // Anti-Spin While Big Angle Error
+                        This -> AimStatus[3][1] *= cosf(2 * Angle_Error) / 2.0 + 0.5;
+
+                        // Get Control Value, while Volt to mV
+		                This -> Voltage = 1000.0 * (This -> M2 * This -> AimStatus[3][1] - This -> K * (This -> M1 * This -> Status + This -> AimStatus));
+                        // Votage Limitation
+                        This -> Voltage[1][1] = RopoMath::Limit<float>(This -> Voltage[1][1], 12000.0);
+                        This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
+
+                        // Drive the motors
+                        This -> Motor_1.move_voltage((int)This -> Voltage[1][1]);
+                        This -> Motor_2.move_voltage((int)This -> Voltage[2][1]);
                     }
-                    
-                    // 轮偏角大于90°，则反方向转，且轮转速也对应相反数
-                    if (fabsf(Angle_Error) > RopoMath::Pi / 2.0) {
-                        This -> AimStatus[1][1] -= RopoMath::Sign(Angle_Error) * RopoMath::Pi;
-                        // reverse
-                        This -> AimStatus[3][1] *= -1.0;
+                    else {
+                        This -> Motor_1 . brake();
+                        This -> Motor_2 . brake();
                     }
-                    Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1]; // 更改后再次更新
 
-                    //放缩法 当|Angle_Error|趋近于90°，拉低轮速
-                    This -> AimStatus[3][1] *= cosf(2 * Angle_Error) / 2.0 + 0.5;
-
-                    // Voltage = 1000.0 * (M2 * Vd - K * (M1 * X + Xd))
-                    This -> Voltage = 1000.0 * (This -> M2 * This -> AimStatus[3][1] - This -> K * (This -> M1 * This -> Status + This -> AimStatus));
-                    // Limit Voltage
-                    This -> Voltage[1][1] = RopoMath::Limit<float>(This -> Voltage[1][1], 12000.0);
-                    This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
-
-                    // 手动解除震荡
-                    // if( This -> AimStatus[3][1] == 0.0){
-                    //     This -> Motor_1.move_voltage(0);
-                    //     This -> Motor_2.move_voltage(0);
-                    //     pros::delay(This -> Control_Time);
-                    //     continue;
-                    // }
-
-                    // Ensure that LowPassFilter function is defined and correctly declared in the RopoMath namespace
-                    This -> Motor_1.move_voltage((int)This -> Voltage[1][1]);
-                    This -> Motor_2.move_voltage((int)This -> Voltage[2][1]);
-                    // This -> x1 = (int)This -> Voltage[1][1];
-                    // This -> x2 = (int)This -> Voltage[2][1];
                     pros::delay(This -> Control_Time);
                 }
             }
 
         public:
-            FloatType A;
-            FloatType A_;
-            FloatType V;
-            float x1,x2;
+            DiffySwerve(pros::Motor &_Motor_1, pros::Motor &_Motor_2)
+				:Motor_1(_Motor_1), Motor_2(_Motor_2){
+				new pros::Task(Swerve_Control, this);
+			}
+            ~DiffySwerve(){}
+            inline void Control_On(){ Control_Status = true; }                                                                 // Start to control
+            inline void Control_Off(){ Control_Status = false; }                                                                // Stop controlling
+            inline void Initialize(){ // Intialization
+				Motor_1 . tare_position();
+				Motor_2 . tare_position();
 
-
-            DiffySwerve(pros::Motor& _Motor_1, pros::Motor& _Motor_2)
-				:Motor_1(_Motor_1), Motor_2(_Motor_2), Status(3, 1),
-                AimStatus(3, 1), Voltage(2, 1), 
-                K(2, 3), M1(3, 3), M2(2, 1),
-                BackgroundTaskPtr(nullptr) {}
-            ~DiffySwerve(){
-                delete BackgroundTaskPtr;
-            }
-            inline void Initialize(){
-				Motor_1.tare_position();
-				Motor_2.tare_position();
-
-                Motor_1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-                Motor_2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+                Motor_1 . set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+                Motor_2 . set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
                 M1[1][1] = -1;
                 M1[2][2] = 1;
@@ -106,48 +100,29 @@ namespace RopoDiffySwerve{
 
                 M2[1][1] = 1;
                 M2[2][1] = -1;
-                M2 = (75.0 / 354.0) * M2;
+                M2 = (135 / 354) * M2;
 
-                K[1][1] = -17.0294, K[1][2] = 0.4073; K[1][3] =  -0.3312;
-                K[2][1] = -17.0294, K[2][2] = 0.4073; K[2][3] =   0.3312;
+                K[1][1] = -22.3607; K[1][2] = 0.0853; K[1][3] = -0.4575;
+                K[2][1] = -22.3607; K[2][2] = 0.0853; K[2][3] =  0.4575;
+                
+
+				// start control
+				Control_On();
 			}                                                              
-            inline void SetAimStatus(float _AimSpeed, float _AimAngle) {
+            inline void SetAimStatus(float _AimSpeed, float _AimAngle){
 				AimStatus[1][1] = _AimAngle;
                 AimStatus[2][1] = 0.0;
         		AimStatus[3][1] = _AimSpeed / WheelRadius;
-			}
-            void Start() {
-                BackgroundTaskPtr = new Task(Swerve_Control, this);
-            }
-
-            // 更新状态变量
+			}                                 // Set AimStatus
             void UpdateStatus(Matrix &Status) {
-                static float M1_pos_biais = 0, M2_pos_biais = 0;
-                static float M1_pos_last  = 0, M2_pos_last  = 0, M1_pos_now = 0, M2_pos_now = 0;
-                static float M1_vel_last  = 0, M2_vel_last  = 0, M1_vel_now = 0, M2_vel_now = 0;
-                M1_pos_now = Motor_1.get_position();
-                M2_pos_now = Motor_2.get_position();
-                M1_vel_now = Motor_1.get_actual_velocity();
-                M2_vel_now = Motor_2.get_actual_velocity();
-
-                // ERR Solution
-                if(M1_pos_now == PROS_ERR_F) M1_pos_now = M1_pos_biais = M1_pos_last;
-                else M1_pos_now += M1_pos_biais;
-                if(M2_pos_now == PROS_ERR_F) M2_pos_now = M2_pos_biais = M2_pos_last;
-                else M2_pos_now += M2_pos_biais;
-
-                if(M1_vel_now == PROS_ERR_F) M1_vel_now = M1_vel_last;
-                if(M2_vel_now == PROS_ERR_F) M2_vel_now = M2_vel_last;
-
-                // 轮偏角(rad)
-                Status[1][1] = (M1_pos_now + M2_pos_now) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
-                // 偏角速度(rad/s)
-                Status[2][1] = (M1_vel_now + M2_vel_now) / 2.0 * RopoMath::Pi / 30.0 * AngleRatio;
-                // 轮速(rad/s)
-                Status[3][1] = (M1_vel_now - M2_vel_now) / 2.0 * RopoMath::Pi / 30.0 * SpinRatio;
-
-                M1_pos_last = M1_pos_now; M2_pos_last = M2_pos_now;
-                M1_vel_last = M1_vel_now; M2_vel_last = M2_vel_now;
-            }
+                // 轮偏角,且 Degree to Rad
+                Status[1][1] = (Motor_1.get_position() + Motor_2.get_position()) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
+                x = Status[1][1];
+                // 偏角速度,且 RPM to Rad/s
+                Status[2][1] = (Motor_1.get_actual_velocity() + Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
+                // 轮速,且 RPM to Rad/s
+                Status[3][1] = (Motor_1.get_actual_velocity() - Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 180.0 * SpinRatio;
+            } 
+            float x;                                                  // Upate Status
     };
 }
