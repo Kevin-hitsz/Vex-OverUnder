@@ -1,3 +1,4 @@
+#include "RopoApi.hpp"
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "RopoMath/Misc.hpp"
@@ -8,10 +9,10 @@
 namespace RopoLifter{
 
     // Params
-    const double HoldingPosition = 350.0;
-    const double WaitingPosition = 98.0;
+    const double HoldingPosition = -510.0;
+    const double WaitingPosition = -330.0;
     const double HiddenPosition = 0.0;
-    const double LifterRatio = 1.0;  
+    const double LifterRatio = 1.0;
     const int FullSpeedVoltage = 6000;
     const int Deltatime = 20;
 
@@ -113,6 +114,7 @@ namespace RopoLifter{
                             This -> LifterPosition = PositionVector[1] * LifterRatio;
                             pros::delay(20);
                         }
+                        
                         if (!This -> breaktag)
                         {
                             This -> LeftMotor.brake();
@@ -121,8 +123,8 @@ namespace RopoLifter{
                         break;
                     case WAITING:
                     pros::lcd::print(1,"wait");
-                        This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-                        This -> LeftMotor.move_absolute(WaitingPosition,30);
+                        This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD); //E_MOTOR_BRAKE_BRAKE
+                        This -> LeftMotor.move_absolute(WaitingPosition,160);
                         while (fabs(This->LifterPosition-WaitingPosition) > 3.0)
                         {
                             if (This -> breaktag) break;    
