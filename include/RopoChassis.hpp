@@ -4,8 +4,15 @@
 #include "RopoApi.hpp"
 #include "RopoDiffySwerve.hpp"
 #include <cmath>
+#include "RopoSensor/EncodingDisk.hpp"
+#include "pros/imu.hpp"
 
 namespace RopoChassis{
+    enum ChassisMoveMode{
+                OpenLoop,
+                CloseLoop,
+                Opcontrol
+            };
     class Chassis{
         private:
             const FloatType Length = 0.3672;
@@ -13,23 +20,59 @@ namespace RopoChassis{
             
 
             RopoDiffySwerve::DiffySwerve &LF, &LB, &RF, &RB;
+            RopoSensor::EncodingDisk &EncodingDisk;
+            pros::IMU &InertialSensor;
 
-            Matrix AimStatus; // (Vx,Vy,W)
-            Matrix SwerveAimStatus; // (V,Theta)
-            Matrix AimStatus_X_Y; // (Vx,Vy)
-            Matrix Transfer_M; // Transfer Matix
+            Matrix AimStatus = Matrix(3,1); // (Vx,Vy,W)
+            Matrix SwerveAimStatus = Matrix(2,1); // (V,Theta)
+            Matrix AimStatus_X_Y = Matrix(2,1); // (Vx,Vy)
+            Matrix Transfer_M = Matrix(8,3); // Transfer Matix
 
             pros::Task *BackgroundTaskPtr;
 
-            
+            Matrix AimPosition = Matrix(3,1);
+            Matrix Velocity = Matrix(3,1); 
+            Matrix ActualPosition = Matrix(3,1);
+            Matrix PositionError = Matrix(3,1);
+            Matrix Kp = Matrix(3,3);
+            Matrix Ki = Matrix(3,3);
+            Matrix Integrator = Matrix(3,1);
+            Matrix Parameter = Matrix(3,3);
+
+            bool Position_OK = false;
+            static constexpr float ControlTime = 20; // ms
+            FloatType XYMinError = 0.01;
+            FloatType ThetaMinError = 0.01;
+            int counter_for_error = 0;
+            const int max_counter = 50;
+            int max_time = 1000; // ms
+            int DelayTime;
+            RopoChassis::ChassisMoveMode MoveMode = Opcontrol;
+
 
             static void ChassisControl(void* param){
                 if(param == nullptr) return;
                 Chassis *This = static_cast<Chassis *>(param);
                 while(true){
+                    This -> UpdatePosition();
+                    if(This -> MoveMode == OpenLoop){
+                    }
+                    else if (This -> MoveMode == CloseLoop){
+                        int counter_for_time = 0;
+                        while(!This -> Position_OK){
+                            This -> PositionControl();
+                            This -> MovingCalculate();
+                            This -> SwerveMove();
+                            counter_for_time++;
+                            if(counter_for_time * 5 > This -> max_time)break;
+                            pros::delay(5);
+                        }
+                    }
+                    else if (This -> MoveMode == Opcontrol){
+                    }
                     This -> MovingCalculate();
                     This -> SwerveMove();
-                    pros::delay(15);
+                    pros::delay(This -> DelayTime);
                 }
             }
 
@@ -51,18 +94,12 @@ namespace RopoChassis{
             }
 
         public:
-            enum ChassisStatus{
-                opcontrol = 0,
-                autonomous= 1,
-                freedrive = 2
-            }Status;
-            Matrix (* UpdatePosition)();
-            Chassis(RopoDiffySwerve::DiffySwerve& LF_,RopoDiffySwerve::DiffySwerve& LB_,RopoDiffySwerve::DiffySwerve& RF_,RopoDiffySwerve::DiffySwerve& RB_,Matrix(* p_getposition)())
-            :Status(opcontrol), LF(LF_), LB(LB_), RF(RF_), RB(RB_), UpdatePosition(p_getposition),
+            Chassis(RopoDiffySwerve::DiffySwerve& LF_, RopoDiffySwerve::DiffySwerve& LB_, RopoDiffySwerve::DiffySwerve& RF_, RopoDiffySwerve::DiffySwerve& RB_, pros::IMU& Imu, RopoSensor::EncodingDisk& Encoding_Disk)
+            :LF(LF_), LB(LB_), RF(RF_), RB(RB_), InertialSensor(Imu), EncodingDisk(Encoding_Disk),
             AimStatus(3, 1), SwerveAimStatus(8, 1), AimStatus_X_Y(8, 1),
             Transfer_M(8, 3), BackgroundTaskPtr(nullptr) {
                 LF.Initialize(); RF.Initialize(); LB.Initialize(); RB.Initialize();
-                //LF.Start(); RF.Start(); LB.Start(); RB.Start();
+
                 Transfer_M[1][1] = 1,Transfer_M[1][2] = 0,Transfer_M[1][3] = - Width  * 0.5;
                 Transfer_M[2][1] = 0,Transfer_M[2][2] = 1,Transfer_M[2][3] = - Length * 0.5;
                 Transfer_M[3][1] = 1,Transfer_M[3][2] = 0,Transfer_M[3][3] =   Width  * 0.5;
@@ -71,39 +108,86 @@ namespace RopoChassis{
                 Transfer_M[6][1] = 0,Transfer_M[6][2] =-1,Transfer_M[6][3] = - Length * 0.5;
                 Transfer_M[7][1] = -1,Transfer_M[7][2]= 0,Transfer_M[7][3] = - Width  * 0.5;
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
+
+                Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 5;
+
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
-
-            void SetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W){
+            inline void UpdatePosition(){
+                ActualPosition[1][1] = EncodingDisk.GetPosX();
+                ActualPosition[2][1] = EncodingDisk.GetPosY();
+                ActualPosition[3][1] = InertialSensor.get_yaw() / 180.0 * RopoMath::Pi;
+            }
+            inline void AutoSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
+                MoveMode = OpenLoop;
                 AimStatus[1][1] = Vx;
                 AimStatus[2][1] = Vy;
                 AimStatus[3][1] = W;
+                DelayTime = Time;
+            }
+            inline void OpSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
+                MoveMode = Opcontrol;
+                AimStatus[1][1] = Vx;
+                AimStatus[2][1] = Vy;
+                AimStatus[3][1] = W;
+                DelayTime = Time;
+            }
+            void PositionControl(){
+    
+                PositionError = AimPosition - ActualPosition;
+                if(fabsf(PositionError[3][1]) > RopoMath::Pi) PositionError[3][1] -= 2 * RopoMath::Pi * RopoMath::Sign(PositionError[3][1]);
+                if(fabsf(PositionError[1][1]) < XYMinError && fabsf(PositionError[2][1]) < XYMinError && fabsf(PositionError[3][1]) < ThetaMinError){
+                    counter_for_error++;
+                    if (counter_for_error > max_counter){
+                        Position_OK = true;
+                        counter_for_error = max_counter;
+                    }
+                }else{
+                    counter_for_error = 0;
+                    Position_OK = false;
+                }
+                if(Position_OK) Velocity[1][1] = Velocity[2][1] = Velocity[3][1] = 0;
+                else{
+                    Velocity = Kp * PositionError;
+                    Velocity[1][1] = fabsf(Velocity[1][1]) > 1.2 ? 1.2 * RopoMath::Sign(Velocity[1][1]) : Velocity[1][1];
+                    Velocity[2][1] = fabsf(Velocity[2][1]) > 1.2 ? 1.2 * RopoMath::Sign(Velocity[2][1]) : Velocity[2][1];
+                    Velocity[3][1] = fabsf(Velocity[3][1]) > (1.5 * RopoMath::Pi) ? (1.5 * RopoMath::Pi * RopoMath::Sign(Velocity[3][1])) : Velocity[3][1];
+                    // Rotaion Matrix
+                    Parameter[1][1] = cosf(ActualPosition[3][1]) , Parameter[1][2] = sinf(ActualPosition[3][1]) , Parameter[1][3] = 0;
+                    Parameter[2][1] =-sinf(ActualPosition[3][1]) , Parameter[2][2] = cosf(ActualPosition[3][1]) , Parameter[2][3] = 0;
+                    Parameter[3][1] = 0                          , Parameter[3][2] = 0                          , Parameter[3][3] = 1;
+                    Velocity = Parameter * Velocity;
+                }
+                Velocity[2][1] = -Velocity[2][1];             // ???
             }
 
-            void SetAimStatus(Matrix const AimStatus_){
-                AimStatus = AimStatus_;
+            void AutoSetPosition(FloatType x, FloatType y, FloatType theta, int _max_time){
+                MoveMode = CloseLoop;
+                counter_for_error = 0;
+                Integrator[1][1] = Integrator[2][1] = Integrator[3][1] = 0;
+                max_time = _max_time;
+                Position_OK = false;
+                AimPosition[1][1] = x;
+                AimPosition[2][1] = y;
+                AimPosition[3][1] = theta;
             }
-
-            void AutoStart(){
-                Status = autonomous;
+            void OpenAuto(){
+                MoveMode = OpenLoop;
             }
-
-            void Autoend(){
-                Status = opcontrol;
+            /* void CloseAuto(){
+                MoveMode = CloseLoop;
+            } */
+            void Operator(){
+                MoveMode = Opcontrol;
             }
 
             bool IsAuto(){
-                if(Status == autonomous && Status == freedrive) return true;
+                if(MoveMode != Opcontrol) return true;
                 else return false;
-            }     
-
+            }
             bool IsOpcontrol(){
-                if(Status == opcontrol) return true;
+                if(MoveMode == Opcontrol) return true;
                 else return false;
-            }      
-
-            void FreeDrive(){
-                Status = freedrive;
             }
     }; 
 }
