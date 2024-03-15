@@ -103,7 +103,7 @@ namespace RopoDevice{
 
 		const int RightLiftMotorPort		= 20;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
-		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, true);
+		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false);
 
 		const int IntakeMotorPort		= 10;
 		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
