@@ -64,7 +64,7 @@ namespace RopoAuto{
         double Lim_x = 10000;
         double Lim_y = 10000;
         double Dis = Distance * k;
-        double Roa_para = -0.9;
+        double Roa_para = -1;
         double Dis_para = 1;
         double X = RopoDevice::Position_Motor::MyPosition.Get_X();
         double Y = RopoDevice::Position_Motor::MyPosition.Get_Y();
@@ -80,29 +80,55 @@ namespace RopoAuto{
             return 1; 
         }
     }
-    void Auto_Find(){
 
+    void Update_Ball_Position(double Distance , double Roation){
+        double k = 1.0;
+        double Roa_para = -1;
+        double ExternDis = 0.4;
+        double X = RopoDevice::Position_Motor::MyPosition.Get_X();
+        double Y = RopoDevice::Position_Motor::MyPosition.Get_Y();
+        Angle = Roa_para * Roation + RopoDevice::Position_Motor::MyPosition.Get_Angle();//OpenMV获取角度向左是负，转换为右手系需要*-1
+        Ball_x = X + RopoMath::Cos(Angle) * (Distance * k + ExternDis);
+        Ball_y = Y + RopoMath::Sin(Angle) * (Distance * k + ExternDis);
+    }
+
+    void Auto_Find(){
+        RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+        RopoDevice::Motors::IntakeMotor.move_velocity(-500);
+		RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
         int See_Flag = 0;
         double Distance = 0;
         double Degree = 0;
         double Aim_Position[2] = {0};
         int Go_Flag = 0;
         See_Flag = RopoDevice::Sensors::My_openMV.If_See();
-        while(!See_Flag) {
-            RopoDevice::Chassis.MoveVelocity(0,0.5);
-            pros::delay(100);
-            See_Flag = RopoDevice::Sensors::My_openMV.If_See();
-        }
         Distance = RopoDevice::Sensors::My_openMV.Get_Ball_Dis();
         Degree = RopoDevice::Sensors::My_openMV.Get_Ball_Deg();
-        // std::printf("Number:%d , Distance:%lf , Degree:%lf\n",i,Distance,Degree);
-        if(!Auto_Find_DQ(Distance,Degree)){
-            Go_Flag = 1;
-        }
-        if(Go_Flag){
-            RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
+        while(!( (See_Flag) && !Auto_Find_DQ(Distance,Degree) ) ) {
+            RopoDevice::Chassis.MoveVelocity(0,3.0);
             pros::delay(100);
-            Go_Flag = 0;
+            See_Flag = RopoDevice::Sensors::My_openMV.If_See();
+            Distance = RopoDevice::Sensors::My_openMV.Get_Ball_Dis();
+            Degree = RopoDevice::Sensors::My_openMV.Get_Ball_Deg();
         }
+        Angle = -RopoDevice::Sensors::My_openMV.Get_Ball_Deg() + RopoDevice::Position_Motor::MyPosition.Get_Angle();
+        RopoDevice::Chassis.AutoRotateAbs(Angle);
+        pros::delay(30);
+        for(int ii = 0;ii<=25;ii++){
+            if(!RopoDevice::Chassis.IfArrived()){
+                Angle = -RopoDevice::Sensors::My_openMV.Get_Ball_Deg() + RopoDevice::Position_Motor::MyPosition.Get_Angle();
+                RopoDevice::Chassis.AutoRotateAbs(Angle);
+                pros::delay(20);
+            }
+        }
+        //pros::delay(300);
+        // while(!RopoDevice::Chassis.IfArrived()){
+        //     // Angle = -RopoDevice::Sensors::My_openMV.Get_Ball_Deg() + RopoDevice::Position_Motor::MyPosition.Get_Angle();
+        //     // RopoDevice::Chassis.AutoRotateAbs(Angle);
+        //     pros::delay(30);
+        // }
+        Update_Ball_Position(RopoDevice::Sensors::My_openMV.Get_Ball_Dis() , RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
+        RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y);
+
     }
 }

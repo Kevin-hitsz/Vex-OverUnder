@@ -44,7 +44,7 @@ namespace RopoParameter {
 	// static constexpr double GPSY_OFFSET = 0.0931;
 
 	//Chassis
-	static constexpr double CHASSIS_PARAMETER = 0.381 ; 				//车体宽度
+	static constexpr double CHASSIS_PARAMETER = 0.3006 ; 				//车体宽度
 	static constexpr double WHEEL_RAD = 0.034925;						//轮子半径
 	static constexpr double CHASSIS_RATIO = 23.0 / 22.0;	      		//减速比
 	static constexpr double CHASSIS_SPPED_MAX= 600;					//底盘电机最高转速
