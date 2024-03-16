@@ -60,6 +60,7 @@ namespace RopoChassis{
                     else if (This -> MoveMode == CloseLoop){
                         int counter_for_time = 0;
                         while(!This -> Position_OK){
+                            This -> UpdatePosition();
                             This -> PositionControl();
                             This -> MovingCalculate();
                             This -> SwerveMove();
