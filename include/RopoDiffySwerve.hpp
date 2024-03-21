@@ -58,7 +58,7 @@ namespace RopoDiffySwerve{
                         }
                         Angle_Error = This -> AimStatus[1][1] - This -> Status[1][1];
                         // Anti-Spin While Big Angle Error
-                        This -> AimStatus[3][1] *= cosf(2 * Angle_Error) / 2.0 + 0.5;
+                        This -> AimStatus[3][1] *= (cosf(2 * Angle_Error) / 2.0 + 0.5)*(cosf(2 * Angle_Error) / 2.0 + 0.5);
 
                         // Get Control Value, while Volt to mV
 		                This -> Voltage = 1000.0 * (This -> M2 * This -> AimStatus[3][1] - This -> K * (This -> M1 * This -> Status + This -> AimStatus));
@@ -100,9 +100,9 @@ namespace RopoDiffySwerve{
 
                 M2[1][1] = 1;
                 M2[2][1] = -1;
-                M2 = (2000 / 8437) * M2;
+                M2 = (2000.0 / 8437) * M2;
 
-                K[1][1] = -15.2753; K[1][2] = 0.4139 ; K[1][3] = 0.0329;
+                K[1][1] = -14.1412; K[1][2] = 0.4139 ; K[1][3] = 0.0508;
                 K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
                 
 
