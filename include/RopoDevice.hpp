@@ -21,23 +21,23 @@ namespace RopoDevice{
 	//创建三线接口
 	namespace ThreeWire{
 
-		const char ExternPneumaticPort = 'G';
+		const char ExternPneumaticPort = 'B';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char WingPneumaticPort  = 'B';
+		const char WingPneumaticPort  = 'E';
 		pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
 
 		const char IntakerPneumaticPort = 'A';
 		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
 
-		const char SpadePneumaticPort = 'H';
+		const char SpadePneumaticPort = 'D';
 		pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
 
 	}
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 19;		// 19
+		const int InertialPort = 8;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 16;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
@@ -46,14 +46,14 @@ namespace RopoDevice{
 	// 创建电机
 	namespace Motors{	
 
-		const int LeftChassisMotor1Port  	= 3;	// 3
-		const int LeftChassisMotor2Port  	= 1;	// 1
-		const int LeftChassisMotor3Port  	= 9;	// 9
-        const int LeftChassisMotor4Port  	= 6;	
+		const int LeftChassisMotor1Port  	= 2;
+		const int LeftChassisMotor2Port  	= 4;
+		const int LeftChassisMotor3Port  	= 5;
+        const int LeftChassisMotor4Port  	= 6;
 		const int RightChassisMotor1Port	= 13;
-		const int RightChassisMotor2Port	= 12;
-		const int RightChassisMotor3Port	= 15;	// 15
-		const int RightChassisMotor4Port	= 17;	// 17
+		const int RightChassisMotor2Port	= 14;
+		const int RightChassisMotor3Port	= 15;
+		const int RightChassisMotor4Port	= 20;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
@@ -101,11 +101,11 @@ namespace RopoDevice{
 			RightWheelMove(RV);
 		}
 
-		const int RightLiftMotorPort		= 20;
+		const int RightLiftMotorPort		= 17;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false );
 
-		const int IntakeMotorPort		= 10;
+		const int IntakeMotorPort		= 9;
 		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
 		pros::Motor   IntakeMotor ( IntakeMotorPort  , 	IntakeGearset, true );
 		
