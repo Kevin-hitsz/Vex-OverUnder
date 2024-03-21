@@ -39,7 +39,7 @@ namespace RopoDevice{
 	namespace Sensors{
 		const int InertialPort = 8;
 		pros::IMU Inertial(InertialPort);
-		const int OpenmvPort = 16;
+		const int OpenmvPort = 18;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
