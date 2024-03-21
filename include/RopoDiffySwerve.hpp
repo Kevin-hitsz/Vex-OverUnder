@@ -10,8 +10,8 @@ namespace RopoDiffySwerve{
     class DiffySwerve{
         private:
             // System
-            static constexpr float SpinRatio = 450.0 / 600.0; // Wheel Rpm / Motor Rpm
-            static constexpr float AngleRatio = 20.0 / 45.0; // Swerve Angle Rpm / Motor Rpm
+            static constexpr float SpinRatio = 143.0 / 200.0; // Wheel Rpm / Motor Rpm
+            static constexpr float AngleRatio = 34.0 / 75.0; // Swerve Angle Rpm / Motor Rpm
             static constexpr float WheelRadius = 2.75 * 0.0254 / 2.0; // unit: m
             bool Control_Status = false; // start to control or not
             pros::Motor& Motor_1; // Motor No.1
