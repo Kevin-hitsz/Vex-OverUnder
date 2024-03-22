@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "test_HYG",
+    "project_name": "HYG_1",
     "target": "v5",
     "templates": {
       "kernel": {
