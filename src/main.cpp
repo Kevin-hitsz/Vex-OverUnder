@@ -262,6 +262,11 @@ void autonomous_1(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 	// --------- begin ------------
 
+
+	// ControllerModule::ChangeIntakerPneumatic();
+	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
+	pros::delay(30);
+	RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
 	RopoDevice::Chassis.AutoDirectMove(1.11,0,0);
 	while(!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
@@ -270,16 +275,23 @@ void autonomous_1(){
 	while(!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
+	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
+	RopoDevice::Chassis.MoveVelocity(0.2,0);
+	pros::delay(230);
 	ControllerModule::TogetherPush();
 	// RopoDevice::Chassis.AutoDirectMove(1.11,-0.69,1);
 	// while(!RopoDevice::Chassis.IfArrived()){
 	// 	pros::delay(20);
 	// }
-	RopoDevice::Chassis.MoveVelocity(-1,0);
-	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(-1.3,0);
+	pros::delay(850);
 	RopoDevice::Position_Motor::MyPosition.Set_XY(1.11, -0.70);
+	RopoDevice::Chassis.MoveVelocity(0.3,0);
+	pros::delay(230);
 	ControllerModule::TogetherUnpush();
-	RopoDevice::Chassis.AutoPositionMove(0.05,0.4);
+	RopoDevice::Chassis.MoveVelocity(0.3,0);
+	pros::delay(150);
+	RopoDevice::Chassis.AutoPositionMove(-0.01,0.38);
 	while(!RopoDevice::Chassis.IfArrived()){
 		pros::delay(20);
 	}
@@ -292,14 +304,14 @@ void autonomous_1(){
 	}
 	ControllerModule::Lift();
 	pros::delay(700);
-	for (int i = 1; i <= 8; i++) {
+	for (int i = 1; i <= 2; i++) {
 
 		// RopoDevice::Chassis.AutoRotateAbs(182);
 		// while(!RopoDevice::Chassis.IfArrived()){
 		// 	pros::delay(20);
 		// }
-		RopoDevice::Chassis.MoveVelocity(0,2);
-		pros::delay(450);
+		RopoDevice::Chassis.MoveVelocity(0,2.3);
+		pros::delay(480);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		RopoDevice::Chassis.AutoRotateAbs(135);
 		while(!RopoDevice::Chassis.IfArrived()){
@@ -391,13 +403,28 @@ void autonomous_1(){
 //-------------------------------------------------------------
 
 	RopoDevice::Chassis.AutoRotateAbs(180);
-	RopoDevice::Chassis.MoveVelocity(0.5,-0.9);
+	RopoDevice::Chassis.MoveVelocity(0.5,-0.92);
 	pros::delay(1450);
-	RopoDevice::Chassis.AutoRotateAbs(90);
-	RopoDevice::Chassis.MoveVelocity(0.7,0);
-	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(3000);
+	// RopoDevice::Chassis.AutoRotateAbs(180);
+	// delay();
+	// pros::delay(2000);
+	RopoDevice::Chassis.MoveVelocity(0.6,0.2);
+	pros::delay(1400);
+
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::Lift();
+	pros::delay(600);
+	RopoDevice::Position_Motor::MyPosition.Set_XY(0, 0);
+	RopoDevice::Chassis.MoveVelocity(-0.3,0);
+	pros::delay(700);
+	ControllerModule::Intake();
+	RopoDevice::Chassis.MoveVelocity(0.2,0);
+	pros::delay(400);
+	RopoDevice::Chassis.AutoPositionMove(0.4,-0.1);
+	RopoDevice::Chassis.AutoRotateAbs(0);
+
 
 
 
