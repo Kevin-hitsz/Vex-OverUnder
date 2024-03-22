@@ -180,11 +180,13 @@ namespace ControllerModule {
 			
 			// MasterController.print(0,1,"degree: %.1lf",RopoDevice::GetPosition()[3]);
 			// pros::delay(50); 
-			MasterController.print(1,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
-			pros::delay(50); 
+			// MasterController.print(1,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
+			// pros::delay(50); 
 			MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
 			pros::delay(50); 
 			MasterController.print(0,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
+			pros::delay(50); 
+			MasterController.print(1,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
 			pros::delay(50); 
 			// MasterController.print(1,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_rotation()*1.017);
 			// pros::delay(50); 
@@ -218,6 +220,7 @@ void opcontrol()
 {
 	//autonomous();
 	//pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
+	RopoDevice::ChassisBrake();
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
@@ -281,7 +284,7 @@ void opcontrol()
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	RopoDevice::Chassis.AutoRotateAbs(90);
+	RopoDevice::Chassis.AutoRotateAbs(135);
 	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);

@@ -26,7 +26,7 @@ namespace RopoChassis{
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,2.5   ,0.2};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000078,0.000008,0.0000025,0.0050 ,-0.0050 ,1.0   ,0.3};
 			//0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2
 			RopoControl::TankChassisCore Core;		
 			
@@ -116,7 +116,7 @@ namespace RopoChassis{
 							//输入平滑
 							AimPosition[1] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[1],AimPosition[1],11,1000.0 / This->SampleTime);//10
 							AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],11,1000.0 / This->SampleTime);//10
-							AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],10,1000.0 / This->SampleTime);//10
+							AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],11,1000.0 / This->SampleTime);//10
 							
 							
 							aimDistance=RopoMath::Distance(AimPosition[1]-IniPosition[1],AimPosition[2]-IniPosition[2]);		
