@@ -97,12 +97,16 @@ namespace RopoSensor{
 			}			
 			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate)
 				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate),Encoding_in_Car_X(0),Encoding_in_Car_Y(0),Encoding_in_Car_Angle(0){}
+
 			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate,int _SamplingDelay)
 				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay),Encoding_in_Car_X(0),Encoding_in_Car_Y(0),Encoding_in_Car_Angle(0){}
+
 			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate,int _SamplingDelay,float _Encoding_in_Car_X,float _Encoding_in_Car_Y)
 				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay),Encoding_in_Car_X(_Encoding_in_Car_X),Encoding_in_Car_Y(_Encoding_in_Car_Y),Encoding_in_Car_Angle(0){}	
+			
 			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate,int _SamplingDelay,float _Encoding_in_Car_X,float _Encoding_in_Car_Y,float _Encoding_in_Car_Angle)
 				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay),Encoding_in_Car_X(_Encoding_in_Car_X),Encoding_in_Car_Y(_Encoding_in_Car_Y),Encoding_in_Car_Angle(_Encoding_in_Car_Angle){}
+			
 			~EncodingDisk(){}
 	};
 }
