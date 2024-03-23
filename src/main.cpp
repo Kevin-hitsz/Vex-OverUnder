@@ -182,14 +182,20 @@ namespace ControllerModule {
 			// pros::delay(50); 
 			// MasterController.print(1,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
 			// pros::delay(50); 
-			MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
-			pros::delay(50); 
-			MasterController.print(0,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
-			pros::delay(50); 
-			MasterController.print(1,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
-			pros::delay(50); 
-			// MasterController.print(1,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_rotation()*1.017);
+
+			// MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
 			// pros::delay(50); 
+			// MasterController.print(0,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
+			// pros::delay(50); 
+			// MasterController.print(1,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
+			// pros::delay(50); 
+			MasterController.print(0,1,"0：%.2lf",RopoDevice::Sensors::EncodingDisk.GetAngle(0));
+			pros::delay(50);
+			MasterController.print(1,1,"1：%.2lf",RopoDevice::Sensors::EncodingDisk.GetAngle(1));
+			pros::delay(50);
+			MasterController.print(2,1,"2：%.2lf",RopoDevice::Sensors::EncodingDisk.GetAngle(2));
+			pros::delay(50);
+
 			// MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
 			// pros::delay(50);
 		}
@@ -199,7 +205,7 @@ namespace ControllerModule {
 void initialize() {
 	pros::lcd::initialize();
 	pros::delay(50);
-	RopoDevice::DeviceInit();
+	//RopoDevice::DeviceInit();
 	RopoDevice::MotorsInit();
 	RopoDevice::Position_Motor::MyPosition.initial();
 	RopoDevice::ThreeWire::IntakerPneumatic.set_value(false);
