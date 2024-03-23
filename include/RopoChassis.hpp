@@ -77,7 +77,7 @@ namespace RopoChassis{
                     This -> MovingCalculate();
                     This -> SwerveMove();
                     pros::delay(This -> DelayTime);
-                    pros::delay(This -> DelayTime);
+
                 }
             }
 
