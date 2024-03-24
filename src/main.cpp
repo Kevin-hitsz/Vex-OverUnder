@@ -180,21 +180,15 @@ namespace ControllerModule {
 			
 			// MasterController.print(0,1,"degree: %.1lf",RopoDevice::GetPosition()[3]);
 			// pros::delay(50); 
-			// MasterController.print(1,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
-			// pros::delay(50); 
+			MasterController.print(1,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
+			pros::delay(50); 
 
-			// MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
-			// pros::delay(50); 
-			// MasterController.print(0,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
-			// pros::delay(50); 
+			MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
+			pros::delay(50); 
+			MasterController.print(0,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
+			pros::delay(50); 
 			// MasterController.print(1,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
 			// pros::delay(50); 
-			MasterController.print(0,1,"0：%.2lf",RopoDevice::Sensors::EncodingDisk.GetAngle(0));
-			pros::delay(50);
-			MasterController.print(1,1,"1：%.2lf",RopoDevice::Sensors::EncodingDisk.GetAngle(1));
-			pros::delay(50);
-			MasterController.print(2,1,"2：%.2lf",RopoDevice::Sensors::EncodingDisk.GetAngle(2));
-			pros::delay(50);
 
 			// MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
 			// pros::delay(50);
@@ -205,7 +199,7 @@ namespace ControllerModule {
 void initialize() {
 	pros::lcd::initialize();
 	pros::delay(50);
-	//RopoDevice::DeviceInit();
+	RopoDevice::DeviceInit();
 	RopoDevice::MotorsInit();
 	RopoDevice::Position_Motor::MyPosition.initial();
 	RopoDevice::ThreeWire::IntakerPneumatic.set_value(false);
@@ -262,7 +256,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising,  RopoAuto::Auto_Find);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoAuto::Auto_Find);
 
 	ButtonDetectLine.Enable();
 
@@ -290,13 +284,20 @@ void opcontrol()
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	RopoDevice::Chassis.AutoRotateAbs(135);
-	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
-	RopoDevice::Chassis.AutoRotateAbs(0);
-	while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
-	// RopoDevice::Chassis.AutoPositionMove(0.5,0,-90);
-	// RopoDevice::Chassis.AutoPositionMove(0.5,-0.5,-90);
-	// RopoDevice::Chassis.AutoPositionMove(0,0,0);
+	// RopoDevice::Chassis.AutoRotateAbs(135);
+	// while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
+	// RopoDevice::Chassis.AutoRotateAbs(0);
+	// while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
+	RopoAuto::Auto_Find();
+	RopoDevice::Chassis.AutoPositionMove(1.2,-1.4,-90);
+	ControllerModule::ChangeIntakerPneumatic();
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
 }
 
 void delay(){

@@ -61,20 +61,20 @@ namespace RopoAuto{
     double Ball_y = 0;
     bool Auto_Find_DQ(double Distance , double Roation){
         double k = 1.0;
-        double Lim_x = 10000;
-        double Lim_y = 10000;
+        double Lim_x = 100;
+        double Lim_y = 100;
         double Dis = Distance * k;
         double Roa_para = -1;
         double Dis_para = 1;
         double ExternDis = 0.1;
-        double X = RopoDevice::Position_Motor::MyPosition.Get_X();
-        double Y = RopoDevice::Position_Motor::MyPosition.Get_Y();
+        double X = RopoDevice::GetTransformedPosition()[1];
+        double Y = RopoDevice::GetTransformedPosition()[2];
         Distance = Dis_para * Distance;
         Roation = Roa_para * Roation;
         Angle = Roation + RopoDevice::Position_Motor::MyPosition.Get_Angle();//OpenMV获取角度向左是负，转换为右手系需要*-1
         Ball_x = X + RopoMath::Cos(Angle)* (Dis * k + ExternDis);
         Ball_y = Y + RopoMath::Sin(Angle)* (Dis * k + ExternDis);
-        if(Ball_x < Lim_x && Ball_y < Lim_y){
+        if(Ball_x < 1.5 && Ball_x > 0.3 && Ball_y < -0.9 && Ball_y > -1.5 ){
             return 0;//没有越界就是0
         }
         else{
@@ -86,8 +86,8 @@ namespace RopoAuto{
         double k = 1.0;
         double Roa_para = -1;
         double ExternDis = 0.2;
-        double X = RopoDevice::Position_Motor::MyPosition.Get_X();
-        double Y = RopoDevice::Position_Motor::MyPosition.Get_Y();
+        double X = RopoDevice::GetTransformedPosition()[1];
+        double Y = RopoDevice::GetTransformedPosition()[2];
         Angle = Roa_para * Roation + RopoDevice::Position_Motor::MyPosition.Get_Angle();//OpenMV获取角度向左是负，转换为右手系需要*-1
         Ball_x = X + RopoMath::Cos(Angle) * (Distance * k + ExternDis);
         Ball_y = Y + RopoMath::Sin(Angle) * (Distance * k + ExternDis);
@@ -115,7 +115,7 @@ namespace RopoAuto{
         Angle = -RopoDevice::Sensors::My_openMV.Get_Ball_Deg() + RopoDevice::Position_Motor::MyPosition.Get_Angle();
         RopoDevice::Chassis.AutoRotateAbs(Angle);
         pros::delay(30);
-        for(int ii = 0;ii<=25;ii++){
+        for(int ii = 0;ii<=35;ii++){
             if(!RopoDevice::Chassis.IfArrived()){
                 Angle = -RopoDevice::Sensors::My_openMV.Get_Ball_Deg() + RopoDevice::Position_Motor::MyPosition.Get_Angle();
                 RopoDevice::Chassis.AutoRotateAbs(Angle);

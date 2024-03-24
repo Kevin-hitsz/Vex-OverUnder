@@ -42,10 +42,10 @@ namespace RopoDevice{
 		const int OpenmvPort = 18;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 
-		const int EncodingDiskReceivePort = 15;
-		const int EncodingDiskSendPort = 16;
-		const int EncodingDiskBaudrate = 115200;
-		RopoSensor::EncodingDisk EncodingDisk(EncodingDiskSendPort,EncodingDiskBaudrate,EncodingDiskReceivePort,EncodingDiskBaudrate);
+	// 	const int EncodingDiskReceivePort = 15;
+	// 	const int EncodingDiskSendPort = 16;
+	// 	const int EncodingDiskBaudrate = 115200;
+	// 	RopoSensor::EncodingDisk EncodingDisk(EncodingDiskSendPort,EncodingDiskBaudrate,EncodingDiskReceivePort,EncodingDiskBaudrate);
 	}			
 	
 	// 创建电机
