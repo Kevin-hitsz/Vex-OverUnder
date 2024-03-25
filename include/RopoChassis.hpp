@@ -26,7 +26,7 @@ namespace RopoChassis{
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000078,0.000008,0.0000025,0.0050 ,-0.0050 ,1.0   ,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000060,0.000008,0.0000025,0.0050 ,-0.0050 ,2.0   ,0.3};
 			//0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2
 			RopoControl::TankChassisCore Core;		
 			
@@ -44,7 +44,8 @@ namespace RopoChassis{
 				DetectMove = -1,				//直接控制状态
 				MovePosAbs = 0,				//坐标运行状态
 				MoveForward = 1,			//直行
-				Rotate = 2					//旋转
+				Rotate = 2,					//旋转
+				RotateLock = 3              //旋转锁定，速度不改
 			} AutoMoveType;
 			
 			enum OpStatus{
@@ -155,7 +156,7 @@ namespace RopoChassis{
 
 									if(!This->moveReverse)
 									{
-										if(DeltaDis/aimDistance>0.2)
+										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
 											DeltaRotation -= CurrentPosition[3];
 										else
 											//DeltaRotation=IniPosition[3]-CurrentPosition[3];
@@ -170,7 +171,7 @@ namespace RopoChassis{
 										if(DeltaRotation>180)
 											DeltaRotation-=360;
 
-										if(DeltaDis/aimDistance>0.2)
+										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
 											DeltaRotation -= CurrentPosition[3];
 										else
 											//DeltaRotation=IniPosition[3]-CurrentPosition[3];
@@ -401,9 +402,11 @@ namespace RopoChassis{
 				pros::delay(20);
 				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
 				//旋转至目标角度
-				AutoRotateAbs(Theta);
-				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				if(Theta < 1000){
+					AutoRotateAbs(Theta);
+					pros::delay(20);
+					while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				}
 				flag = true;
 			}
 

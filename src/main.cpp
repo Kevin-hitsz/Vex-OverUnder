@@ -130,7 +130,7 @@ namespace ControllerModule {
 	void Outtake(){
 		RopoDevice::Motors::IntakeMotor.move_velocity(400);
 		pros::delay(200);
-		RopoDevice::Motors::IntakeMotor.move_voltage(0);
+		RopoDevice::Motors::IntakeMotor.move_voltage(100);
 	}
 	void IntakerStop(){
 		RopoDevice::Motors::IntakeMotor.move_voltage(0);
@@ -138,9 +138,11 @@ namespace ControllerModule {
 
 	bool intaker_status = false;  
 	void ChangeIntakerPneumatic(){
-		if(!intaker_status)Outtake();
+		
 		intaker_status ^= 1;
 		RopoDevice::ThreeWire::IntakerPneumatic.set_value(intaker_status);
+		pros::delay(100);
+		if(intaker_status)Outtake();
 	}
 
 	void TurnAround(){
@@ -152,24 +154,16 @@ namespace ControllerModule {
 	}
 
 	void AutoLift(){
-		RopoDevice::Chassis.MoveVelocity(-0.6,0);
-		pros::delay(400);
-		RopoDevice::Chassis.MoveVelocity(-0.3,0);
-		pros::delay(500);
-		RopoDevice::Chassis.MoveVelocity(0,0);
+		RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+		RopoDevice::LiftMotors.Wait2();
+		RopoDevice::Chassis.MoveVelocity(-0.2,-0.05);
+		while(RopoDevice::Sensors::distance.get() - 0.45 * RopoDevice::Sensors::distance.get_object_velocity() < 117) pros::delay(20);
 		ChangeExtern();
-		RopoDevice::Chassis.MoveVelocity(-0.6,0);
+		pros::delay(200);
+		ChangeExtern();
 		pros::delay(1000);
-		RopoDevice::Chassis.MoveVelocity(-1.2,0);
-		pros::delay(1000);
-		RopoDevice::Chassis.MoveVelocity(-2.0,0);
-		pros::delay(1000);
-		RopoDevice::Chassis.MoveVelocity(-1.3,0);
-		pros::delay(1000);
-		RopoDevice::Chassis.MoveVelocity(-0.6,0);
-		pros::delay(1000);
-		RopoDevice::Chassis.MoveVelocity(-0.3,0);
-		pros::delay(500);
+		ChangeExtern();
+		pros::delay(100);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 
 	}
@@ -177,19 +171,28 @@ namespace ControllerModule {
 	void ControllerPrint(){
 		while(true) {
 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
+			// Position ******************************************************************************************************
+			MasterController.print(0,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
+			pros::delay(50); 
+			// MasterController.print(1,1,"degree: %.1lf",RopoDevice::GetPosition()[3]);
+			// pros::delay(50); 
 			
-			// MasterController.print(0,1,"degree: %.1lf",RopoDevice::GetPosition()[3]);
-			// pros::delay(50); 
-			MasterController.print(1,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
-			pros::delay(50); 
 
-			MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
-			pros::delay(50); 
-			MasterController.print(0,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
-			pros::delay(50); 
-			// MasterController.print(1,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
+			//Openmv**********************************************************************************************************
+			// MasterController.print(0,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
+			// pros::delay(50); 
+			// MasterController.print(1,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
+			// pros::delay(50);
+			// MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
 			// pros::delay(50); 
 
+			//Distance********************************************************************************************************
+			MasterController.print(1,1,"Deg:%.2f",RopoDevice::Sensors::distance.get_object_velocity());
+			pros::delay(50); 
+			MasterController.print(2,1,"Deg:%.2f",RopoDevice::Sensors::distance.get());
+			pros::delay(50); 
+
+			//Lifter**********************************************************************************************************
 			// MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
 			// pros::delay(50);
 		}
@@ -284,18 +287,19 @@ void opcontrol()
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	// RopoDevice::Chassis.AutoRotateAbs(135);
-	// while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
-	// RopoDevice::Chassis.AutoRotateAbs(0);
+	// RopoDevice::Chassis.AutoPositionMove(1.0,0,-90);
 	// while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
 	RopoAuto::Auto_Find();
-	RopoDevice::Chassis.AutoPositionMove(1.2,-1.4,-90);
-	ControllerModule::ChangeIntakerPneumatic();
-	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+	RopoDevice::Chassis.AutoPositionMoveBack(1.2,-1.5,-90);
+	RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(10);
+	RopoDevice::Chassis.MoveVelocity(1.4,0);
 	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	pros::delay(100);
-	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(50);
+	RopoDevice::Chassis.MoveVelocity(-1.4,0);
 	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 }

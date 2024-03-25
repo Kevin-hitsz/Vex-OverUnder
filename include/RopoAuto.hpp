@@ -74,7 +74,7 @@ namespace RopoAuto{
         Angle = Roation + RopoDevice::Position_Motor::MyPosition.Get_Angle();//OpenMV获取角度向左是负，转换为右手系需要*-1
         Ball_x = X + RopoMath::Cos(Angle)* (Dis * k + ExternDis);
         Ball_y = Y + RopoMath::Sin(Angle)* (Dis * k + ExternDis);
-        if(Ball_x < 1.5 && Ball_x > 0.3 && Ball_y < -0.9 && Ball_y > -1.5 ){
+        if(Ball_x < 1.5 && Ball_x > 0.3 && Ball_y < -0.95 && Ball_y > -1.8 ){
             return 0;//没有越界就是0
         }
         else{
@@ -96,7 +96,7 @@ namespace RopoAuto{
     void Auto_Find(){
         RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
         RopoDevice::Motors::IntakeMotor.move_velocity(-500);
-		RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
+		RopoDevice::ThreeWire::IntakerPneumatic.set_value(false);
         int See_Flag = 0;
         double Distance = 0;
         double Degree = 0;
@@ -113,6 +113,8 @@ namespace RopoAuto{
             Degree = RopoDevice::Sensors::My_openMV.Get_Ball_Deg();
         }
         Angle = -RopoDevice::Sensors::My_openMV.Get_Ball_Deg() + RopoDevice::Position_Motor::MyPosition.Get_Angle();
+        RopoDevice::Chassis.MoveVelocity(0,0.0);
+        pros::delay(100);
         RopoDevice::Chassis.AutoRotateAbs(Angle);
         pros::delay(30);
         for(int ii = 0;ii<=35;ii++){
@@ -129,7 +131,9 @@ namespace RopoAuto{
         //     pros::delay(30);
         // }
         Update_Ball_Position(RopoDevice::Sensors::My_openMV.Get_Ball_Dis() , RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
-        RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y);
+        RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+        RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,10000,3000);
+        RopoDevice::gpsAddPosition.SetUpdateFlag(10);
 
     }
 }

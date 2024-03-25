@@ -2,6 +2,7 @@
 #ifndef ROPO_DEVICE_HPP
 #define ROPO_DEVICE_HPP
 
+#include "pros/distance.hpp"
 #include "pros/imu.hpp"
 #include "pros/adi.hpp"
 #include "pros/motors.hpp"
@@ -41,6 +42,9 @@ namespace RopoDevice{
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 18;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
+		const int DistancePort = 11;
+		pros::Distance distance(DistancePort);
+		
 
 	// 	const int EncodingDiskReceivePort = 15;
 	// 	const int EncodingDiskSendPort = 16;
@@ -168,14 +172,14 @@ namespace RopoDevice{
 	}
 
 	void MotorsInit(){
-		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+		Motors::LeftChassisMotor1 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor2 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor3 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftChassisMotor4 .set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor1.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
 		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
