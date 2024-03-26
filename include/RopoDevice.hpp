@@ -42,18 +42,20 @@ namespace RopoDevice{
 	}			
 	
 	namespace Motors{
-		const int LFMotorPort  	=  1;
+		const int LFMotorPort  	=  5;
 		const int LFMotorPort_ 	=  2;
 		const int LBMotorPort  	=  3;
 		const int LBMotorPort_ 	=  4;
-		const int RFMotorPort  	=  9;
+		const int RFMotorPort  	=  6;
 		const int RFMotorPort_ 	= 10;
 		const int RBMotorPort  	=  7;
 		const int RBMotorPort_ 	=  8;
 		const int IntakeMotorPort  = 16;
 		const int ClimberMotorPort1 = 11;
-		const int ClimberMotorPort2 = 20;
-		const int ShooterMotorPort = 19;
+		const int ClimberMotorPort2 = 19;
+		const int LShooterMotorPort = 20;
+        const int RShooterMotorPort = 9;
+        const int HitterMotorPort = 1;
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LBMotor (LBMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
@@ -65,7 +67,9 @@ namespace RopoDevice{
 		Motor IntakeMotor(IntakeMotorPort,pros::E_MOTOR_GEAR_BLUE, true);
 		Motor ClimberMotor1(ClimberMotorPort1,pros::E_MOTOR_GEAR_BLUE, true);
 		Motor ClimberMotor2(ClimberMotorPort2,pros::E_MOTOR_GEAR_BLUE, false);
-		Motor ShooterMotor(ShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);		
+		Motor LShooterMotor(LShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);	
+        Motor RShooterMotor(RShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);
+        Motor HitterMotor(HitterMotorPort,pros::E_MOTOR_GEAR_RED, true);		
 
 	}
 
@@ -73,7 +77,9 @@ namespace RopoDevice{
         Sensors::Inertial.reset(false);
         pros::delay(200);
         Sensors::Encoder.SetZero();
-        Motors::ShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        Motors::HitterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 RopoDiffySwerve::DiffySwerve LF(Motors::LFMotor,Motors::LFMotor_); // Define the variable in a source file

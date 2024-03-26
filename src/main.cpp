@@ -47,20 +47,42 @@ namespace RopoFunction{
 		RopoDevice::Motors::ClimberMotor2.move_velocity(0);
 	}
 	void ShooterInit(){
-		RopoDevice::Motors::ShooterMotor.move_velocity(30);
+		RopoDevice::Motors::LShooterMotor.move_velocity(-30);
+		RopoDevice::Motors::RShooterMotor.move_velocity(30);
 	}
 	void ShooterStopInit(){
-		RopoDevice::Motors::ShooterMotor.move_velocity(0);
+		RopoDevice::Motors::LShooterMotor.move_velocity(0);
+		RopoDevice::Motors::RShooterMotor.move_velocity(0);
 	}
 	bool DetectLoader(){
-		if(RopoDevice::Motors::ShooterMotor.get_torque() < 0.2) return false;
+		if(RopoDevice::Motors::LShooterMotor.get_torque() < 0.2 && RopoDevice::Motors::RShooterMotor.get_torque() < 0.2) return false;
 		else return true;
 	}
 	void ReLoad(){
-		RopoDevice::Motors::ShooterMotor.move_relative(3600, 200);
+		RopoDevice::Motors::LShooterMotor.move_velocity(-6000);
+		RopoDevice::Motors::RShooterMotor.move_velocity(6000);
+		pros::delay(200);
+		while (RopoDevice::Motors::RShooterMotor.get_actual_velocity() > 5) pros::delay(5);
+		ShooterStopInit();
 	}
 	void Shoot(){
-		RopoDevice::Motors::ShooterMotor.move_relative(500, 200);
+		RopoDevice::Motors::LShooterMotor.move_voltage(12000);
+		RopoDevice::Motors::RShooterMotor.move_voltage(-12000);
+		pros::delay(200);
+		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 2) pros::delay(5);
+		ShooterStopInit();
+	}
+	void Hit(){
+		RopoDevice::Motors::HitterMotor.move_voltage(-12000);
+		pros::delay(200);
+		while (std::abs(RopoDevice::Motors::HitterMotor.get_actual_velocity()) > 5) pros::delay(5);
+		RopoDevice::Motors::HitterMotor.move_voltage(0);
+	}
+	void HitterReset(){
+		RopoDevice::Motors::HitterMotor.move_voltage(12000);
+		pros::delay(200);
+		while (RopoDevice::Motors::HitterMotor.get_actual_velocity() > 5) pros::delay(5);
+		RopoDevice::Motors::HitterMotor.move_voltage(0);
 	}
 }
 
@@ -98,10 +120,15 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, RopoFunction::ClimberStop);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::ClimberUp);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Falling, RopoFunction::ClimberStop);
+
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::ShooterInit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Falling, RopoFunction::ShooterStopInit);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::ReLoad);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::Shoot);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::ReLoad);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
+
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
+
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
