@@ -12,7 +12,7 @@ void test();
 void skill();
 void autonomous_1();
 namespace ControllerModule {
-
+	FloatType VelocityMax = 1.6;//1.4
 	void BoolSwitch(void * Parameter){
 		bool *p = static_cast<bool *>(Parameter);
 		(*p) ^= 1;
@@ -129,8 +129,8 @@ namespace ControllerModule {
 	}
 	void Outtake(){
 		RopoDevice::Motors::IntakeMotor.move_velocity(400);
-		pros::delay(200);
-		RopoDevice::Motors::IntakeMotor.move_voltage(100);
+		pros::delay(400);
+		RopoDevice::Motors::IntakeMotor.move_voltage(2000);
 	}
 	void IntakerStop(){
 		RopoDevice::Motors::IntakeMotor.move_voltage(0);
@@ -154,10 +154,12 @@ namespace ControllerModule {
 	}
 
 	void AutoLift(){
-		RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 		RopoDevice::LiftMotors.Wait2();
-		RopoDevice::Chassis.MoveVelocity(-0.2,-0.05);
-		while(RopoDevice::Sensors::distance.get() - 0.45 * RopoDevice::Sensors::distance.get_object_velocity() < 117) pros::delay(20);
+		RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+		//RopoDevice::Chassis.AutoRotateAbs(-90);
+		//pros::delay(500);
+		RopoDevice::Chassis.MoveVelocity(-0.2,-0.00);
+		while(RopoDevice::Sensors::distance.get() - 0.45 * RopoDevice::Sensors::distance.get_object_velocity() * 1000 > 125) pros::delay(20);
 		ChangeExtern();
 		pros::delay(200);
 		ChangeExtern();
@@ -165,12 +167,13 @@ namespace ControllerModule {
 		ChangeExtern();
 		pros::delay(100);
 		RopoDevice::Chassis.MoveVelocity(0,0);
-
 	}
 
 	void ControllerPrint(){
 		while(true) {
 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
+			MasterController.clear();
+			pros::delay(50); 
 			// Position ******************************************************************************************************
 			MasterController.print(0,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
 			pros::delay(50); 
@@ -187,9 +190,9 @@ namespace ControllerModule {
 			// pros::delay(50); 
 
 			//Distance********************************************************************************************************
-			MasterController.print(1,1,"Deg:%.2f",RopoDevice::Sensors::distance.get_object_velocity());
+			MasterController.print(1,1,"Vb:%.2f",RopoDevice::Sensors::distance.get_object_velocity());
 			pros::delay(50); 
-			MasterController.print(2,1,"Deg:%.2f",RopoDevice::Sensors::distance.get());
+			MasterController.print(2,1,"Dis:%d",RopoDevice::Sensors::distance.get());
 			pros::delay(50); 
 
 			//Lifter**********************************************************************************************************
@@ -228,7 +231,6 @@ void opcontrol()
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType opTime = pros::millis();
-	FloatType VelocityMax = 1.6;//1.4
 	FloatType RopoWcLimit = 6;
 	bool ChassisMove = false;
 	
@@ -253,7 +255,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising , ControllerModule::TogetherPush);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, ControllerModule::TogetherUnpush);
 	//*/
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising , ControllerModule::AutoLift);	
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::AutoLift);	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising , ControllerModule::Switch);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
@@ -268,8 +270,8 @@ void opcontrol()
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
 		FloatType RopoWc = RopoWcLimit-fabs(XInput) * 3.3;			
-		FloatType RopoVx = VelocityMax-fabs(WInput) * 0.7;	
-		if(opTime - pros::millis() > 55000) VelocityMax = 2.1;
+		FloatType RopoVx = ControllerModule::VelocityMax-fabs(WInput) * 0.7;	
+		if(opTime - pros::millis() > 55000) ControllerModule::VelocityMax = 2.1;
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.06) {
 			if(ChassisMove == true){
 				RopoDevice::Motors::MoveOpControll(0.0, 0.0);
