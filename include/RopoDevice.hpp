@@ -16,13 +16,19 @@ namespace RopoDevice{
 
 
 	namespace ThreeWire{
-		const char ExternPneumaticPort = 'H';
-		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
+		const char LExternPneumaticPort = 'A';
+		pros::ADIDigitalOut LExternPneumatic(LExternPneumaticPort,true);
+        const char RExternPneumaticPort = 'A';
+		pros::ADIDigitalOut RExternPneumatic(RExternPneumaticPort,true);
+        const char ClimberPneumaticPort = 'A';
+		pros::ADIDigitalOut ClimberPneumatic(ClimberPneumaticPort,true);
+        const char IntakerPneumaticPort = 'A';
+		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,true);
 	}
 
 
 	namespace Sensors{
-		const int InertialPort = 12;
+		const int InertialPort = 5;
 		pros::IMU Inertial(InertialPort);
 
 		const int EncoderReciverPort = 5;
@@ -42,20 +48,23 @@ namespace RopoDevice{
 	}			
 	
 	namespace Motors{
-		const int LFMotorPort  	=  5;
-		const int LFMotorPort_ 	=  2;
-		const int LBMotorPort  	=  3;
-		const int LBMotorPort_ 	=  4;
-		const int RFMotorPort  	=  6;
-		const int RFMotorPort_ 	= 10;
-		const int RBMotorPort  	=  7;
-		const int RBMotorPort_ 	=  8;
-		const int IntakeMotorPort  = 16;
-		const int ClimberMotorPort1 = 11;
-		const int ClimberMotorPort2 = 19;
+		const int LFMotorPort  	=  12;
+		const int LFMotorPort_ 	=  15;
+		const int LBMotorPort  	=  16;
+		const int LBMotorPort_ 	=  17;
+		const int RFMotorPort  	=  8;
+		const int RFMotorPort_ 	=  2;
+		const int RBMotorPort  	=  1;
+		const int RBMotorPort_ 	=  4;
+		const int IntakeMotorPort  = 18;
 		const int LShooterMotorPort = 20;
-        const int RShooterMotorPort = 9;
-        const int HitterMotorPort = 1;
+        const int RShooterMotorPort = 10;
+        const int HitterMotorPort = 9;
+
+
+
+
+
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LBMotor (LBMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
@@ -65,8 +74,6 @@ namespace RopoDevice{
 		Motor RBMotor (RBMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor RBMotor_(RBMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor IntakeMotor(IntakeMotorPort,pros::E_MOTOR_GEAR_BLUE, true);
-		Motor ClimberMotor1(ClimberMotorPort1,pros::E_MOTOR_GEAR_BLUE, true);
-		Motor ClimberMotor2(ClimberMotorPort2,pros::E_MOTOR_GEAR_BLUE, false);
 		Motor LShooterMotor(LShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);	
         Motor RShooterMotor(RShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);
         Motor HitterMotor(HitterMotorPort,pros::E_MOTOR_GEAR_RED, true);		
@@ -83,7 +90,6 @@ namespace RopoDevice{
 }
 
 RopoDiffySwerve::DiffySwerve LF(Motors::LFMotor,Motors::LFMotor_); // Define the variable in a source file
-
 RopoDiffySwerve::DiffySwerve LB(Motors::LBMotor,Motors::LBMotor_);
 RopoDiffySwerve::DiffySwerve RF(Motors::RFMotor,Motors::RFMotor_);
 RopoDiffySwerve::DiffySwerve RB(Motors::RBMotor,Motors::RBMotor_);
