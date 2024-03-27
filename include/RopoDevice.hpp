@@ -16,14 +16,16 @@ namespace RopoDevice{
 
 
 	namespace ThreeWire{
-		const char LExternPneumaticPort = 'A';
-		pros::ADIDigitalOut LExternPneumatic(LExternPneumaticPort,true);
-        const char RExternPneumaticPort = 'A';
-		pros::ADIDigitalOut RExternPneumatic(RExternPneumaticPort,true);
+		const char LExternPneumaticPort = 'H';
+		pros::ADIDigitalOut LExternPneumatic(LExternPneumaticPort,false);
+        const char RExternPneumaticPort = 'G';
+		pros::ADIDigitalOut RExternPneumatic(RExternPneumaticPort,false);
         const char ClimberPneumaticPort = 'A';
-		pros::ADIDigitalOut ClimberPneumatic(ClimberPneumaticPort,true);
-        const char IntakerPneumaticPort = 'A';
-		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,true);
+		pros::ADIDigitalOut ClimberPneumatic(ClimberPneumaticPort,false);
+        const char IntakerPneumaticPort = 'F';
+		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
+        const char ShooterPneumaticPort = 'C';
+		pros::ADIDigitalOut ShooterPneumatic(ShooterPneumaticPort,false);
 	}
 
 
@@ -60,10 +62,6 @@ namespace RopoDevice{
 		const int LShooterMotorPort = 20;
         const int RShooterMotorPort = 10;
         const int HitterMotorPort = 9;
-
-
-
-
 
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);

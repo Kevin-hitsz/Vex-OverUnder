@@ -17,8 +17,8 @@ namespace RopoChassis{
             };
     class Chassis{
         private:
-            const FloatType Length = 0.3672;
-            const FloatType Width  = 0.3672;
+            const FloatType Length = 0.295;
+            const FloatType Width  = 0.295;
             
 
             RopoDiffySwerve::DiffySwerve &LF, &LB, &RF, &RB;
