@@ -122,8 +122,6 @@ namespace RopoFunction{
 		pros::delay(200);
 		HitterReset();
 
-	void Test(){
-		RopoDevice::Chassis.AutoSetPosition(0.5,0.5,0.0,2000);
 	}
 }
 
@@ -176,6 +174,7 @@ void skill() {
 }
 
 void autonomous(){
+	
 }
 
 void opcontrol() {
@@ -218,7 +217,6 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumaticTest);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
@@ -226,8 +224,7 @@ void opcontrol() {
 		FloatType YInput =  3 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -5 * WVelocityInput.GetAxisValue();	
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.OpSetAimStatus(XInput, YInput, WInput);
-		 MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetX(), RopoDevice::Chassis.GetY(), RopoDevice::Chassis.GetTheta());
-		
+		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::Encoder.GetPosX(), RopoDevice::Sensors::Encoder.GetPosY(), RopoDevice::Sensors::Inertial.get_yaw() / RopoMath::Pi * 180.0);
 		pros::delay(20);
 	}
 }
