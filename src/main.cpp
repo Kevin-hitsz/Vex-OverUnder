@@ -247,7 +247,7 @@ void opcontrol() {
 		FloatType YInput =  3 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -5 * WVelocityInput.GetAxisValue();	
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.OpSetAimStatus(XInput, YInput, WInput);
-		 MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetX(), RopoDevice::Chassis.GetY(), RopoDevice::Chassis.GetTheta());
+		 MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetX(), RopoDevice::Chassis.GetY(), RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
 		
 		pros::delay(20);
 	}
