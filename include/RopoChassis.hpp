@@ -26,15 +26,14 @@ namespace RopoChassis{
             pros::IMU &InertialSensor;
 
             Matrix AimStatus = Matrix(3,1); // (Vx,Vy,W)
-            Matrix SwerveAimStatus = Matrix(2,1); // (V,Theta)
-            Matrix AimStatus_X_Y = Matrix(2,1); // (Vx,Vy)
+            Matrix SwerveAimStatus = Matrix(8,1); // (V,Theta)
+            Matrix SwerveAimStatus_X_Y = Matrix(8,1); // (Vx,Vy)
             Matrix Transfer_M = Matrix(8,3); // Transfer Matix
 
 
             pros::Task *BackgroundTaskPtr;
 
             Matrix AimPosition = Matrix(3,1);
-            Matrix Velocity = Matrix(3,1); 
             Matrix ActualPosition = Matrix(3,1);
             Matrix PositionError = Matrix(3,1);
             Matrix Kp = Matrix(3,3);
@@ -62,13 +61,16 @@ namespace RopoChassis{
                     }
                     else if (This -> MoveMode == CloseLoop){
                         int counter_for_time = 0;
-                        while(!This -> Position_OK){
+                        while(1){
                             This -> UpdatePosition();
                             This -> PositionControl();
                             This -> MovingCalculate();
                             This -> SwerveMove();
                             counter_for_time++;
-                            if(counter_for_time * 5 > This -> max_time)break;
+                            if(counter_for_time * 5 > This -> max_time || This -> Position_OK){
+                                This -> MoveMode = Opcontrol;
+                                break;
+                            }
                             pros::delay(5);
                         }
                     }
@@ -77,7 +79,7 @@ namespace RopoChassis{
                     This -> MovingCalculate();
                     This -> SwerveMove();
                     pros::delay(This -> DelayTime);
-
+                    //This -> MoveMode = Opcontrol;
                 }
             }
 
@@ -89,11 +91,11 @@ namespace RopoChassis{
             }
 
             inline void MovingCalculate(){
-                AimStatus_X_Y = Transfer_M * AimStatus;
+                SwerveAimStatus_X_Y = Transfer_M * AimStatus;
                 for(int i = 1; i <= 7; i += 2){
-                    SwerveAimStatus[i][1] = sqrtf(pow(AimStatus_X_Y[i][1], 2) + pow(AimStatus_X_Y[i+1][1],2));
+                    SwerveAimStatus[i][1] = sqrtf(pow(SwerveAimStatus_X_Y[i][1], 2) + pow(SwerveAimStatus_X_Y[i+1][1],2));
                     if(SwerveAimStatus[i][1] != 0.0){
-                        SwerveAimStatus[i+1][1] = atan2(AimStatus_X_Y[i+1][1],AimStatus_X_Y[i][1]);
+                        SwerveAimStatus[i+1][1] = atan2(SwerveAimStatus_X_Y[i+1][1],SwerveAimStatus_X_Y[i][1]);
                     }
                 }
             }
@@ -101,7 +103,7 @@ namespace RopoChassis{
         public:
             Chassis(RopoDiffySwerve::DiffySwerve& LF_, RopoDiffySwerve::DiffySwerve& LB_, RopoDiffySwerve::DiffySwerve& RF_, RopoDiffySwerve::DiffySwerve& RB_, pros::IMU& Imu, RopoSensor::EncodingDisk& Encoding_Disk)
             :LF(LF_), LB(LB_), RF(RF_), RB(RB_), InertialSensor(Imu), EncodingDisk(Encoding_Disk),
-            AimStatus(3, 1), SwerveAimStatus(8, 1), AimStatus_X_Y(8, 1),
+            AimStatus(3, 1), SwerveAimStatus(8, 1), SwerveAimStatus_X_Y(8, 1),
             Transfer_M(8, 3), BackgroundTaskPtr(nullptr) {
                 LF.Initialize(); RF.Initialize(); LB.Initialize(); RB.Initialize();
 
@@ -117,14 +119,11 @@ namespace RopoChassis{
 
                 Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 5;
 
-
-                Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 5;
-
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
             inline void UpdatePosition(){
-                ActualPosition[1][1] = EncodingDisk.GetPosX();
-                ActualPosition[2][1] = EncodingDisk.GetPosY();
+                ActualPosition[1][1] = EncodingDisk.GetPosX() / 1000;
+                ActualPosition[2][1] = EncodingDisk.GetPosY() / 1000;
                 ActualPosition[3][1] = InertialSensor.get_yaw() / 180.0 * RopoMath::Pi;
             }
             inline void AutoSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
@@ -135,7 +134,6 @@ namespace RopoChassis{
                 DelayTime = Time;
             }
             inline void OpSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
-                MoveMode = Opcontrol;
                 AimStatus[1][1] = Vx;
                 AimStatus[2][1] = Vy;
                 AimStatus[3][1] = W;
@@ -155,19 +153,19 @@ namespace RopoChassis{
                     counter_for_error = 0;
                     Position_OK = false;
                 }
-                if(Position_OK) Velocity[1][1] = Velocity[2][1] = Velocity[3][1] = 0;
+                if(Position_OK) AimStatus[1][1] = AimStatus[2][1] = AimStatus[3][1] = 0;
                 else{
-                    Velocity = Kp * PositionError;
-                    Velocity[1][1] = fabsf(Velocity[1][1]) > 1.2 ? 1.2 * RopoMath::Sign(Velocity[1][1]) : Velocity[1][1];
-                    Velocity[2][1] = fabsf(Velocity[2][1]) > 1.2 ? 1.2 * RopoMath::Sign(Velocity[2][1]) : Velocity[2][1];
-                    Velocity[3][1] = fabsf(Velocity[3][1]) > (1.5 * RopoMath::Pi) ? (1.5 * RopoMath::Pi * RopoMath::Sign(Velocity[3][1])) : Velocity[3][1];
+                    AimStatus = Kp * PositionError;
+                    AimStatus[1][1] = fabsf(AimStatus[1][1]) > 1.2 ? 1.2 * RopoMath::Sign(AimStatus[1][1]) : AimStatus[1][1];
+                    AimStatus[2][1] = fabsf(AimStatus[2][1]) > 1.2 ? 1.2 * RopoMath::Sign(AimStatus[2][1]) : AimStatus[2][1];
+                    AimStatus[3][1] = fabsf(AimStatus[3][1]) > (1.5 * RopoMath::Pi) ? (1.5 * RopoMath::Pi * RopoMath::Sign(AimStatus[3][1])) : AimStatus[3][1];
                     // Rotaion Matrix
                     Parameter[1][1] = cosf(ActualPosition[3][1]) , Parameter[1][2] = sinf(ActualPosition[3][1]) , Parameter[1][3] = 0;
                     Parameter[2][1] =-sinf(ActualPosition[3][1]) , Parameter[2][2] = cosf(ActualPosition[3][1]) , Parameter[2][3] = 0;
                     Parameter[3][1] = 0                          , Parameter[3][2] = 0                          , Parameter[3][3] = 1;
-                    Velocity = Parameter * Velocity;
+                    AimStatus = Parameter * AimStatus;
                 }
-                Velocity[2][1] = -Velocity[2][1];             // ???
+                AimStatus[2][1] = -AimStatus[2][1];             // ???
             }
 
             void AutoSetPosition(FloatType x, FloatType y, FloatType theta, int _max_time){
@@ -202,6 +200,18 @@ namespace RopoChassis{
                 if(MoveMode == Opcontrol) return true;
                 if(MoveMode == Opcontrol) return true;
                 else return false;
+            }
+            float GetAimX(){ return AimStatus[1][1];}
+            float GetAimY(){ return AimStatus[2][1];}
+            float GetAimW(){ return AimStatus[3][1];}
+            float GetX(){
+                return ActualPosition[1][1];
+            }
+            float GetY(){
+                return ActualPosition[2][1];
+            }
+            float GetTheta(){
+                return ActualPosition[3][1];
             }
     }; 
 }

@@ -30,15 +30,16 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 5;
+		const int InertialPort = 7;
 		pros::IMU Inertial(InertialPort);
 
 		const int EncoderReciverPort = 6;
 		const int EncoderSenderPort  = 2;
 		const int Boundrate = 115200;
 		const int SamplingDelay = 1;
-		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay);
-		/* Matrix GetPosition(){
+		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,95.0,17.0);
+		
+        /* Matrix GetPosition(){
 			Matrix Position(3,1);
 			if(RopoDevice::Sensors::Encoder.IsReading() == true){
 				Position[2][1] =-RopoDevice::Sensors::Encoder.GetPosX() / 1000.0;
@@ -47,6 +48,8 @@ namespace RopoDevice{
 			Position[3][1] = - RopoDevice::Sensors::Inertial.get_yaw() / 180.0 * RopoMath::Pi;
 			return Position;
 		} */
+
+        //GPS在19号口
 	}			
 	
 	namespace Motors{
