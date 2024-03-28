@@ -103,7 +103,7 @@ namespace RopoFunction{
 		RopoDevice::Motors::HitterMotor.move_voltage(0);
 	}
 	void Test(){
-		RopoDevice::Chassis.AutoSetPosition(0.5,0.5,0.0,2000);
+		RopoDevice::Chassis.AutoSetPosition(0.5,0.5,90,2000);
 	}
 	void Import(){
 		Shoot();
@@ -211,7 +211,7 @@ void opcontrol() {
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising, autonomous_A1);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising, autonomous_A1);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Intake);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Outtake);

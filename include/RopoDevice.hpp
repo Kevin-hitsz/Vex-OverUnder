@@ -37,7 +37,7 @@ namespace RopoDevice{
 		const int EncoderSenderPort  = 2;
 		const int Boundrate = 115200;
 		const int SamplingDelay = 1;
-		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,95.0,17.0);
+		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,95.0,-17.0);
 		
         /* Matrix GetPosition(){
 			Matrix Position(3,1);
