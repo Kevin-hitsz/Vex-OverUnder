@@ -3,6 +3,7 @@
 #define ROPO_SENSOR_ENCODING_DISK_HPP
 
 #include "SerialCore.hpp"
+#include "RopoMath/Misc.hpp"
 
 namespace RopoSensor{
 	class EncodingDisk : public SerialCore{
@@ -11,6 +12,7 @@ namespace RopoSensor{
 			float PosY;
 			float Angle[3];
 			float W_Z;
+			float Encoding_in_Car_X,Encoding_in_Car_Y,Encoding_in_Car_Angle;
 			SystemSerial Send;
 			virtual void Update(){
 				static uint8_t ReceiveChar;
@@ -68,10 +70,23 @@ namespace RopoSensor{
 				}
 			}
 		public:
+			//x为机体正前方，y为机体正左
+			//获得码盘相对于机体零点机体x方向的坐标pos_x
+			float GetEncodingPosX0(){
+				return  PosY * RopoMath::Cos(Encoding_in_Car_Angle) + PosX * RopoMath::Sin(Encoding_in_Car_Angle) + Encoding_in_Car_X;
+			}		
+			//获得码盘相对于机体零点机体y方向的坐标pos_y
+			float GetEncodingPosY0(){
+				return -PosX * RopoMath::Cos(Encoding_in_Car_Angle) + PosY * RopoMath::Sin(Encoding_in_Car_Angle) + Encoding_in_Car_Y;
+			}			
 			//获得机体相对于零点x方向的坐标pos_x
-			float GetPosX(){return PosX;}		
+			float GetPosX(){
+				return  GetEncodingPosX0() - Encoding_in_Car_X * RopoMath::Cos(Angle[2]) + Encoding_in_Car_Y * RopoMath::Cos(Angle[2]);
+			}		
 			//获得机体相对于零点y方向的坐标pos_y
-			float GetPosY(){return PosY;}			
+			float GetPosY(){
+				return  GetEncodingPosY0() - Encoding_in_Car_Y * RopoMath::Cos(Angle[2]) - Encoding_in_Car_X * RopoMath::Cos(Angle[2]);
+			}		
 			//获得机体偏离Tag所示轴向的角度Tag angle 
 				//Tag: 0_x 1_y 2_z
 			float GetAngle(int Tag){return Angle[Tag];}
@@ -81,9 +96,17 @@ namespace RopoSensor{
 				Send.Write(Message,5);
 			}			
 			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate)
-				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate){}
+				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate),Encoding_in_Car_X(0),Encoding_in_Car_Y(0),Encoding_in_Car_Angle(0){}
+
 			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate,int _SamplingDelay)
-				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay){}
+				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay),Encoding_in_Car_X(0),Encoding_in_Car_Y(0),Encoding_in_Car_Angle(0){}
+
+			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate,int _SamplingDelay,float _Encoding_in_Car_X,float _Encoding_in_Car_Y)
+				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay),Encoding_in_Car_X(_Encoding_in_Car_X),Encoding_in_Car_Y(_Encoding_in_Car_Y),Encoding_in_Car_Angle(0){}	
+			
+			EncodingDisk(SerialID Receive_ID, std::int32_t Receive_Baudrate,SerialID Send_ID,std::int32_t Send_Baudrate,int _SamplingDelay,float _Encoding_in_Car_X,float _Encoding_in_Car_Y,float _Encoding_in_Car_Angle)
+				:Send(Send_ID,Send_Baudrate),SerialCore(Receive_ID,Receive_Baudrate,_SamplingDelay),Encoding_in_Car_X(_Encoding_in_Car_X),Encoding_in_Car_Y(_Encoding_in_Car_Y),Encoding_in_Car_Angle(_Encoding_in_Car_Angle){}
+			
 			~EncodingDisk(){}
 	};
 }

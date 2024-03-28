@@ -33,8 +33,8 @@ namespace RopoDevice{
 		const int InertialPort = 5;
 		pros::IMU Inertial(InertialPort);
 
-		const int EncoderReciverPort = 5;
-		const int EncoderSenderPort  = 6;
+		const int EncoderReciverPort = 6;
+		const int EncoderSenderPort  = 2;
 		const int Boundrate = 115200;
 		const int SamplingDelay = 1;
 		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay);
@@ -54,8 +54,8 @@ namespace RopoDevice{
 		const int LFMotorPort_ 	=  15;
 		const int LBMotorPort  	=  16;
 		const int LBMotorPort_ 	=  17;
-		const int RFMotorPort  	=  8;
-		const int RFMotorPort_ 	=  2;
+		const int RFMotorPort  	=  5;
+		const int RFMotorPort_ 	=  8;
 		const int RBMotorPort  	=  1;
 		const int RBMotorPort_ 	=  4;
 		const int IntakeMotorPort  = 18;
