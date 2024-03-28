@@ -124,7 +124,7 @@ namespace RopoChassis{
             inline void UpdatePosition(){
                 ActualPosition[1][1] = EncodingDisk.GetPosX() / 1000;
                 ActualPosition[2][1] = EncodingDisk.GetPosY() / 1000;
-                ActualPosition[3][1] = InertialSensor.get_yaw() / 180.0 * RopoMath::Pi;
+                ActualPosition[3][1] = InertialSensor.get_yaw() ;
             }
             inline void AutoSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
                 MoveMode = OpenLoop;

@@ -64,7 +64,7 @@ namespace RopoDevice{
 		const int IntakeMotorPort  = 18;
 		const int LShooterMotorPort = 20;
         const int RShooterMotorPort = 10;
-        const int HitterMotorPort = 9;
+        const int HitterMotorPort = 3;
 
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
