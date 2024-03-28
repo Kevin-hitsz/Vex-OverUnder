@@ -82,7 +82,8 @@ namespace RopoDevice{
 	}
 
     void DeviceIni(){
-        Sensors::Inertial.reset(false);
+        Sensors::Inertial.reset(true);
+        while(Sensors::Inertial.is_calibrating())pros::delay(20);
         pros::delay(200);
         Sensors::Encoder.SetZero();
         Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
