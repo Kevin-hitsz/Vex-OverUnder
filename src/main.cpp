@@ -102,27 +102,6 @@ namespace RopoFunction{
 		while (RopoDevice::Motors::HitterMotor.get_actual_velocity() > 5) pros::delay(5);
 		RopoDevice::Motors::HitterMotor.move_voltage(0);
 	}
-
-	void Import(){
-
-		Shoot();
-		pros::delay(100);
-		Hit();
-		int i = 0;
-		for(i;i<=4;i++){
-			pros::delay(200);
-			HitterReset();
-			pros::delay(100);
-			ReLoad();
-			pros::delay(800);
-			Shoot();
-			pros::delay(200);
-			Hit();
-		}
-		pros::delay(200);
-		HitterReset();
-
-	}
 }
 
 
@@ -216,7 +195,6 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumaticTest);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
