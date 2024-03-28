@@ -4,6 +4,7 @@
 #include "RopoApi.hpp"
 #include "RopoDiffySwerve.hpp"
 #include <cmath>
+#include "RopoMath/Misc.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
 #include "pros/imu.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
@@ -124,7 +125,7 @@ namespace RopoChassis{
             inline void UpdatePosition(){
                 ActualPosition[1][1] = EncodingDisk.GetPosX() / 1000;
                 ActualPosition[2][1] = EncodingDisk.GetPosY() / 1000;
-                ActualPosition[3][1] = InertialSensor.get_yaw() ;
+                ActualPosition[3][1] = InertialSensor.get_yaw() * RopoMath::Pi /180.0;
             }
             inline void AutoSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
                 MoveMode = OpenLoop;

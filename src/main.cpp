@@ -103,7 +103,7 @@ namespace RopoFunction{
 		RopoDevice::Motors::HitterMotor.move_voltage(0);
 	}
 	void Test(){
-		RopoDevice::Chassis.AutoSetPosition(0,0,90,2000);
+		RopoDevice::Chassis.AutoSetPosition(0,0,90 * RopoMath::Pi / 180.0,2000);
 	}
 	void Import(){
 		Shoot();
