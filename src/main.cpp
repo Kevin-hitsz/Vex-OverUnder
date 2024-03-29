@@ -105,6 +105,21 @@ namespace RopoFunction{
 	void Test(){
 		RopoDevice::Chassis.AutoSetPosition(0,0,90 * RopoMath::Pi / 180.0,2000);
 	}
+	void RelativeControlMode(){
+		RopoDevice::Chassis.SetRelativeMode();
+	}
+	void AbsoluteControlMode(){
+		RopoDevice::Chassis.SetAbsoluteMode();
+	}
+	void ChangeControlMode(){
+		static bool ControlMode = true;
+		if(ControlMode){
+			AbsoluteControlMode();
+		}else{
+			RelativeControlMode();
+		}
+		ControlMode = !ControlMode;
+	}
 	void Import(){
 		Shoot();
 		pros::delay(100);
@@ -240,6 +255,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumaticTest);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::DoubleClick, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {

@@ -16,6 +16,10 @@ namespace RopoChassis{
                 CloseLoop,
                 Opcontrol
             };
+    enum ChassisControlMode{
+                Absolute,
+                Relative
+            };
     class Chassis{
         private:
             const FloatType Length = 0.295;
@@ -50,7 +54,8 @@ namespace RopoChassis{
             const int max_counter = 50;
             int max_time = 1000; // ms
             int DelayTime;
-            RopoChassis::ChassisMoveMode MoveMode = Opcontrol;
+            ChassisMoveMode MoveMode = Opcontrol;
+            ChassisControlMode ControlMode = Absolute;
 
 
             static void ChassisControl(void* param){
@@ -76,6 +81,7 @@ namespace RopoChassis{
                         }
                     }
                     else if (This -> MoveMode == Opcontrol){
+                        
                     }
                     This -> MovingCalculate();
                     This -> SwerveMove();
@@ -138,6 +144,10 @@ namespace RopoChassis{
                 AimStatus[1][1] = Vx;
                 AimStatus[2][1] = Vy;
                 AimStatus[3][1] = W;
+                if(ControlMode == Relative){
+                    AimStatus[1][1] = AimStatus[1][1] * RopoMath::Cos(-ActualPosition[3][1]);
+                    AimStatus[2][1] = AimStatus[2][1] * RopoMath::Sin(-ActualPosition[3][1]);
+                }
                 DelayTime = Time;
             }
             void PositionControl(){
@@ -213,6 +223,12 @@ namespace RopoChassis{
             }
             float GetTheta(){
                 return ActualPosition[3][1];
+            }
+            void SetRelativeMode(){
+                ControlMode = Relative;
+            }
+            void SetAbsoluteMode(){
+                ControlMode = Absolute;
             }
     }; 
 }
