@@ -118,7 +118,7 @@ namespace RopoChassis{
                 Transfer_M[7][1] = -1,Transfer_M[7][2]= 0,Transfer_M[7][3] = - Width  * 0.5;
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
 
-                Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 5;
+                Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 7;
 
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
