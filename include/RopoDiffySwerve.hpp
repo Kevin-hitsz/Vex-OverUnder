@@ -24,6 +24,7 @@ namespace RopoDiffySwerve{
             static constexpr float Control_Time = 15; // unit: ms
             Matrix AimStatus = Matrix(3,1); // include AimSpeed and AimAngle    
             Matrix Voltage = Matrix(2, 1); // Drive voltage
+            //Matrix Last_Voltage = Matrix(2, 1);
             Matrix K = Matrix(2, 3); // Gain Matrix
             Matrix M1 = Matrix(3, 3); // Assitant Matrix
             Matrix M2 = Matrix(2, 1); // Assitant Matrix
@@ -33,6 +34,8 @@ namespace RopoDiffySwerve{
                 DiffySwerve *This = static_cast<DiffySwerve *>(param);
 
                 float Angle_Error = 0;
+                //This -> Last_Voltage[1][1] = 0;
+                //This -> Last_Voltage[2][1] = 0;
                 
                 // L
                 while(1){
@@ -62,9 +65,16 @@ namespace RopoDiffySwerve{
 
                         // Get Control Value, while Volt to mV
 		                This -> Voltage = 1000.0 * (This -> M2 * This -> AimStatus[3][1] - This -> K * (This -> M1 * This -> Status + This -> AimStatus));
+                        //This -> Voltage[1][1] = RopoMath::LowPassFilter(This -> Voltage[1][1], This -> Last_Voltage[1][1],100,1000);
+                        //This -> Voltage[2][1] = RopoMath::LowPassFilter(This -> Voltage[2][1], This -> Last_Voltage[2][1],100,1000);
                         // Votage Limitation
-                        This -> Voltage[1][1] = RopoMath::Limit<float>(This -> Voltage[1][1], 12000.0);
-                        This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
+                        //This -> Voltage[1][1] = RopoMath::Limit<float>(This -> Voltage[1][1], 12000.0);
+                        //This -> Voltage[2][1] = RopoMath::Limit<float>(This -> Voltage[2][1], 12000.0);
+                        if(fabs(This -> Voltage[1][1]) > 12000 || fabs(This -> Voltage[2][1]) > 12000){
+                            double kc = 12000.0 / (fabs(This -> Voltage[1][1]) > fabs(This -> Voltage[2][1]) ? fabs(This -> Voltage[1][1]) : fabs(This -> Voltage[2][1]));
+                            This -> Voltage[1][1] *= kc;
+                            This -> Voltage[2][1] *= kc;
+                        }
 
                         // Drive the motors
                         This -> Motor_1.move_voltage((int)This -> Voltage[1][1]);
@@ -74,7 +84,7 @@ namespace RopoDiffySwerve{
                         This -> Motor_1 . brake();
                         This -> Motor_2 . brake();
                     }
-
+                    //This -> Last_Voltage = This -> Voltage;
                     pros::delay(This -> Control_Time);
                 }
             }
@@ -104,6 +114,19 @@ namespace RopoDiffySwerve{
 
                 K[1][1] = -14.1412; K[1][2] = 0.4139 ; K[1][3] = 0.0508;
                 K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
+
+                /*M1[1][1] = -1;  // 上赛季参数
+                M1[2][2] = 1;
+                M1[3][3] = -1;
+
+                M2[1][1] = 1;
+                M2[2][1] = -1;
+                M2 = (8.0 / 33.0) * M2;
+
+                K[1][1] = -22.3607; K[1][2] = 0.4877 ; K[1][3] = 0.5164;
+                K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
+
+                K = 0.8 * K;*/
                 
 
 				// start control

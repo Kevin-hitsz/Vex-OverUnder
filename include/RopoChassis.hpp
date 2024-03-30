@@ -24,6 +24,8 @@ namespace RopoChassis{
         private:
             const FloatType Length = 0.295;
             const FloatType Width  = 0.295;
+            //const int GainOfLowPassFilter = 1 ;
+            //const FloatType CutoffFrequency = 1;
             
 
             RopoDiffySwerve::DiffySwerve &LF, &LB, &RF, &RB;
@@ -49,7 +51,7 @@ namespace RopoChassis{
             bool Position_OK = false;
             static constexpr float ControlTime = 20; // ms
             FloatType XYMinError = 0.01;
-            FloatType ThetaMinError = 0.01;
+            FloatType ThetaMinError = 5;
             int counter_for_error = 0;
             const int max_counter = 50;
             int max_time = 1000; // ms
@@ -124,7 +126,7 @@ namespace RopoChassis{
                 Transfer_M[7][1] = -1,Transfer_M[7][2]= 0,Transfer_M[7][3] = - Width  * 0.5;
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
 
-                Kp[1][1] = 3.5; Kp[2][2] = 3.5; Kp[3][3] = 7;
+                Kp[1][1] = 7; Kp[2][2] = 7; Kp[3][3] = 10;  // 控制参数调整
 
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
@@ -229,6 +231,9 @@ namespace RopoChassis{
             }
             void SetAbsoluteMode(){
                 ControlMode = Absolute;
+            }
+            float GetSwerveAimStatus(int n,int m){
+                return SwerveAimStatus[n][m];
             }
     }; 
 }

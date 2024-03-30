@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Obsolate",
+    "project_name": "Obsolate_beta",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -168,7 +168,7 @@
     },
     "upload_options": {
       "icon": "planet",
-      "slot": 1,
+      "slot": 4,
       "description": "2"
     }
   }

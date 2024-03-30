@@ -219,6 +219,13 @@ void opcontrol() {
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType VelocityMax = 2.3;
 	FloatType RopoWcLimit = 3.5;
+
+	/*FloatType LastXInput = 0;
+	FloatType LastYInput = 0;
+	FloatType LastWInput = 0;
+	FloatType XInput = 0;
+	FloatType YInput = 0;
+	FloatType WInput = 0;*/
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
 	RopoController::AxisValueCast YVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_X,RopoController::Linear);
@@ -259,12 +266,33 @@ void opcontrol() {
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
+
+		/*XInput = RopoMath::LowPassFilter(3 * XVelocityInput.GetAxisValue(),LastXInput,50,1000);
+		YInput = RopoMath::LowPassFilter(3 * YVelocityInput.GetAxisValue(),LastYInput,50,1000);
+		WInput = RopoMath::LowPassFilter(-5 * WVelocityInput.GetAxisValue(),LastWInput,50,1000);*/
+
+
+
 		FloatType XInput =  3 * XVelocityInput.GetAxisValue();
 		FloatType YInput =  3 * YVelocityInput.GetAxisValue();
-		FloatType WInput = -5 * WVelocityInput.GetAxisValue();	
+		FloatType WInput = -15 * WVelocityInput.GetAxisValue();
+
+		/*FloatType YInput = 10;
+		FloatType XInput = 0;
+		FloatType WInput = 0;*/
+
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.OpSetAimStatus(XInput, YInput, WInput);
-		 MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetX(), RopoDevice::Chassis.GetY(), RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
-		
+
+		/*LastXInput = XInput;
+		LastYInput = YInput;
+		LastWInput = WInput;*/
+
+		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetX(), RopoDevice::Chassis.GetY(), RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
+		//MasterController.print(0,0,"%.2f, %.2f", 180 * RopoDevice::LF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::LB.get_Angle() / RopoMath::Pi);
+		//MasterController.print(1,0,"%.2f, %.2f", 180 * RopoDevice::RF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::RB.get_Angle() / RopoMath::Pi);
+		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(4,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(6,1) * 180 / RopoMath::Pi);
+		MasterController.print(0,0,"%.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 /RopoMath::Pi,RopoDevice::LF.x * 180 /RopoMath::Pi);
+
 		pros::delay(20);
 	}
 }
