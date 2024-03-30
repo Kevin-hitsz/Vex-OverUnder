@@ -66,7 +66,7 @@ namespace RopoAuto{
         double Dis = Distance * k;
         double Roa_para = -1;
         double Dis_para = 1;
-        double ExternDis = 0.1;
+        double ExternDis = 0.2;
         double X = RopoDevice::GetTransformedPosition()[1];
         double Y = RopoDevice::GetTransformedPosition()[2];
         Distance = Dis_para * Distance;
@@ -74,7 +74,7 @@ namespace RopoAuto{
         Angle = Roation + RopoDevice::Position_Motor::MyPosition.Get_Angle();//OpenMV获取角度向左是负，转换为右手系需要*-1
         Ball_x = X + RopoMath::Cos(Angle)* (Dis * k + ExternDis);
         Ball_y = Y + RopoMath::Sin(Angle)* (Dis * k + ExternDis);
-        if(Ball_x < 1.5 && Ball_x > 0.3 && Ball_y < -0.95 && Ball_y > -1.8 ){
+        if(Ball_x < 1.5 && Ball_x > 0.3 && Ball_y < -0.95 && Ball_y > -1.9 ){
             return 0;//没有越界就是0
         }
         else{
@@ -132,7 +132,7 @@ namespace RopoAuto{
         // }
         Update_Ball_Position(RopoDevice::Sensors::My_openMV.Get_Ball_Dis() , RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
         RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-        RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,10000,3000);
+        RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,10000,2500);
         RopoDevice::gpsAddPosition.SetUpdateFlag(10);
 
     }

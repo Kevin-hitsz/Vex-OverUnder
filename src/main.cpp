@@ -11,6 +11,7 @@
 void test();
 void skill();
 void autonomous_1();
+void autonomous_C2();
 namespace ControllerModule {
 	FloatType VelocityMax = 1.6;//1.4
 	void BoolSwitch(void * Parameter){
@@ -172,13 +173,11 @@ namespace ControllerModule {
 	void ControllerPrint(){
 		while(true) {
 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
-			MasterController.clear();
-			pros::delay(50); 
 			// Position ******************************************************************************************************
-			MasterController.print(0,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
+			MasterController.print(0,1,"X: %.2lf Y:%.2lf   ",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
 			pros::delay(50); 
-			// MasterController.print(1,1,"degree: %.1lf",RopoDevice::GetPosition()[3]);
-			// pros::delay(50); 
+			MasterController.print(1,1,"degree: %.1lf    ",RopoDevice::GetPosition()[3]);
+			pros::delay(50); 
 			
 
 			//Openmv**********************************************************************************************************
@@ -186,14 +185,14 @@ namespace ControllerModule {
 			// pros::delay(50); 
 			// MasterController.print(1,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
 			// pros::delay(50);
-			// MasterController.print(2,1,"See:%s",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
-			// pros::delay(50); 
+			MasterController.print(2,1,"See:%s    ",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
+			pros::delay(50); 
 
 			//Distance********************************************************************************************************
-			MasterController.print(1,1,"Vb:%.2f",RopoDevice::Sensors::distance.get_object_velocity());
-			pros::delay(50); 
-			MasterController.print(2,1,"Dis:%d",RopoDevice::Sensors::distance.get());
-			pros::delay(50); 
+			// MasterController.print(1,1,"Vb:%.2f    ",RopoDevice::Sensors::distance.get_object_velocity());
+			// pros::delay(50); 
+			// MasterController.print(2,1,"Dis:%d    ",RopoDevice::Sensors::distance.get());
+			// pros::delay(50); 
 
 			//Lifter**********************************************************************************************************
 			// MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
@@ -231,7 +230,7 @@ void opcontrol()
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType opTime = pros::millis();
-	FloatType RopoWcLimit = 6;
+	FloatType RopoWcLimit = 8;
 	bool ChassisMove = false;
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
@@ -260,16 +259,15 @@ void opcontrol()
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoAuto::Auto_Find);
-
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  autonomous_C2);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
 	ButtonDetectLine.Enable();
 
 	while (true) {
 		
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
-		FloatType RopoWc = RopoWcLimit-fabs(XInput) * 3.3;			
+		FloatType RopoWc = RopoWcLimit-fabs(XInput) * 5.3;			
 		FloatType RopoVx = ControllerModule::VelocityMax-fabs(WInput) * 0.7;	
 		if(opTime - pros::millis() > 55000) ControllerModule::VelocityMax = 2.1;
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.06) {
@@ -289,21 +287,32 @@ void opcontrol()
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	// RopoDevice::Chassis.AutoPositionMove(1.0,0,-90);
-	// while(!RopoDevice::Chassis.IfArrived()) pros::delay(50);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(1);//开启gps
+	pros::delay(80);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
 	RopoAuto::Auto_Find();
 	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(100);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMoveBack(1.2,-1.5,-90);
+	if( !(RopoDevice::GetTransformedPosition()[1] < 1.5 && RopoDevice::GetTransformedPosition()[1] > 1.2)){
+		RopoDevice::Chassis.AutoPositionMoveBack(1.2,-1.5,-90);
+	}
+	else {
+		RopoDevice::Chassis.AutoRotateAbs(-90);
+		pros::delay(600);
+	}
 	RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(10);
 	RopoDevice::Chassis.MoveVelocity(1.4,0);
 	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);
-	RopoDevice::Chassis.MoveVelocity(-1.4,0);
+	RopoDevice::Chassis.MoveVelocity(-1.1,0);
 	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
+
+
+
 }
 
 void delay(){
@@ -510,6 +519,105 @@ void autonomous_1(){
 
 
 
+}
+
+void autonomous_C2(){
+	RopoDevice::ChassisBrake();
+	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	//start--推己方四球
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);//关闭gps
+	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
+	pros::delay(30);
+	RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
+	RopoDevice::Chassis.AutoDirectMove(1.07,0.00,0);
+	while(!RopoDevice::Chassis.IfArrived()){
+		pros::delay(20);
+	}
+	RopoDevice::Chassis.AutoRotateAbs(88);
+	pros::delay(800);
+	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
+	RopoDevice::Chassis.MoveVelocity(0.3,0);
+	pros::delay(230);
+	ControllerModule::TogetherPush();
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(1800);
+
+	//----------------------转身越障，推球入网
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(150);
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	while(!RopoDevice::Chassis.IfArrived())pros::delay(20);
+	RopoDevice::Chassis.MoveVelocity(1.3,0);
+	pros::delay(500);
+	ControllerModule::Intake();
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(800);
+	//越过后进行转向，多推球入网
+	RopoDevice::Chassis.AutoRotateAbs(-70);
+	pros::delay(500);
+	RopoDevice::Chassis.MoveVelocity(0.2,0.7);
+	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(0.43,-0.15);
+	pros::delay(700);
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	while(!RopoDevice::Chassis.IfArrived())pros::delay(20);
+	ControllerModule::ChangeIntakerPneumatic();
+	RopoDevice::gpsAddPosition.SetUpdateFlag(3);//开启gps
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(1000);
+
+	//从网里退出吃两个球
+	ControllerModule::TogetherUnpush();
+	RopoDevice::Chassis.AutoRotateAbs(-85);
+	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(-1.2,0);
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(200);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);//关闭gps
+	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(500);
+	//吃中立区45°球
+	
+	ControllerModule::ChangeIntakerPneumatic();
+	ControllerModule::Intake();
+	RopoDevice::Chassis.AutoPositionMove(1.40,-1.06,45,3500);
+	ControllerModule::ChangeLift();
+	
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(150);
+	RopoDevice::Chassis.AutoRotateAbs(90);
+	pros::delay(600);
+	ControllerModule::ChangeLift();
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(150);
+	ControllerModule::WingPush();
+	RopoDevice::gpsAddPosition.SetUpdateFlag(10);//开启gps
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(850);
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(30);
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(850);
+	ControllerModule::WingUnpush();
+	//自动吃球
+	test();
+	test();
+	test();
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(150);
 }
 
 void skill(){
