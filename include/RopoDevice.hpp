@@ -40,7 +40,7 @@ namespace RopoDevice{
 	namespace Sensors{
 		const int InertialPort = 8;
 		pros::IMU Inertial(InertialPort);
-		const int OpenmvPort = 18;
+		const int OpenmvPort = 19;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 		const int DistancePort = 11;
 		pros::Distance distance(DistancePort);
@@ -127,7 +127,7 @@ namespace RopoDevice{
 			RightWheelMove1(RV);
 		}
 
-		const int RightLiftMotorPort		= 17;
+		const int RightLiftMotorPort		= 18;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false);
 
@@ -152,7 +152,7 @@ namespace RopoDevice{
 // 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::RightLiftMotor);
 	FloatType GetHeading(){
-		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 
+		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.011; 
 	}
 
 // 坐标获取函数
