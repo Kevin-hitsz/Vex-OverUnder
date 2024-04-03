@@ -21,7 +21,7 @@ namespace RopoDiffySwerve{
             Matrix Status = Matrix(3,1); // include Speed and Angle
 
             // Control parameters
-            static constexpr float Control_Time = 15; // unit: ms
+            static constexpr float Control_Time = 5; // unit: ms
             Matrix AimStatus = Matrix(3,1); // include AimSpeed and AimAngle    
             Matrix Voltage = Matrix(2, 1); // Drive voltage
             //Matrix Last_Voltage = Matrix(2, 1);
@@ -104,7 +104,7 @@ namespace RopoDiffySwerve{
                 Motor_1 . set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
                 Motor_2 . set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
-                M1[1][1] = -1;
+                /*M1[1][1] = -1;
                 M1[2][2] = 1;
                 M1[3][3] = -1;
 
@@ -113,7 +113,7 @@ namespace RopoDiffySwerve{
                 M2 = (2000.0 / 8437) * M2;
 
                 K[1][1] = -14.1412; K[1][2] = 0.4139 ; K[1][3] = 0.0508;
-                K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
+                K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];*/
 
                 /*M1[1][1] = -1;  // 上赛季参数
                 M1[2][2] = 1;
@@ -127,6 +127,28 @@ namespace RopoDiffySwerve{
                 K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
 
                 K = 0.8 * K;*/
+
+                /*M1[1][1] = -1;  // 新参数1
+                M1[2][2] = 1;
+                M1[3][3] = -1;
+
+                M2[1][1] = 1;
+                M2[2][1] = -1;
+                M2 = 0.3954 * M2;
+
+                K[1][1] = -22.3607; K[1][2] = 0.5302 ; K[1][3] = -1.2344;
+                K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];*/
+
+                M1[1][1] = -1;  // 新参数2
+                M1[2][2] = 1;
+                M1[3][3] = -1;
+
+                M2[1][1] = 1;
+                M2[2][1] = -1;
+                M2 = 0.3954 * M2;
+
+                K[1][1] = -15.8114; K[1][2] = 0.4596 ; K[1][3] = -1.2344;
+                K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
                 
 
 				// start control
