@@ -22,11 +22,11 @@ namespace RopoChassis{
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
 			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.004;  //加速过程每SampleTime的增加的速度
-			static constexpr float AccelerationVelocityLimits = 1.3;
+			static constexpr float AccelerationVelocityLimits = 1.2;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0002  ,0.00006 ,0.0014,-0.0014,0.03,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000008,0.0000030,0.0060 ,-0.0060 ,2.0   ,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000058,0.000008,0.0000030,0.0060 ,-0.0060 ,2.0   ,0.3};
 			//0.000060,0.000008,0.0000025,0.0030 ,-0.0030 ,3   ,0.2
 			RopoControl::TankChassisCore Core;		
 			
@@ -183,7 +183,7 @@ namespace RopoChassis{
 									
 									//方向锁定
 									//TempChassisVelocity[2] = DeltaRotation * (This->moveReverse?-1:1) * 0.02 ;
-									TempChassisVelocity[2] = DeltaRotation * 0.02 ;
+									TempChassisVelocity[2] = DeltaRotation * 0.036 ;
 									
 
 								}
@@ -446,9 +446,11 @@ namespace RopoChassis{
 				pros::delay(20);
 				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
 				//旋转至目标角度
-				AutoRotateAbs(Theta);
-				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				if(Theta < 1000){
+					AutoRotateAbs(Theta);
+					pros::delay(20);
+					while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				}
 				flag = true;
 			}
 	};

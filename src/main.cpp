@@ -11,6 +11,7 @@
 void test();
 void skill();
 void autonomous_1();
+void autonomous_C1();
 void autonomous_C2();
 namespace ControllerModule {
 	FloatType VelocityMax = 1.6;//1.4
@@ -71,6 +72,14 @@ namespace ControllerModule {
 		} else {
 			Hold();
 		}
+	}
+
+	void StartGps(){
+		RopoDevice::gpsAddPosition.SetUpdateFlag(3);//开gps
+	}
+
+	void StopGps(){
+		RopoDevice::gpsAddPosition.SetUpdateFlag(0);//开gps
 	}
 
 	bool wing_status = false;
@@ -168,7 +177,7 @@ namespace ControllerModule {
 		ChangeExtern();
 		RopoDevice::Chassis.MoveVelocity(-0.5,-0.00);
 		pros::delay(700);
-		RopoDevice::Chassis.AutoRotateAbs(90);
+		RopoDevice::Chassis.AutoRotateAbs(0);
 		pros::delay(400);
 		ChangeExtern();
 		
@@ -190,10 +199,10 @@ namespace ControllerModule {
 			//Openmv**********************************************************************************************************
 			// MasterController.print(0,1,"Read:%s",RopoDevice::Sensors::My_openMV.IsReading()?"yes":"no");
 			// pros::delay(50); 
-			// MasterController.print(1,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
-			// pros::delay(50);
-			MasterController.print(2,1,"See:%s    ",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
-			pros::delay(50); 
+			MasterController.print(2,1,"Deg:%.2f",RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
+			pros::delay(50);
+			// MasterController.print(2,1,"See:%s    ",RopoDevice::Sensors::My_openMV.If_See()?"yes":"no");
+			// pros::delay(50); 
 
 			//Distance********************************************************************************************************
 			// MasterController.print(1,1,"Vb:%.2f    ",RopoDevice::Sensors::distance.get_object_velocity());
@@ -224,7 +233,7 @@ void competition_initialize() {}
 
 void autonomous(){
 	RopoDevice::ChassisBrake();
-	autonomous_1();
+	autonomous_C1();
 	//skill();
 }
 
@@ -266,8 +275,9 @@ void opcontrol()
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  autonomous_C2);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  autonomous_C1);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::StartGps);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Falling,  ControllerModule::StopGps);
 	ButtonDetectLine.Enable();
 
 	while (true) {
@@ -297,247 +307,143 @@ void opcontrol()
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	RopoDevice::ChassisBrake();
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(10);//开启gps
-	pros::delay(300);
+	pros::delay(200);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(10);
 	RopoAuto::Auto_Find();
 	RopoDevice::Chassis.MoveVelocity(-1.0,0);
 	pros::delay(100);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	if( !(RopoDevice::GetTransformedPosition()[1] < 1.5 && RopoDevice::GetTransformedPosition()[1] > 1.2)){
-		RopoDevice::Chassis.AutoPositionMoveBack(1.05,-1.5,-90);
+	if( !(RopoDevice::GetTransformedPosition()[2] > -1.5 && RopoDevice::GetTransformedPosition()[2] < -1.2)){
+		RopoDevice::Chassis.AutoPositionMoveBack(-1.60,-1.35,-180);
 	}
 	else {
-		RopoDevice::Chassis.AutoRotateAbs(-90);
-		pros::delay(700);
+		RopoDevice::Chassis.AutoRotateAbs(177);
+		pros::delay(800);
 	}
-	ControllerModule::ChangeIntakerPneumatic();
+	//ControllerModule::ChangeIntakerPneumatic();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(10);
-	RopoDevice::Chassis.MoveVelocity(1.4,0);
-	pros::delay(700);
-	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	pros::delay(50);
+	RopoDevice::Chassis.MoveVelocity(1.5,0);
+	pros::delay(650);
 	RopoDevice::Chassis.MoveVelocity(-1.1,0);
 	pros::delay(700);
-	RopoDevice::Chassis.AutoRotateAbs(90);
+	//RopoDevice::Chassis.AutoRotateAbs(00);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	ControllerModule::ChangeIntakerPneumatic();
-	// RopoDevice::Chassis.AutoRotateAbs(-90);
-	// while(!RopoDevice::Chassis.IfArrived()){
-	// 	pros::delay(20);
-	// }
-	// RopoDevice::Chassis.AutoRotateAbs(90);
-	// while(!RopoDevice::Chassis.IfArrived()){
-	// 	pros::delay(20);
-	// }
+	//ControllerModule::ChangeIntakerPneumatic();
 
 }
 
 void delay(){
-	while(!RopoDevice::Chassis.IfArrived()){
-		pros::delay(20);
-	}
+	while(!RopoDevice::Chassis.IfArrived()){pros::delay(20);}
 	return;
 }
 
+void delayDeg(){
+	double aa = pros::millis();
+	while(!RopoDevice::Chassis.IfDegArrived() && aa - pros::millis() < 2500)pros::delay(20);
+}
 
-void autonomous_1(){
+void autonomous_C1(){
+	RopoDevice::ChassisBrake();
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	// --------- begin ------------
-
-
-	// ControllerModule::ChangeIntakerPneumatic();
-	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
-	pros::delay(30);
-	RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
-	RopoDevice::Chassis.AutoDirectMove(1.11,0,0);
-	while(!RopoDevice::Chassis.IfArrived()){
-		pros::delay(20);
-	}
-	RopoDevice::Chassis.AutoRotateAbs(87);
-	while(!RopoDevice::Chassis.IfArrived()){
-		pros::delay(20);
-	}
-	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
-	RopoDevice::Chassis.MoveVelocity(0.2,0);
-	pros::delay(230);
-	ControllerModule::TogetherPush();
-	// RopoDevice::Chassis.AutoDirectMove(1.11,-0.69,1);
-	// while(!RopoDevice::Chassis.IfArrived()){
-	// 	pros::delay(20);
-	// }
-	RopoDevice::Chassis.MoveVelocity(-1.3,0);
-	pros::delay(850);
-	RopoDevice::Position_Motor::MyPosition.Set_XY(1.11, -0.70);
-	RopoDevice::Chassis.MoveVelocity(0.35,0);
-	pros::delay(120);
-	ControllerModule::TogetherUnpush();
-	pros::delay(130);
-	RopoDevice::Chassis.MoveVelocity(0.3,0);
-	pros::delay(150);
-	RopoDevice::Chassis.AutoPositionMove(-0.01,0.38);
-	while(!RopoDevice::Chassis.IfArrived()){
-		pros::delay(20);
-	}
-
-//-----------------------------------------------------
-	
-	RopoDevice::Chassis.AutoRotateAbs(135);
-	while(!RopoDevice::Chassis.IfArrived()){
-		pros::delay(20);
-	}
-	RopoDevice::Chassis.MoveVelocity(0.35,0);
-	pros::delay(150);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	ControllerModule::Lift();
-	pros::delay(700);
-	for (int i = 1; i <= 2; i++) {
-
-		// RopoDevice::Chassis.AutoRotateAbs(182);
-		// while(!RopoDevice::Chassis.IfArrived()){
-		// 	pros::delay(20);
-		// }
-
-		RopoDevice::Chassis.MoveVelocity(0,2.3);
-		pros::delay(480);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		RopoDevice::Chassis.AutoRotateAbs(135);
-		while(!RopoDevice::Chassis.IfArrived()){
-			pros::delay(20);
-		}
-		RopoDevice::Chassis.MoveVelocity(0.35,0);
-		pros::delay(250);
-		RopoDevice::Chassis.MoveVelocity(0,0);
-		pros::delay(20);
-	}
-
-//-------------------------------------------------
-
-	ControllerModule::Hide();
-	pros::delay(200);
-	RopoDevice::Chassis.MoveVelocity(-0.4,0);
-	pros::delay(400);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	RopoDevice::Chassis.AutoRotateAbs(45);
-	delay();
-	RopoDevice::Chassis.MoveVelocity(-0.50,0);
-	pros::delay(600);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	RopoDevice::Chassis.AutoRotateAbs(86);
-	while(!RopoDevice::Chassis.IfArrived()){
-		pros::delay(20);
-	}
-	pros::delay(100);
-
-//-----------------------------------------------
-	// RopoDevice::Chassis.AutoRotateAbs(-90);
-	// // delay();
-	// RopoDevice::Position_Motor::MyPosition.Set_XY(0, 0);
-	// pros::delay(300);
-	// RopoDevice::Chassis.MoveVelocity(0.5,0);
-	// pros::delay(900);
-	// FloatType radspeed = -0.5;
-	// FloatType sign_flag = -1;
-	// while (RopoDevice::Position_Motor::MyPosition.Get_Y() > -2.0) {
-	// 	if (fabs(RopoDevice::Position_Motor::MyPosition.Get_X()) > 0.03 && RopoMath::Sign(RopoDevice::Position_Motor::MyPosition.Get_X()) == sign_flag) {
-	// 		radspeed = radspeed * -1;
-	// 		sign_flag = sign_flag * -1;
-	// 		RopoDevice::Chassis.MoveVelocity(0,0);
-	// 		pros::delay(1000);
-	// 	}
-	// 	RopoDevice::Chassis.MoveVelocity(0.5,radspeed);
-	// 	pros::delay(10);
-	// }
-	// RopoDevice::Chassis.MoveVelocity(0,0);
-	// RopoDevice::Chassis.AutoRotateAbs(-90);
-
-//----------------------------------------------------------------
-
-	ControllerModule::TogetherPush();
-	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	pros::delay(2410);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	// RopoDevice::Chassis.AutoRotateAbs(90);
-	RopoDevice::Chassis.MoveVelocity(-0.6,0.95);
-	pros::delay(2050);
-	ControllerModule::TogetherUnpush();
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(100);
-
-	// RopoDevice::Chassis.MoveVelocity(0.5,0);
-	// pros::delay(400);
-	// RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	// pros::delay(700);
-	// RopoDevice::Chassis.MoveVelocity(0.2,0);
-	// pros::delay(200);
-
-//-------------------------------------------------------
-
-	// RopoDevice::Chassis.AutoRotateAbs(180);
-	RopoDevice::Chassis.MoveVelocity(0.65,0.1);
-	pros::delay(900);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	pros::delay(30);
-	RopoDevice::Position_Motor::MyPosition.Set_XY(0, 0);
-	ControllerModule::Lift();
-	pros::delay(850);
-	RopoDevice::Chassis.MoveVelocity(-0.4,0);
-	pros::delay(800);
 	ControllerModule::Intake();
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	ControllerModule::Hide();
-	RopoDevice::Chassis.MoveVelocity(0.3,0);
-	pros::delay(300);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	RopoDevice::Chassis.AutoPositionMove(0.6,-0.23);
-	delay();
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);//关闭gps
+	//start--前吃后推
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(100);
 	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(200);
+	RopoDevice::Chassis.AutoDirectMove(-1.9,-0.00,1);
+	pros::delay(1500);
 	delay();
+	RopoDevice::Chassis.MoveVelocity(-0.5,1.0);
+	pros::delay(750);
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(-0.5,1.0);
+	pros::delay(750);
+	RopoDevice::Chassis.AutoRotateAbs(85);
+	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0.6,0);
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(300);
+	RopoDevice::Chassis.AutoRotateAbs(-93);
+	pros::delay(1500);
+	
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	ControllerModule::ChangeIntakerPneumatic();//收
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(50);
+	RopoDevice::Chassis.MoveVelocity(-0.7,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(50);
+	
+	//联队球
+	RopoDevice::Chassis.AutoPositionMove(-2.42,-0.22,138,5000);
+	ControllerModule::ChangeLift();
+	RopoDevice::Chassis.MoveVelocity(0.2,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(-0.4,0);//把联队球勾出来
+	pros::delay(900);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(50);
+	RopoDevice::Chassis.MoveVelocity(0.0,2.0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.0,1.0);
+	pros::delay(300);
+	RopoDevice::Chassis.AutoRotateAbs(-145);
+	pros::delay(300);
+	ControllerModule::ChangeLift();
 
-//-------------------------------------------------------------
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0.4,1);
+	pros::delay(750);
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(300);
+	
 
-	// RopoDevice::Chassis.AutoRotateAbs(180);
-	// RopoDevice::Chassis.MoveVelocity(0.5,-0.93);
-	// pros::delay(1450);
-	// RopoDevice::Chassis.MoveVelocity(0,0);
-	// pros::delay(3000);
-	// // pros::delay(3000);
-	// // RopoDevice::Chassis.AutoRotateAbs(180);
-	// // delay();
-	// // pros::delay(2000);
-	// RopoDevice::Chassis.MoveVelocity(0.6,0.2);
-	// pros::delay(2000);
 
-	// RopoDevice::Chassis.MoveVelocity(0,0);
-	// ControllerModule::Lift();
-	// pros::delay(600);
-	// RopoDevice::Position_Motor::MyPosition.Set_XY(0, 0);
-	// RopoDevice::Chassis.MoveVelocity(-0.3,0);
-	// pros::delay(700);
-	// ControllerModule::Intake();
-	// RopoDevice::Chassis.MoveVelocity(0.2,0);
-	// pros::delay(400);
-	// RopoDevice::Chassis.AutoPositionMove(0.4,-0.1);
+
+	//从网退出
+	RopoDevice::Chassis.MoveVelocity(-1.2,-2.0);
+	pros::delay(650);
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(50);
 	// RopoDevice::Chassis.AutoRotateAbs(0);
-	// ControllerModule::Outtake();
-	// RopoDevice::Chassis.MoveVelocity(0.6,0);
-	// pros::delay(700);
-	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(1100);
+	// RopoDevice::Chassis.MoveVelocity(0.8,0);
+	// pros::delay(750);
+	// RopoDevice::Chassis.MoveVelocity(0.0,0);
+	// pros::delay(50);
 
+	ControllerModule::ChangeIntakerPneumatic();//放
+	
 
+	//中间吃球
+	ControllerModule::Intake();
+	RopoDevice::Chassis.AutoPositionMove(-1.25,-1.53,10000,4000);
+	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(800);
+	ControllerModule::WingPush();
+	//RopoDevice::Chassis.AutoPositionMoveBack(-1.80,-1.35,10000,5000);
+	RopoDevice::Chassis.MoveVelocity(-1.1,0);
+	pros::delay(900);
 
-
-
-
-
-
-
-
+	RopoDevice::Chassis.MoveVelocity(0.0,0);
+	pros::delay(150);
 }
 
 void autonomous_C2(){

@@ -184,6 +184,7 @@ namespace RopoDevice{
 		while(Sensors::Inertial.is_calibrating())pros::delay(20);
 		pros::delay(200);
 		Position_Motor::MyPosition.initial();
+		Gpss::vexGps.set_data_rate(5);
 		
 
 	}
