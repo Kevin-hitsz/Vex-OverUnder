@@ -147,7 +147,7 @@ namespace RopoDiffySwerve{
                 M2[2][1] = -1;
                 M2 = 0.3954 * M2;
 
-                K[1][1] = -15.8114; K[1][2] = 0.4596 ; K[1][3] = -1.2344;
+                K[1][1] = -6.1237; K[1][2] = 0.1182 ; K[1][3] = -0.1637;
                 K[2][1] = K[1][1] ; K[2][2] = K[1][2]; K[2][3] = -K[1][3];
                 
 
@@ -164,9 +164,9 @@ namespace RopoDiffySwerve{
                 Status[1][1] = (Motor_1.get_position() + Motor_2.get_position()) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
                 x = Status[1][1];
                 // 偏角速度,且 RPM to Rad/s
-                Status[2][1] = (Motor_1.get_actual_velocity() + Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 180.0 * AngleRatio;
+                Status[2][1] = (Motor_1.get_actual_velocity() + Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 30.0 * AngleRatio;
                 // 轮速,且 RPM to Rad/s
-                Status[3][1] = (Motor_1.get_actual_velocity() - Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 180.0 * SpinRatio;
+                Status[3][1] = (Motor_1.get_actual_velocity() - Motor_2.get_actual_velocity()) / 2.0 * RopoMath::Pi / 30.0 * SpinRatio;
             } 
             float x;                                                  // Upate Status
     };

@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Obsolate_beta_3",
+    "project_name": "Obsolate_beta_4",
     "target": "v5",
     "templates": {
       "kernel": {

@@ -30,7 +30,7 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 7;
+		const int InertialPort = 14;
 		pros::IMU Inertial(InertialPort);
 
 		const int EncoderReciverPort = 6;
@@ -53,18 +53,19 @@ namespace RopoDevice{
 	}			
 	
 	namespace Motors{
-		const int LFMotorPort  	=  12;
-		const int LFMotorPort_ 	=  15;
-		const int LBMotorPort  	=  16;
-		const int LBMotorPort_ 	=  17;
-		const int RFMotorPort  	=  5;
-		const int RFMotorPort_ 	=  8;
-		const int RBMotorPort  	=  1;
-		const int RBMotorPort_ 	=  4;
+		const int LFMotorPort  	=  20;
+		const int LFMotorPort_ 	=  12;
+		const int LBMotorPort  	=  15;
+		const int LBMotorPort_ 	=  11;
+		const int RFMotorPort  	=  3;
+		const int RFMotorPort_ 	=  1;
+		const int RBMotorPort  	=  7;
+		const int RBMotorPort_ 	=  5;
+
 		const int IntakeMotorPort  = 18;
-		const int LShooterMotorPort = 20;
+		const int LShooterMotorPort = 4;
         const int RShooterMotorPort = 10;
-        const int HitterMotorPort = 3;
+        const int HitterMotorPort = 9;
 
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);

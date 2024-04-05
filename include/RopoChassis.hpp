@@ -22,8 +22,8 @@ namespace RopoChassis{
             };
     class Chassis{
         private:
-            const FloatType Length = 0.295;
-            const FloatType Width  = 0.295;
+            const FloatType Length = 0.276;
+            const FloatType Width  = 0.276;
             //const int GainOfLowPassFilter = 1 ;
             //const FloatType CutoffFrequency = 1;
             
@@ -137,15 +137,15 @@ namespace RopoChassis{
             }
             inline void AutoSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
                 MoveMode = OpenLoop;
-                AimStatus[1][1] = Vx;
-                AimStatus[2][1] = Vy;
-                AimStatus[3][1] = W;
+                AimStatus[1][1] = RopoMath::Sign(Vx) * RopoMath::Limit<float>(fabs(Vx), 1.57);
+                AimStatus[2][1] = RopoMath::Sign(Vy) * RopoMath::Limit<float>(fabs(Vy), 1.57);
+                AimStatus[3][1] = RopoMath::Sign(W) * RopoMath::Limit<float>(fabs(W), 8);
                 DelayTime = Time;
             }
             inline void OpSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
-                AimStatus[1][1] = Vx;
-                AimStatus[2][1] = Vy;
-                AimStatus[3][1] = W;
+                AimStatus[1][1] = RopoMath::Sign(Vx) * RopoMath::Limit<float>(fabs(Vx), 1.57);
+                AimStatus[2][1] = RopoMath::Sign(Vy) * RopoMath::Limit<float>(fabs(Vy), 1.57);
+                AimStatus[3][1] = RopoMath::Sign(W) * RopoMath::Limit<float>(fabs(W), 8);
                 if(ControlMode == Relative){
                     AimStatus[1][1] = AimStatus[1][1] * RopoMath::Cos(-ActualPosition[3][1]);
                     AimStatus[2][1] = AimStatus[2][1] * RopoMath::Sin(-ActualPosition[3][1]);
