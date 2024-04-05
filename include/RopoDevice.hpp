@@ -30,14 +30,14 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 14;
+		const int InertialPort = 5;
 		pros::IMU Inertial(InertialPort);
 
-		const int EncoderReciverPort = 6;
-		const int EncoderSenderPort  = 2;
+		const int EncoderReciverPort = 9;
+		const int EncoderSenderPort  = 19;
 		const int Boundrate = 115200;
 		const int SamplingDelay = 1;
-		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,95.0,-17.0);
+		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,0,68.0);
 		
         /* Matrix GetPosition(){
 			Matrix Position(3,1);
