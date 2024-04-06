@@ -33,11 +33,11 @@ namespace RopoDevice{
 		const int InertialPort = 6;
 		pros::IMU Inertial(InertialPort);
 
-		const int EncoderReciverPort = 19;
-		const int EncoderSenderPort  = 9;
+		const int EncoderReciverPort = 9;
+		const int EncoderSenderPort  = 19;
 		const int Boundrate = 115200;
 		const int SamplingDelay = 1;
-		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,0,68,180);
+		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,0,75,180);
 		
         /* Matrix GetPosition(){
 			Matrix Position(3,1);
@@ -83,9 +83,9 @@ namespace RopoDevice{
 	}
 
     void DeviceIni(){
-        Sensors::Inertial.reset(false);
+        Sensors::Inertial.reset(true);
         //while(Sensors::Inertial.is_calibrating())pros::delay(20);
-        pros::delay(2000);
+        pros::delay(1400);
         Sensors::Encoder.SetZero();
         Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
