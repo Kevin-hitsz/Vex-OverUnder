@@ -2,8 +2,8 @@
 #ifndef ROPO_SENSOR_ENCODING_DISK_HPP
 #define ROPO_SENSOR_ENCODING_DISK_HPP
 
-#include "SerialCore.hpp"
 #include "RopoMath/Misc.hpp"
+#include "SerialCore.hpp"
 
 namespace RopoSensor{
 	class EncodingDisk : public SerialCore{
@@ -12,7 +12,7 @@ namespace RopoSensor{
 			float PosY;
 			float Angle[3];
 			float W_Z;
-			float Encoding_in_Car_X,Encoding_in_Car_Y,Encoding_in_Car_Angle;
+			float Encoding_in_Car_X,Encoding_in_Car_Y,Encoding_in_Car_Angle;//x为右，y为前
 			SystemSerial Send;
 			virtual void Update(){
 				static uint8_t ReceiveChar;
@@ -71,14 +71,23 @@ namespace RopoSensor{
 			}
 		public:
 			
+			//获得码盘相对于机体零点机体x方向的坐标pos_x
+			float GetEncodingPosX0(){
+				return   PosX * RopoMath::Cos(Encoding_in_Car_Angle) - PosY * RopoMath::Sin(Encoding_in_Car_Angle);
+			}		
+			//获得码盘相对于机体零点机体y方向的坐标pos_y
+			float GetEncodingPosY0(){
+				return  PosY * RopoMath::Cos(Encoding_in_Car_Angle) + PosX * RopoMath::Sin(Encoding_in_Car_Angle);
+			}
+			//x为机体正前方，y为机体正左			
 			//获得机体相对于零点x方向的坐标pos_x
 			float GetPosX(){
-				return  PosY - Encoding_in_Car_Y * RopoMath::Cos(Angle[2]) - Encoding_in_Car_X * RopoMath::Sin(Angle[2])+Encoding_in_Car_Y;
-
+				return   GetEncodingPosY0() - Encoding_in_Car_Y * RopoMath::Cos(Angle[2]) - Encoding_in_Car_X * RopoMath::Cos(Angle[2])+ Encoding_in_Car_Y;
 			}		
+			
 			//获得机体相对于零点y方向的坐标pos_y
 			float GetPosY(){
-				return  -(PosX - Encoding_in_Car_X * RopoMath::Cos(Angle[2]) - Encoding_in_Car_Y * RopoMath::Sin(Angle[2])+Encoding_in_Car_X);
+				return   -(GetEncodingPosX0() - Encoding_in_Car_X * RopoMath::Cos(Angle[2]) + Encoding_in_Car_Y * RopoMath::Cos(Angle[2])+ Encoding_in_Car_X);
 			}		
 			//获得机体偏离Tag所示轴向的角度Tag angle 
 				//Tag: 0_x 1_y 2_z
