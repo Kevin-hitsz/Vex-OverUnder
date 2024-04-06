@@ -30,22 +30,14 @@ namespace RopoDevice{
 
 
 	namespace Sensors{
-		const int InertialPort = 5;
+		const int InertialPort = 6;
 		pros::IMU Inertial(InertialPort);
 
-<<<<<<< HEAD
 		const int EncoderReciverPort = 19;
 		const int EncoderSenderPort  = 9;
 		const int Boundrate = 115200;
 		const int SamplingDelay = 1;
 		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,0,68,180);
-=======
-		const int EncoderReciverPort = 9;
-		const int EncoderSenderPort  = 19;
-		const int Boundrate = 115200;
-		const int SamplingDelay = 1;
-		RopoSensor::EncodingDisk Encoder(EncoderReciverPort,Boundrate,EncoderSenderPort,Boundrate,SamplingDelay,0,68.0);
->>>>>>> 5ed5fe6adaf1be6aefa3b412ceb1b6f58f4ba58d
 		
         /* Matrix GetPosition(){
 			Matrix Position(3,1);
@@ -83,7 +75,7 @@ namespace RopoDevice{
 		Motor RFMotor_(RFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor RBMotor (RBMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor RBMotor_(RBMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
-		Motor IntakeMotor(IntakeMotorPort,pros::E_MOTOR_GEAR_BLUE, true);
+		Motor IntakeMotor(IntakeMotorPort,pros::E_MOTOR_GEAR_BLUE, false);
 		Motor LShooterMotor(LShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);	
         Motor RShooterMotor(RShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);
         Motor HitterMotor(HitterMotorPort,pros::E_MOTOR_GEAR_RED, true);		

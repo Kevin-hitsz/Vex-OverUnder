@@ -4,6 +4,7 @@
 #include "RopoApi.hpp"
 #include "RopoDiffySwerve.hpp"
 #include <cmath>
+#include "RopoMath/Matrix.hpp"
 #include "RopoMath/Misc.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
 #include "pros/imu.hpp"
@@ -16,10 +17,10 @@ namespace RopoChassis{
                 CloseLoop,
                 Opcontrol
             };
-    enum ChassisControlMode{
+    /* enum ChassisControlMode{
                 Absolute,
                 Relative
-            };
+            }; */
     class Chassis{
         private:
             const FloatType Length = 0.276;
@@ -57,7 +58,7 @@ namespace RopoChassis{
             int max_time = 1000; // ms
             int DelayTime;
             ChassisMoveMode MoveMode = Opcontrol;
-            ChassisControlMode ControlMode = Absolute;
+           // ChassisControlMode ControlMode = Absolute;
 
 
             static void ChassisControl(void* param){
@@ -100,6 +101,7 @@ namespace RopoChassis{
             }
 
             inline void MovingCalculate(){
+                
                 SwerveAimStatus_X_Y = Transfer_M * AimStatus;
                 for(int i = 1; i <= 7; i += 2){
                     SwerveAimStatus[i][1] = sqrtf(pow(SwerveAimStatus_X_Y[i][1], 2) + pow(SwerveAimStatus_X_Y[i+1][1],2));
@@ -146,10 +148,7 @@ namespace RopoChassis{
                 AimStatus[1][1] = RopoMath::Sign(Vx) * RopoMath::Limit<float>(fabs(Vx), 1.57);
                 AimStatus[2][1] = RopoMath::Sign(Vy) * RopoMath::Limit<float>(fabs(Vy), 1.57);
                 AimStatus[3][1] = RopoMath::Sign(W) * RopoMath::Limit<float>(fabs(W), 8);
-                if(ControlMode == Relative){
-                    AimStatus[1][1] = AimStatus[1][1] * RopoMath::Cos(-ActualPosition[3][1]);
-                    AimStatus[2][1] = AimStatus[2][1] * RopoMath::Sin(-ActualPosition[3][1]);
-                }
+                
                 DelayTime = Time;
             }
             void PositionControl(){
@@ -226,14 +225,20 @@ namespace RopoChassis{
             float GetTheta(){
                 return ActualPosition[3][1];
             }
-            void SetRelativeMode(){
+            /* void SetRelativeMode(){
                 ControlMode = Relative;
             }
             void SetAbsoluteMode(){
                 ControlMode = Absolute;
             }
+            ChassisControlMode GetRelativeMode(){
+                return ControlMode;
+            } */
             float GetSwerveAimStatus(int n,int m){
                 return SwerveAimStatus[n][m];
+            }
+            RopoMath::Matrix<FloatType> GetAimStatus(){
+                return AimStatus;
             }
     }; 
 }

@@ -105,19 +105,9 @@ namespace RopoFunction{
 	void Test(){
 		RopoDevice::Chassis.AutoSetPosition(0,0,90 * RopoMath::Pi / 180.0,2000);
 	}
-	void RelativeControlMode(){
-		RopoDevice::Chassis.SetRelativeMode();
-	}
-	void AbsoluteControlMode(){
-		RopoDevice::Chassis.SetAbsoluteMode();
-	}
+	bool ControlMode = false;
+	
 	void ChangeControlMode(){
-		static bool ControlMode = true;
-		if(ControlMode){
-			AbsoluteControlMode();
-		}else{
-			RelativeControlMode();
-		}
 		ControlMode = !ControlMode;
 	}
 	void Import(){
@@ -257,12 +247,12 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumaticTest);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::DoubleClick, RopoFunction::ChangeControlMode);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
@@ -276,7 +266,12 @@ void opcontrol() {
 		FloatType XInput =  1.57 * XVelocityInput.GetAxisValue();
 		FloatType YInput =  1.57 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -8 * WVelocityInput.GetAxisValue();
-
+		if(RopoFunction::ControlMode){
+                    double a =  XInput * cos(RopoDevice::Chassis.GetTheta()) - YInput * sin(RopoDevice::Chassis.GetTheta());
+                    double b =  YInput * cos(RopoDevice::Chassis.GetTheta()) + XInput * sin(RopoDevice::Chassis.GetTheta());
+                    XInput = a;
+                    YInput = b;
+                }
 		/*FloatType YInput = 1;
 		FloatType XInput = 0;
 		FloatType WInput = 0;*/
@@ -287,11 +282,11 @@ void opcontrol() {
 		LastYInput = YInput;
 		LastWInput = WInput;*/
 
-		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetX(), RopoDevice::Chassis.GetY(), RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
+		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetAimStatus()[1][1], RopoDevice::Chassis.GetAimStatus()[2][1], RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f, %.2f", 180 * RopoDevice::LF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::LB.get_Angle() / RopoMath::Pi);
 		//MasterController.print(1,0,"%.2f, %.2f", 180 * RopoDevice::RF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::RB.get_Angle() / RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(4,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(6,1) * 180 / RopoMath::Pi);
-		MasterController.print(0,0,"%.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 /RopoMath::Pi,RopoDevice::LF.x * 180 /RopoMath::Pi);
+		//MasterController.print(0,0,"%.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 /RopoMath::Pi,RopoDevice::LF.x * 180 /RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f",RopoDevice::LF.x);
 		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::LF.GetStatusError(1),RopoDevice::LF.GetStatusError(2),RopoDevice::LF.GetStatusError(3));
 		pros::delay(5);
