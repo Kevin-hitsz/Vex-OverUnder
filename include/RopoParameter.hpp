@@ -16,11 +16,11 @@ namespace RopoParameter {
 	
 	static constexpr int GPS_PORT = 14;
 	static constexpr double GPSX_INITIAL_0 = -1.40;
-	static constexpr double GPSY_INITIAL_0 = -0.95;
+	static constexpr double GPSY_INITIAL_0 = -1.40;
 	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
 	static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
 	
-	static constexpr double GPS_HEADING_INITIAL_0 = 180;
+	static constexpr double GPS_HEADING_INITIAL_0 = 135;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
 	static constexpr double GPSX_OFFSET = 0.0;

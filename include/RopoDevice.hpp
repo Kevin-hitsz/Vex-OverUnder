@@ -92,7 +92,7 @@ namespace RopoDevice{
 		}
 
 		const int LeftLiftMotorPort		= 4;
-		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
+		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_GREEN;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 
 		const int IntakeMotorPort		= 18;
@@ -129,7 +129,7 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20);
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,10 );
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
@@ -142,7 +142,9 @@ namespace RopoDevice{
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
         Sensors::Inertial.reset(true);
-        while(Sensors::Inertial.is_calibrating())pros::delay(20);
+        if(Sensors::Inertial.get_yaw() != PROS_ERR_F){
+			while(Sensors::Inertial.is_calibrating())pros::delay(20);
+		}
 		pros::delay(200);
 		Position_Motor::MyPosition.initial();
 	}
