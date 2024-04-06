@@ -157,7 +157,7 @@ void autonomous(){
 
 void opcontrol()
 {
-	pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
+	//pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);

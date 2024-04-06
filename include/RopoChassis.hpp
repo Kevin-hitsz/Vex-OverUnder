@@ -29,19 +29,17 @@ namespace RopoChassis{
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2};
 			//0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2
 			RopoControl::TankChassisCore Core;		
-			
-									
+				
 			void (*MotorMove[2])(FloatType);
-			Vector ChassisVelocity;
-			Vector MotorVelocity;
+
+			Vector ChassisVelocity;				//底盘速度(线速度、角速度)
+			Vector MotorVelocity;				//轮系电机转速(右侧、左侧)
 			FloatType AccelerationProcessSpeed;
 
 			const int SampleTime;			//采样间隔
 			
-			
-			
 			enum AutoStatus{
-				DetectMove = -1,				//直接控制状态
+				OpenMove = -1,				//直接控制状态
 				MovePosAbs = 0,				//坐标运行状态
 				MoveForward = 1,			//直行
 				Rotate = 2					//旋转
@@ -57,9 +55,9 @@ namespace RopoChassis{
 			bool DisArrived;									//距离到达标志 
 			bool DegArrived;									//角度到达标志
 
-			pros::Task* BackgroundTask;
-			bool moveReverse=false;
-			bool flag;
+			pros::Task* BackgroundTask;			//底盘控制线程
+			bool moveReverse = false;
+			bool reachFlag;						//坐标控制状态下判断是否达到 AimPosition
 
 			
 			void OpenLoopMove(const Vector& Velocity) {
@@ -99,17 +97,17 @@ namespace RopoChassis{
 				while(true)
 				{
 					if(This->MoveType == AutoMove){
-						if(This->AutoMoveType != DetectMove && This->flag)
+						if(This->AutoMoveType != OpenMove && This->reachFlag)	// 到达指定坐标后，重置
 						{
 							AimPosition = This->GetCurPosition();
 							IniPosition = This->GetCurPosition();
 						}
 
-						if(This->AutoMoveType == DetectMove)
+						if(This->AutoMoveType == OpenMove)
 						{
 							This->OpenLoopMove(This->ChassisVelocity);
 						}
-						else if(!This->flag)
+						else if(!This->reachFlag)
 						{
 							
 							CurrentPosition = This->GetCurPosition();
@@ -190,7 +188,7 @@ namespace RopoChassis{
 								{
 									TempChassisVelocity[1] = 0;
 									TempChassisVelocity[2] = 0;
-									This->flag=true;
+									This->reachFlag=true;
 								}
 							}
 
@@ -208,7 +206,7 @@ namespace RopoChassis{
 								else
 								{
 									TempChassisVelocity[2] = 0;
-									This->flag=true;
+									This->reachFlag=true;
 								}
 								TempChassisVelocity[1] = 0;
 							}
@@ -231,13 +229,13 @@ namespace RopoChassis{
 				Core( WheelRad, ChassisParameter, DefaultVelocityLimits),
 				MotorMove{  RightMotorMove,LeftMotorMove},
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
-				AutoMoveType(DetectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
+				AutoMoveType(OpenMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
 				DisArrived(false),DegArrived(false),AccelerationProcessSpeed(0),
-				BackgroundTask(nullptr),moveReverse(false),flag(true){
+				BackgroundTask(nullptr),moveReverse(false),reachFlag(true){
 				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
 			}
 
-			void SetVelocityLimits(FloatType VelocityLimits) {Core.SetVelocityLimits(VelocityLimits);}
+			void SetVelocityLimits(FloatType VelocityLimits) {Core.SetVelocityLimits(VelocityLimits);}	//设置底盘电机转速(rpm)
 			Vector GetChassisVelocity(){return ChassisVelocity;}
 			Vector GetMotorVelocity(){return MotorVelocity;}
 
@@ -245,7 +243,7 @@ namespace RopoChassis{
 			/// @return 单次直行或旋转是否完成
 			bool IfArrived()
 			{
-				return flag;
+				return reachFlag;
 			}
 
 			/// @brief 直行是否到达
@@ -260,7 +258,7 @@ namespace RopoChassis{
 			/// @brief 设置底盘为手动赛模式，该模式底盘模块不会操控底盘电机，此时底盘模块只会等待
 			void StartChassisOpControll(){
 				MoveType = OpMove;
-				flag = true;
+				reachFlag = true;
 			}
 
 			/// @brief 设置底盘为自动赛模式，该模式底盘模块会操控底盘电机
@@ -273,7 +271,7 @@ namespace RopoChassis{
 			void MoveVelocity(const Vector& Velocity) 
 			{
 				ChassisVelocity = Velocity;
-				AutoMoveType = DetectMove;
+				AutoMoveType = OpenMove;
 			}
 
 			/// @brief 赋予车速度
@@ -283,7 +281,7 @@ namespace RopoChassis{
 			{
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
-				AutoMoveType = DetectMove;
+				AutoMoveType = OpenMove;
 			}
 
 			/// @brief 旋转至目标角
@@ -291,7 +289,7 @@ namespace RopoChassis{
 			void AutoRotateAbs(FloatType AimDegree)
 			{
 				SlowDegRegulator.Reset();
-				flag=false;
+				reachFlag=false;
 				AimPosition[3] = AimDegree;
 				AutoMoveType = Rotate;
 				DegArrived = false; 
@@ -302,7 +300,7 @@ namespace RopoChassis{
 			void AutoRotateRelative(FloatType RelativeDegree)
 			{
 				SlowDegRegulator.Reset();
-				flag=false;
+				reachFlag=false;
 				RelativeDegree += (GetCurPosition())[3];
 				if(RelativeDegree > 180 ) RelativeDegree -= 180;
 				if(RelativeDegree < -180 ) RelativeDegree += 180;
@@ -319,8 +317,8 @@ namespace RopoChassis{
 			{
 				AccelerationProcessSpeed = 0;
 				DistanceRegulator.Reset();
-				moveReverse=move;
-				flag=false;
+				moveReverse = move;
+				reachFlag = false;
 				AimPosition[1] = AimX;
 				AimPosition[2] = AimY;
 				AimPosition[3] = GetCurPosition()[3];
@@ -333,32 +331,32 @@ namespace RopoChassis{
 			/// @param AimY 目标Y坐标
 			void AutoPositionMove(FloatType AimX,FloatType AimY)
 			{
-				RopoMath:: Vector CurentPosition=GetCurPosition();
+				RopoMath::Vector CurentPosition=GetCurPosition();
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(200);
+				while(!reachFlag) pros::delay(200);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(200);
+				while(!reachFlag) pros::delay(200);
 			}
 
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY)
 			{
-				RopoMath:: Vector CurentPosition=GetCurPosition();
+				RopoMath::Vector CurentPosition=GetCurPosition();
 				//旋转指向目标点
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(200);
+				while(!reachFlag) pros::delay(200);
 				
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(200);
+				while(!reachFlag) pros::delay(200);
 			}
 
 			/// @brief 直接使车移动到目标点并旋转至目标角度
@@ -373,16 +371,16 @@ namespace RopoChassis{
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!reachFlag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!reachFlag) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
 				pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!reachFlag) pros::delay(100);
 			}
 
 			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
@@ -394,16 +392,16 @@ namespace RopoChassis{
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
 				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
 				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
 				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 			}
 
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta)
@@ -414,16 +412,16 @@ namespace RopoChassis{
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!reachFlag) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
 				pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!reachFlag) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
 				pros::delay(20);
-				while(!flag) pros::delay(100);
+				while(!reachFlag) pros::delay(100);
 			}
 
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
@@ -435,16 +433,16 @@ namespace RopoChassis{
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
 				//等待到达
 				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 				
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
 				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
 				pros::delay(20);
-				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 			}
 	};
 }
