@@ -107,7 +107,7 @@ namespace RopoAuto{
         Degree = RopoDevice::Sensors::My_openMV.Get_Ball_Deg();
         double time0 = pros::millis();
         while(!( (See_Flag) && !Auto_Find_DQ(Distance,Degree) ) && pros::millis() - time0 < 5000) {
-            RopoDevice::Chassis.MoveVelocity(0,1.7);
+            RopoDevice::Chassis.MoveVelocity(0,-1.7);
             pros::delay(100);
             See_Flag = RopoDevice::Sensors::My_openMV.If_See();
             Distance = RopoDevice::Sensors::My_openMV.Get_Ball_Dis();
