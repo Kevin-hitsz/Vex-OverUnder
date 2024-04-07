@@ -16,13 +16,13 @@ namespace RopoDevice{
 
 
 	namespace ThreeWire{
-		const char LExternPneumaticPort = 'H';
+		const char LExternPneumaticPort = 'F';
 		pros::ADIDigitalOut LExternPneumatic(LExternPneumaticPort,false);
-        const char RExternPneumaticPort = 'G';
+        const char RExternPneumaticPort = 'H';
 		pros::ADIDigitalOut RExternPneumatic(RExternPneumaticPort,false);
-        const char ClimberPneumaticPort = 'A';
+        const char ClimberPneumaticPort = 'G';
 		pros::ADIDigitalOut ClimberPneumatic(ClimberPneumaticPort,false);
-        const char IntakerPneumaticPort = 'F';
+        const char IntakerPneumaticPort = 'A';
 		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
         const char ShooterPneumaticPort = 'C';
 		pros::ADIDigitalOut ShooterPneumatic(ShooterPneumaticPort,false);

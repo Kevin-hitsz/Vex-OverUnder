@@ -17,10 +17,10 @@ namespace RopoChassis{
                 CloseLoop,
                 Opcontrol
             };
-    /* enum ChassisControlMode{
+    enum ChassisControlMode{
                 Absolute,
                 Relative
-            }; */
+            }; 
     class Chassis{
         private:
             const FloatType Length = 0.276;
@@ -58,7 +58,7 @@ namespace RopoChassis{
             int max_time = 1000; // ms
             int DelayTime;
             ChassisMoveMode MoveMode = Opcontrol;
-           // ChassisControlMode ControlMode = Absolute;
+            ChassisControlMode ControlMode = Absolute;
 
 
             static void ChassisControl(void* param){
@@ -101,7 +101,12 @@ namespace RopoChassis{
             }
 
             inline void MovingCalculate(){
-                
+                if(ControlMode){
+                    double a =  AimStatus[1][1] * cos(ActualPosition[3][1]) - AimStatus[2][1] * sin(ActualPosition[3][1]);
+                    double b =  AimStatus[2][1] * cos(ActualPosition[3][1]) + AimStatus[1][1] * sin(ActualPosition[3][1]);
+                    AimStatus[1][1] = a;
+                    AimStatus[2][1] = b;
+                }
                 SwerveAimStatus_X_Y = Transfer_M * AimStatus;
                 for(int i = 1; i <= 7; i += 2){
                     SwerveAimStatus[i][1] = sqrtf(pow(SwerveAimStatus_X_Y[i][1], 2) + pow(SwerveAimStatus_X_Y[i+1][1],2));
@@ -225,15 +230,19 @@ namespace RopoChassis{
             float GetTheta(){
                 return ActualPosition[3][1];
             }
-            /* void SetRelativeMode(){
+            void SetRelativeMode(){
                 ControlMode = Relative;
             }
             void SetAbsoluteMode(){
                 ControlMode = Absolute;
             }
+            void ChangeControlMode(){
+                if(ControlMode == Relative)ControlMode = Absolute;
+                else ControlMode = Relative;
+            }
             ChassisControlMode GetRelativeMode(){
                 return ControlMode;
-            } */
+            } 
             float GetSwerveAimStatus(int n,int m){
                 return SwerveAimStatus[n][m];
             }

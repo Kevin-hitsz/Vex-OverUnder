@@ -105,10 +105,11 @@ namespace RopoFunction{
 	void Test(){
 		RopoDevice::Chassis.AutoSetPosition(0,0,90 * RopoMath::Pi / 180.0,2000);
 	}
-	bool ControlMode = false;
+	//bool ControlMode = false;
 	
 	void ChangeControlMode(){
-		ControlMode = !ControlMode;
+		//ControlMode = !ControlMode;
+		RopoDevice::Chassis.ChangeControlMode();
 	}
 	void Import(){
 		Shoot();
@@ -229,7 +230,8 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Outtake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, RopoFunction::StopIn);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, RopoFunction::StopIn);
-
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Falling, RopoFunction::StopIn);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Outtake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, RopoFunction::ExternLeft);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, RopoFunction::RecycleLeft);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, RopoFunction::ExternRight);
@@ -251,8 +253,8 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumaticTest);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
@@ -266,12 +268,12 @@ void opcontrol() {
 		FloatType XInput =  1.57 * XVelocityInput.GetAxisValue();
 		FloatType YInput =  1.57 * YVelocityInput.GetAxisValue();
 		FloatType WInput = -8 * WVelocityInput.GetAxisValue();
-		if(RopoFunction::ControlMode){
+		/* if(RopoFunction::ControlMode){
                     double a =  XInput * cos(RopoDevice::Chassis.GetTheta()) - YInput * sin(RopoDevice::Chassis.GetTheta());
                     double b =  YInput * cos(RopoDevice::Chassis.GetTheta()) + XInput * sin(RopoDevice::Chassis.GetTheta());
                     XInput = a;
                     YInput = b;
-                }
+                } */
 		/*FloatType YInput = 1;
 		FloatType XInput = 0;
 		FloatType WInput = 0;*/
