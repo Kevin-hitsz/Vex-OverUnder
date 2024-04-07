@@ -133,7 +133,7 @@ namespace RopoChassis{
                 Transfer_M[7][1] = -1,Transfer_M[7][2]= 0,Transfer_M[7][3] = - Width  * 0.5;
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
 
-                Kp[1][1] = 7; Kp[2][2] = 7; Kp[3][3] = 10;  // 控制参数调整
+                Kp[1][1] = 10; Kp[2][2] = 10; Kp[3][3] = 10;  // 控制参数调整
 
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
@@ -193,7 +193,7 @@ namespace RopoChassis{
                 Position_OK = false;
                 AimPosition[1][1] = x;
                 AimPosition[2][1] = y;
-                AimPosition[3][1] = theta;
+                AimPosition[3][1] = theta* RopoMath::Pi / 180;
             }
             void OpenAuto(){
                 MoveMode = OpenLoop;
@@ -218,6 +218,7 @@ namespace RopoChassis{
                 if(MoveMode == Opcontrol) return true;
                 else return false;
             }
+            bool IfPosition_OK(){return Position_OK;}
             float GetAimX(){ return AimStatus[1][1];}
             float GetAimY(){ return AimStatus[2][1];}
             float GetAimW(){ return AimStatus[3][1];}

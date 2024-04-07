@@ -65,7 +65,7 @@ namespace RopoDevice{
 		const int IntakeMotorPort  = 16;
 		const int LShooterMotorPort = 1;
         const int RShooterMotorPort = 11;
-        const int HitterMotorPort = 9;
+        //const int HitterMotorPort = 9;
 
 		Motor LFMotor (LFMotorPort,pros::E_MOTOR_GEAR_BLUE, true,pros::E_MOTOR_ENCODER_DEGREES);
 		Motor LFMotor_(LFMotorPort_,pros::E_MOTOR_GEAR_BLUE,true,pros::E_MOTOR_ENCODER_DEGREES);
@@ -78,7 +78,7 @@ namespace RopoDevice{
 		Motor IntakeMotor(IntakeMotorPort,pros::E_MOTOR_GEAR_BLUE, false);
 		Motor LShooterMotor(LShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);	
         Motor RShooterMotor(RShooterMotorPort,pros::E_MOTOR_GEAR_RED, true);
-        Motor HitterMotor(HitterMotorPort,pros::E_MOTOR_GEAR_RED, true);		
+        //Motor HitterMotor(HitterMotorPort,pros::E_MOTOR_GEAR_RED, true);		
 
 	}
 
@@ -89,7 +89,7 @@ namespace RopoDevice{
         Sensors::Encoder.SetZero();
         Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Motors::HitterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        //Motors::HitterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
 RopoDiffySwerve::DiffySwerve LF(Motors::LFMotor,Motors::LFMotor_); // Define the variable in a source file

@@ -10,6 +10,10 @@
 #include <cmath>
 
 namespace ControllerModule{
+	bool ClimberFlag = false;
+	bool ExternLeftFlag = false;
+	bool ExternRightFlag = false;
+	bool ShooterPneumaticFlag = false;
 }
 
 void initialize() {
@@ -19,9 +23,19 @@ void initialize() {
 }
 
 namespace RopoFunction{
-	void ShooterPneumaticTest(){
-		RopoDevice::ThreeWire::ShooterPneumatic.set_value(true);
+
+	void ShooterPneumatic(){
+		if(ControllerModule::ShooterPneumaticFlag == false){
+			RopoDevice::ThreeWire::ShooterPneumatic.set_value(true);
+			ControllerModule::ShooterPneumaticFlag = true;
+		}
+		else if(ControllerModule::ShooterPneumaticFlag == true){
+			RopoDevice::ThreeWire::ShooterPneumatic.set_value(false);
+			ControllerModule::ShooterPneumaticFlag = false;
+		}
 	}
+
+
 	void Intake(){
 		RopoDevice::Motors::IntakeMotor.move_velocity(-600);
 	}
@@ -32,30 +46,41 @@ namespace RopoFunction{
 		RopoDevice::Motors::IntakeMotor.move_velocity(0);
 	}
 
+	
+	void Climber(){
+		if(ControllerModule::ClimberFlag == false){
+			RopoDevice::ThreeWire::ClimberPneumatic.set_value(true);
+			ControllerModule::ClimberFlag = true;
+		}
+		else if(ControllerModule::ClimberFlag == true){
+			RopoDevice::ThreeWire::ClimberPneumatic.set_value(false);
+			ControllerModule::ClimberFlag = false;
+		}
+	}
 
 	void ExternLeft(){
-		RopoDevice::ThreeWire::LExternPneumatic.set_value(true);
+		if(ControllerModule::ExternLeftFlag == false){
+			RopoDevice::ThreeWire::LExternPneumatic.set_value(true);
+			ControllerModule::ExternLeftFlag = true;
+		}
+		else if(ControllerModule::ExternLeftFlag == true){
+			RopoDevice::ThreeWire::LExternPneumatic.set_value(false);
+			ControllerModule::ExternLeftFlag = false;
+		}
 	}
-	void RecycleLeft(){
-		RopoDevice::ThreeWire::LExternPneumatic.set_value(false);
-	}
+
 	void ExternRight(){
-		RopoDevice::ThreeWire::RExternPneumatic.set_value(true);
+		if(ControllerModule::ExternRightFlag == false){
+			RopoDevice::ThreeWire::RExternPneumatic.set_value(true);
+			ControllerModule::ExternRightFlag = true;
+		}
+		else if(ControllerModule::ExternRightFlag == true){
+			RopoDevice::ThreeWire::RExternPneumatic.set_value(false);
+			ControllerModule::ExternRightFlag = false;
+		}
 	}
-	void RecycleRight(){
-		RopoDevice::ThreeWire::RExternPneumatic.set_value(false);
-	}
+
 	
-
-	void ClimberUp(){
-		RopoDevice::ThreeWire::ClimberPneumatic.set_value(true);
-		
-	}
-	void ClimberRecycle(){
-		RopoDevice::ThreeWire::ClimberPneumatic.set_value(false);
-	}
-
-
 	void IntakerUp(){
 		RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
 	}
@@ -79,18 +104,19 @@ namespace RopoFunction{
 	void ReLoad(){
 		RopoDevice::Motors::LShooterMotor.move_voltage(-12000);
 		RopoDevice::Motors::RShooterMotor.move_voltage(12000);
-		pros::delay(200);
+		pros::delay(500);
 		while (RopoDevice::Motors::RShooterMotor.get_actual_velocity() > 5) pros::delay(5);
 		ShooterStopInit();
 	}
 	void Shoot(){
 		RopoDevice::Motors::LShooterMotor.move_voltage(12000);
 		RopoDevice::Motors::RShooterMotor.move_voltage(-12000);
-		pros::delay(200);
+		pros::delay(500);
 		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 2) pros::delay(5);
 		ShooterStopInit();
 	}
-	void Hit(){
+
+	/*void Hit(){
 		RopoDevice::Motors::HitterMotor.move_voltage(-12000);
 		pros::delay(200);
 		while (std::abs(RopoDevice::Motors::HitterMotor.get_actual_velocity()) > 5) pros::delay(5);
@@ -101,9 +127,10 @@ namespace RopoFunction{
 		pros::delay(200);
 		while (RopoDevice::Motors::HitterMotor.get_actual_velocity() > 5) pros::delay(5);
 		RopoDevice::Motors::HitterMotor.move_voltage(0);
-	}
+	}*/
+
 	void Test(){
-		RopoDevice::Chassis.AutoSetPosition(0,0,90 * RopoMath::Pi / 180.0,2000);
+		RopoDevice::Chassis.AutoSetPosition(0,0,0,2000);
 	}
 	//bool ControlMode = false;
 	
@@ -112,27 +139,28 @@ namespace RopoFunction{
 		RopoDevice::Chassis.ChangeControlMode();
 	}
 	void Import(){
-		Shoot();
-		pros::delay(100);
-		Hit();
-		int i = 0;
-		for(;i<=4;i++){
-			pros::delay(200);
-			HitterReset();
-			pros::delay(100);
-			ReLoad();
-			pros::delay(800);
-			Shoot();
-			pros::delay(200);
-			Hit();
-		}
-		pros::delay(200);
-		HitterReset();
+
 	}
 }
 
 
-
+void autonomous_1(){
+	RopoFunction::ExternRight();
+	pros::delay(200);
+	RopoDevice::Chassis.AutoSetAimStatus(0, 0, -8);
+	pros::delay(800);
+	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+	RopoDevice::Chassis.AutoSetPosition(0,0,-135,1500);
+	/*
+	RopoDevice::Chassis.AutoSetPosition(0,0,180,1000);
+	//while ( RopoDevice::Chassis.IfPosition_OK()) pros::delay(20);
+	RopoFunction::ExternRight();
+	RopoDevice::Chassis.AutoSetPosition(1,0.15,-90,2000);
+	RopoDevice::Chassis.AutoSetAimStatus(1, 0, 0);
+	pros::delay(1000);
+	*/
+	RopoDevice::Chassis.Operator();
+}
 
 
 
@@ -143,7 +171,7 @@ void autonomous_A1(){
 	RopoDevice::Chassis.AutoSetPosition();*/
 	float x,y,theta;
 	RopoFunction::ReLoad();
-	RopoFunction::HitterReset();
+	//RopoFunction::HitterReset();
 
 	pros::delay(1000);
 
@@ -208,8 +236,9 @@ void autonomous(){
 void opcontrol() {
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 2.3;
-	FloatType RopoWcLimit = 3.5;
+
+	FloatType VelocityMax = 1.57;
+	FloatType RopoWcLimit = 8;
 
 	/*FloatType LastXInput = 0;
 	FloatType LastYInput = 0;
@@ -218,8 +247,8 @@ void opcontrol() {
 	FloatType YInput = 0;
 	FloatType WInput = 0;*/
 	
-	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
-	RopoController::AxisValueCast YVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_X,RopoController::Linear);
+	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Ln);
+	RopoController::AxisValueCast YVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_X,RopoController::Ln);
 	RopoController::AxisValueCast WVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_RIGHT_X,RopoController::Linear);
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
@@ -227,21 +256,19 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising, autonomous_A1);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Intake);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Outtake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, RopoFunction::StopIn);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, RopoFunction::StopIn);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Falling, RopoFunction::StopIn);
+
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Outtake);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Falling, RopoFunction::StopIn);
+	
+
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising, RopoFunction::ExternLeft);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, RopoFunction::RecycleLeft);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising, RopoFunction::ExternRight);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Falling, RopoFunction::RecycleRight);
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::ClimberUp);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Falling, RopoFunction::ClimberRecycle);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::Climber);
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::IntakerUp);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Falling, RopoFunction::IntakerDown);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::IntakerUp);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Falling, RopoFunction::IntakerDown);
 
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::ShooterInit);
@@ -251,8 +278,9 @@ void opcontrol() {
 
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumaticTest);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, autonomous_1);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
@@ -265,9 +293,9 @@ void opcontrol() {
 
 
 
-		FloatType XInput =  1.57 * XVelocityInput.GetAxisValue();
-		FloatType YInput =  1.57 * YVelocityInput.GetAxisValue();
-		FloatType WInput = -8 * WVelocityInput.GetAxisValue();
+		FloatType XInput =  VelocityMax * XVelocityInput.GetAxisValue();
+		FloatType YInput =  VelocityMax * YVelocityInput.GetAxisValue();
+		FloatType WInput = -RopoWcLimit * WVelocityInput.GetAxisValue();
 		/* if(RopoFunction::ControlMode){
                     double a =  XInput * cos(RopoDevice::Chassis.GetTheta()) - YInput * sin(RopoDevice::Chassis.GetTheta());
                     double b =  YInput * cos(RopoDevice::Chassis.GetTheta()) + XInput * sin(RopoDevice::Chassis.GetTheta());
