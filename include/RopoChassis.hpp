@@ -50,7 +50,7 @@ namespace RopoChassis{
             Matrix Parameter = Matrix(3,3);
 
             bool Position_OK = false;
-            static constexpr float ControlTime = 20; // ms
+            static constexpr float ControlTime = 5; // ms
             FloatType XYMinError = 0.01;
             FloatType ThetaMinError = 5;
             int counter_for_error = 0;

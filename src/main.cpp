@@ -284,13 +284,16 @@ void opcontrol() {
 		LastYInput = YInput;
 		LastWInput = WInput;*/
 
-		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetAimStatus()[1][1], RopoDevice::Chassis.GetAimStatus()[2][1], RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
+		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetAimStatus()[1][1], RopoDevice::Chassis.GetAimStatus()[2][1], RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f, %.2f", 180 * RopoDevice::LF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::LB.get_Angle() / RopoMath::Pi);
 		//MasterController.print(1,0,"%.2f, %.2f", 180 * RopoDevice::RF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::RB.get_Angle() / RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(4,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(6,1) * 180 / RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 /RopoMath::Pi,RopoDevice::LF.x * 180 /RopoMath::Pi);
 		//MasterController.print(0,0,"%.2f",RopoDevice::LF.x);
 		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::LF.GetStatusError(1),RopoDevice::LF.GetStatusError(2),RopoDevice::LF.GetStatusError(3));
+		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::Encoder.GetPosX()/1000, RopoDevice::Sensors::Encoder.GetPosY()/1000, RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
 		pros::delay(5);
+		//MasterController.print(1,0,"%s", RopoDevice::Sensors::Encoder.IsReading()?"1":"2");
+		//pros::delay(5);
 	}
 }

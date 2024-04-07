@@ -82,12 +82,12 @@ namespace RopoSensor{
 			//x为机体正前方，y为机体正左			
 			//获得机体相对于零点x方向的坐标pos_x
 			float GetPosX(){
-				return   GetEncodingPosY0() - Encoding_in_Car_Y * RopoMath::Cos(Angle[2]) - Encoding_in_Car_X * RopoMath::Cos(Angle[2])+ Encoding_in_Car_Y;
+				return   GetEncodingPosY0() - Encoding_in_Car_Y * RopoMath::Cos(Angle[2]) - Encoding_in_Car_X * RopoMath::Sin(Angle[2])+ Encoding_in_Car_Y;
 			}		
 			
 			//获得机体相对于零点y方向的坐标pos_y
 			float GetPosY(){
-				return   -(GetEncodingPosX0() - Encoding_in_Car_X * RopoMath::Cos(Angle[2]) + Encoding_in_Car_Y * RopoMath::Cos(Angle[2])+ Encoding_in_Car_X);
+				return   -(GetEncodingPosX0() - Encoding_in_Car_X * RopoMath::Cos(Angle[2]) + Encoding_in_Car_Y * RopoMath::Sin(Angle[2])+ Encoding_in_Car_X);
 			}		
 			//获得机体偏离Tag所示轴向的角度Tag angle 
 				//Tag: 0_x 1_y 2_z
