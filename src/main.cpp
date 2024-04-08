@@ -86,11 +86,19 @@ namespace ControllerModule {
 
 	void SwitchIntakerFor(){
 		intaker_forward ^= 1;
+		intaker_backward = false;
 		RollIntaker();
 	}
 
 	void SwitchIntakerBack(){
 		intaker_backward ^= 1;
+		RollIntaker();
+	}
+
+	void SwitchIntakerForToBack(){
+		intaker_forward ^= 1;
+		intaker_backward ^= 1;
+		pros::delay(50);
 		RollIntaker();
 	}
 
@@ -174,8 +182,8 @@ void opcontrol()
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1   , RopoController::Rising, ControllerModule::ExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Rising,ControllerModule::ChangeLift);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::DoubleEdge, ControllerModule::SwitchIntakerFor);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::DoubleEdge, ControllerModule::SwitchIntakerBack);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::DoubleEdge, ControllerModule::SwitchIntakerForToBack);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerFor);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::TurnAround);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, ControllerModule::ChangeCatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
@@ -187,8 +195,8 @@ void opcontrol()
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
 	ControllerModule::intaker_backward = false;
-	ControllerModule::intaker_forward = false;
-	RopoDevice::Motors::IntakeMotor.move_velocity(0);
+	ControllerModule::intaker_forward = true;
+	ControllerModule::RollIntaker();
 
 	while (true) {
 
