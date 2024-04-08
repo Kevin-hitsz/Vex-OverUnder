@@ -116,6 +116,40 @@ namespace RopoFunction{
 		ShooterStopInit();
 	}
 
+
+	void shootandsweep(){
+
+		float x,y,theta;
+		x = RopoDevice::Chassis.GetX();
+		y = RopoDevice::Chassis.GetY();
+		theta = RopoDevice::Chassis.GetTheta();
+		ReLoad();
+		ShooterPneumatic();
+		ExternLeft();
+
+		for(int i = 1; i<=5; i++)
+		{
+			pros::delay(1000);
+			Shoot();
+			pros::delay(300);
+			RopoDevice::Chassis.AutoSetAimStatus(0, 0, 8);
+			pros::delay(800);
+			RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+			pros::delay(300);
+			RopoDevice::Chassis.AutoSetPosition(x, y, theta, 2000);
+			while (RopoDevice::Chassis.IfPosition_OK() == false) {pros::delay(20);}
+			ReLoad();
+		}
+		
+		ShooterPneumatic();
+		Shoot();
+		ExternLeft();
+
+
+	}
+
+
+
 	/*void Hit(){
 		RopoDevice::Motors::HitterMotor.move_voltage(-12000);
 		pros::delay(200);
@@ -279,7 +313,7 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::shootandsweep);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, autonomous_1);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
