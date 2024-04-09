@@ -81,8 +81,8 @@ namespace RopoDiffySwerve{
                         This -> Motor_2.move_voltage((int)This -> Voltage[2][1]);
                     }
                     else {
-                        This -> Motor_1 . brake();
-                        This -> Motor_2 . brake();
+                        This -> Motor_1 . move_voltage(0);
+                        This -> Motor_2 . move_voltage(0);
                     }
                     //This -> Last_Voltage = This -> Voltage;
                     pros::delay(This -> Control_Time);

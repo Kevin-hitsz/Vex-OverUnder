@@ -105,14 +105,14 @@ namespace RopoFunction{
 		RopoDevice::Motors::LShooterMotor.move_voltage(-12000);
 		RopoDevice::Motors::RShooterMotor.move_voltage(12000);
 		pros::delay(500);
-		while (RopoDevice::Motors::RShooterMotor.get_actual_velocity() > 5) pros::delay(5);
+		while (RopoDevice::Motors::RShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
 	}
 	void Shoot(){
 		RopoDevice::Motors::LShooterMotor.move_voltage(12000);
 		RopoDevice::Motors::RShooterMotor.move_voltage(-12000);
 		pros::delay(500);
-		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 2) pros::delay(5);
+		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
 	}
 
@@ -195,39 +195,102 @@ namespace RopoFunction{
 	/*	step_1 拨出联队球推入球网	*/
 	RopoFunction::ExternRight();
 	pros::delay(500);
-	RopoDevice::Chassis.AutoSetAimStatus(-1, 0, -1);
-	pros::delay(300);
+	RopoDevice::Chassis.AutoSetAimStatus(-1, 0, -2);
+	pros::delay(500);
 	RopoFunction::ExternRight();
-	pros::delay(200);
 	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	//RopoFunction::closemove(0, 0, -75, 1000);
-	RopoFunction::closemove(-0.55, 0.18, -45, 1000);
+
+	pros::delay(500);
+
+	RopoFunction::closemove(-0.14, 0.05, -26.8, 1000);
+	RopoDevice::Chassis.AutoSetAimStatus(-1.57, 0, 0);
+	pros::delay(1000);
+	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+	/*	step_1 end	*/ 
+	
+ 
+	/*  step_2 到中间撞球并返回导球点  */
+	pros::delay(200);
+	RopoDevice::Chassis.AutoSetAimStatus(1, -1, 0);
+	pros::delay(500);
+	RopoFunction::closemove( -0.03, 0.62, -45.33, 1500);
+	//RopoDevice::Chassis.AutoSetAimStatus(-1, 0, 0);
+	//pros::delay(500);
+	//RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+	//pros::delay(200);
+	RopoFunction::closemove(-0.44, 1.05, -45, 1500);
+	RopoFunction::ExternLeft();
+	pros::delay(500);
+	RopoDevice::Chassis.AutoSetAimStatus(0, -1.57, 0);
+	pros::delay(2000);
+	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+	RopoFunction::ExternLeft();
+	pros::delay(200);
+	RopoFunction::closemove(0.03, 0.6, 66.98, 1500);
+	RopoFunction::closemove(0.03, 0.6, 66.98, 1500);
 	RopoDevice::Chassis.AutoSetAimStatus(-1.57, 0, 0);
 	pros::delay(500);
 	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	/*	step_1 end	*/
+	pros::delay(200);
+	RopoFunction::closemove(0.10, 0.01, 72.46, 1500);
+	/*	step_2 end	*/ 
 
 
-	/*  step_2 到中间撞球并返回导球点  */
-	pros::delay(500);
-	RopoDevice::Chassis.AutoSetAimStatus(1, -1, 0);
-	pros::delay(500);
-	RopoFunction::closemove(0.08, 0.56, -44.80, 3000);
-	RopoFunction::closemove(-0.44, 1.05, -44.80, 2000);
-	RopoFunction::ExternLeft();
-	RopoDevice::Chassis.AutoSetAimStatus(0, 1.57, 0);
+	/*  step_3 抛球x3 导球x7  */
 	pros::delay(1000);
-	RopoFunction::closemove(-0.05, 0.03, 90.03, 4000);
+	RopoFunction::ReLoad();
+	pros::delay(200);
+	RopoFunction::ShooterPneumatic();
+	pros::delay(200);
+	for(int i = 1; i <= 3; i++){
+		RopoFunction::Shoot();
+		pros::delay(500);
+		RopoFunction::ReLoad();
+		pros::delay(1000);
+	}
+	RopoFunction::ShooterPneumatic();
+	pros::delay(200);
+	RopoFunction::Shoot();
+	pros::delay(500);
+	RopoFunction::closemove(0.14, 0.04, -2.38, 1000);
+	pros::delay(500);
+	RopoFunction::ExternRight();
+	pros::delay(500);
+	for (int i =1;i <= 7; i++) {
+		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 8);
+		pros::delay(200);
+		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+		pros::delay(800);
+		RopoDevice::Chassis.AutoSetAimStatus(0, 0, -8);
+		pros::delay(200);
+		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+		pros::delay(800);
+	}
+	RopoFunction::ExternRight();
+	RopoFunction::closemove(0.14, 0.04, 44.2768, 1000);
+	pros::delay(500);
+	/*	step_3 end	*/ 
 
 
+	/*  step_4 将导出的球推入球网  */
 
-	RopoFunction::shootandsweep(3);
+	/*	step_4 end	*/ 
 
+
+	/*  step_5 碰杆  */
+
+	/*	step_4 end	*/
+
+
+	/*
+	//pros::delay(3000);
+	RopoFunction::closemove(-0.44, 1.05, -44.80, 2000);
+	//pros::delay(2000);
 	
+	RopoFunction::closemove(-0.05, 0.03, 90.03, 4000);
+	//pros::delay(2000);
 
-
-
-
+	RopoFunction::shootandsweep(3);*/
 
 	/*RopoFunction::closemove(x, y, theta, 3000);
 	RopoFunction::shootandsweep(3);
@@ -362,7 +425,7 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::autonomous_1);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);

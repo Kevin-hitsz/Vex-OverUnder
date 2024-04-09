@@ -78,6 +78,7 @@ namespace RopoChassis{
                             counter_for_time++;
                             if(counter_for_time * 5 > This -> max_time || This -> Position_OK){
                                 This -> MoveMode = Opcontrol;
+                                This -> Position_OK = true;
                                 break;
                             }
                             pros::delay(5);
