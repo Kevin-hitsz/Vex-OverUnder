@@ -184,10 +184,8 @@ namespace RopoFunction{
 	void Import(){
 
 	}
-}
 
-
-void autonomous_1(){
+	void autonomous_1(){
 	//float x,y,theta;
 	//x = RopoDevice::Chassis.GetX();
 	//y = RopoDevice::Chassis.GetY();
@@ -210,6 +208,27 @@ void autonomous_1(){
 	/*	step_1 end	*/
 
 
+	/*  step_2 到中间撞球并返回导球点  */
+	pros::delay(500);
+	RopoDevice::Chassis.AutoSetAimStatus(1, -1, 0);
+	pros::delay(500);
+	RopoFunction::closemove(0.08, 0.56, -44.80, 3000);
+	RopoFunction::closemove(-0.44, 1.05, -44.80, 2000);
+	RopoFunction::ExternLeft();
+	RopoDevice::Chassis.AutoSetAimStatus(0, 1.57, 0);
+	pros::delay(1000);
+	RopoFunction::closemove(-0.05, 0.03, 90.03, 4000);
+
+
+
+	RopoFunction::shootandsweep(3);
+
+	
+
+
+
+
+
 	/*RopoFunction::closemove(x, y, theta, 3000);
 	RopoFunction::shootandsweep(3);
 	RopoDevice::Chassis.AutoSetPosition(0,0,-135,1500);
@@ -221,6 +240,10 @@ void autonomous_1(){
 	pros::delay(1000);*/
 	RopoDevice::Chassis.Operator();
 }
+}
+
+
+
 
 
 
@@ -339,8 +362,8 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, autonomous_1);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::autonomous_1);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
