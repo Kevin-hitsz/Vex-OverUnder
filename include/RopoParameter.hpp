@@ -15,15 +15,15 @@ namespace RopoParameter {
 	static constexpr double ROPO_HEADING_INITIAL  = 90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
 	static constexpr int GPS_PORT = 10;
-	static constexpr double GPSX_INITIAL_0 = -0.91;
-	static constexpr double GPSY_INITIAL_0 = -1.28;
+	static constexpr double GPSX_INITIAL_0 = -0.85;
+	static constexpr double GPSY_INITIAL_0 = -1.29;
 	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
 	static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
 	
 	static constexpr double GPS_HEADING_INITIAL_0 = 270;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
-	static constexpr double GPSX_OFFSET = -0.075;
+	static constexpr double GPSX_OFFSET = -0.11;
 	static constexpr double GPSY_OFFSET = 0.14;
 
 

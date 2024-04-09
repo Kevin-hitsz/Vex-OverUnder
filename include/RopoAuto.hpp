@@ -74,7 +74,7 @@ namespace RopoAuto{
         Angle = Roation + RopoDevice::Position_Motor::MyPosition.Get_Angle();//OpenMV获取角度向左是负，转换为右手系需要*-1
         Ball_x = X + RopoMath::Cos(Angle)* (Dis * k + ExternDis);
         Ball_y = Y + RopoMath::Sin(Angle)* (Dis * k + ExternDis);
-        if(Ball_x > -1.9 && Ball_x < -1.25 && Ball_y < -0.5 && Ball_y > -1.51 ){
+        if(Ball_x < 1.5 && Ball_x > 0.3 && Ball_y < -0.95 && Ball_y > -1.9 ){
             return 0;//没有越界就是0
         }
         else{
@@ -107,7 +107,7 @@ namespace RopoAuto{
         Degree = RopoDevice::Sensors::My_openMV.Get_Ball_Deg();
         double time0 = pros::millis();
         while(!( (See_Flag) && !Auto_Find_DQ(Distance,Degree) ) && pros::millis() - time0 < 5000) {
-            RopoDevice::Chassis.MoveVelocity(0,-1.7);
+            RopoDevice::Chassis.MoveVelocity(0,1.7);
             pros::delay(100);
             See_Flag = RopoDevice::Sensors::My_openMV.If_See();
             Distance = RopoDevice::Sensors::My_openMV.Get_Ball_Dis();
@@ -127,14 +127,13 @@ namespace RopoAuto{
                     pros::delay(100);
                 }
             }
-            RopoDevice::gpsAddPosition.SetUpdateFlag(0);
             Update_Ball_Position(RopoDevice::Sensors::My_openMV.Get_Ball_Dis() , RopoDevice::Sensors::My_openMV.Get_Ball_Deg());
-            
-            RopoDevice::Chassis.MoveVelocity(0.8,0);
-            pros::delay(RopoMath::Distance(Ball_x- RopoDevice::GetTransformedPosition()[1],Ball_y- RopoDevice::GetTransformedPosition()[2])*1250);
+            RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+            RopoDevice::Chassis.MoveVelocity(1.0,0);
+            pros::delay(RopoMath::Distance(Ball_x- RopoDevice::GetTransformedPosition()[1],Ball_y- RopoDevice::GetTransformedPosition()[2])*1000);
             RopoDevice::Chassis.MoveVelocity(0.0,0);
             pros::delay(200);
-            // RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,10000,3000);
+            //RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,10000,3500);
             RopoDevice::gpsAddPosition.SetUpdateFlag(10);
         }
     }
