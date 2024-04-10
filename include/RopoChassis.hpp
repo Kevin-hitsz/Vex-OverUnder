@@ -228,6 +228,7 @@ namespace RopoChassis{
 								{
 									TempChassisVelocity[2] = 0;
 								}
+								TempChassisVelocity[1] = This -> ChassisVelocity[1];
 								
 							}
 							This->OpenLoopMove(TempChassisVelocity);
