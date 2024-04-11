@@ -228,7 +228,7 @@ namespace RopoFunction{
 
 	/*  step_3 抛球x3 导球x7  */
 	pros::delay(500);
-	/* RopoFunction::ReLoad();
+	RopoFunction::ReLoad();
 	pros::delay(200);
 	RopoFunction::ShooterPneumatic();
 	pros::delay(200);
@@ -237,7 +237,7 @@ namespace RopoFunction{
 		pros::delay(800);
 		RopoFunction::ReLoad();
 		pros::delay(50);
-	} */
+	} 
 	RopoFunction::ShooterPneumatic();
 	pros::delay(200);
 	RopoFunction::Shoot();
