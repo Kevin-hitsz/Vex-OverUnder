@@ -52,7 +52,7 @@ namespace RopoChassis{
             bool Position_OK = false;
             static constexpr float ControlTime = 5; // ms
             FloatType XYMinError = 0.01;
-            FloatType ThetaMinError = 5;
+            FloatType ThetaMinError = 3;
             int counter_for_error = 0;
             const int max_counter = 50;
             int max_time = 1000; // ms
