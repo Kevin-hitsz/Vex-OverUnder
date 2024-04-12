@@ -186,12 +186,13 @@ namespace RopoFunction{
 	}
 
 	void autonomous_1(){
-	//float x,y,theta;
+	float x,y,theta;
 	//x = RopoDevice::Chassis.GetX();
 	//y = RopoDevice::Chassis.GetY();
 	//theta = RopoDevice::Chassis.GetTheta();
 
-	
+
+
 	/*	step_1 拨出联队球推入球网	*/
 	RopoFunction::ExternRight();
 	pros::delay(700);
@@ -244,9 +245,9 @@ namespace RopoFunction{
 	} 
 	pros::delay(200);
 	RopoFunction::ShooterPneumatic();
-	pros::delay(200);
+	pros::delay(300);
 	RopoFunction::Shoot();
-	pros::delay(50);
+	pros::delay(200);
 	RopoFunction::closemove(0.08, 0.07, 21.4, 1000);
 	RopoFunction::ExternRight();
 	pros::delay(300);
@@ -259,30 +260,40 @@ namespace RopoFunction{
 		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 8);
 		pros::delay(300);
 		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-		pros::delay(50);
+		pros::delay(150);
 		RopoDevice::Chassis.AutoSetAimStatus(0, 0, -8);
 		pros::delay(300);
 		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
 		pros::delay(600);
 	}
 	RopoFunction::ExternRight();
-	RopoFunction::closemove(0.37, 0.10, -134.33, 1000);
+	x = RopoDevice::Chassis.GetX();
+	y = RopoDevice::Chassis.GetY();
+	RopoFunction::closemove(x, y, -129.46, 600);
+	RopoFunction::closemove(0.39, 0.14, -132.44, 800);
 	/*	step_3 end	*/ 
 
 
 	/*  step_4 将导出的球推入球网  */
-	RopoDevice::Chassis.AutoSetAimStatus(-1.7, 0, 0);
-	pros::delay(800);
-	RopoFunction::closemove(1.28, 0.80, -139.0, 2000);
+	//RopoDevice::Chassis.AutoSetAimStatus(-1.7, 0, 0);
+	//pros::delay(800);
+	//RopoFunction::closemove(1.28, 0.80, -139.0, 2000);
+
+	RopoFunction::closemove(0.97, 0.78, -126.49, 800);
+	RopoFunction::closemove(1.54, 1.47, -125.27, 800);
+	RopoFunction::closemove(1.48, 1.55, -97.851, 500);
+
 	RopoFunction::ExternRight();
-	RopoFunction::closemove(1.80, 1.52, -135.0, 800);
-	RopoFunction::closemove(1.98, 2.11, -81.0, 800);
-	RopoFunction::closemove(1.69, 2.44, -50.0, 800);
-	RopoDevice::Chassis.AutoSetAimStatus(-2.00, 0, 0);
+	RopoFunction::closemove(1.66, 2.25, -47.671, 1000);
+	RopoDevice::Chassis.AutoSetAimStatus(-1.57, 0, 0);
 	pros::delay(1000);
 	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
 	RopoFunction::ExternRight();
-	pros::delay(200);
+	pros::delay(100);
+
+
+	
+	
 	/* RopoFunction::closemove(1.60, 2.37, -47.377, 2000);
 	RopoDevice::Chassis.AutoSetAimStatus(-1.57, 0, 0);
 	pros::delay(1000);
@@ -293,10 +304,14 @@ namespace RopoFunction{
 	
 
 	/*  step_5 碰杆  */
-	RopoFunction::closemove(1.69, 1.91, -88.733, 1000);
-	RopoFunction::closemove(1.65, 1.49, -122.77, 800);
-	RopoFunction::closemove(1.36, 1.20, -135.52, 800);
-	RopoFunction::closemove(1.09, 0.83, -135.52, 800);
+	RopoFunction::closemove(1.65, 2.15, -83.073, 1500);
+	RopoFunction::closemove(1.55, 1.71, -117.91, 500);
+	
+	RopoFunction::closemove(1.34, 1.34, -130.47, 500);
+	
+	
+	RopoFunction::closemove(1.06, 0.95, -132.78, 1000);
+	
 	RopoFunction::ReLoad(); 
 	/*	step_5 end	*/
 
