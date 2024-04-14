@@ -135,7 +135,7 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,10 );
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,0 );
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
