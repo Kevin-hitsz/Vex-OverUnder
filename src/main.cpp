@@ -46,18 +46,6 @@ namespace RopoFunction{
 		RopoDevice::Motors::IntakeMotor.move_velocity(0);
 	}
 
-	
-	void Climber(){
-		if(ControllerModule::ClimberFlag == false){
-			RopoDevice::ThreeWire::ClimberPneumatic.set_value(true);
-			ControllerModule::ClimberFlag = true;
-		}
-		else if(ControllerModule::ClimberFlag == true){
-			RopoDevice::ThreeWire::ClimberPneumatic.set_value(false);
-			ControllerModule::ClimberFlag = false;
-		}
-	}
-
 	void ExternLeft(){
 		if(ControllerModule::ExternLeftFlag == false){
 			RopoDevice::ThreeWire::LExternPneumatic.set_value(true);
@@ -114,6 +102,18 @@ namespace RopoFunction{
 		pros::delay(500);
 		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
+	}
+	void Climber(){
+		if(ControllerModule::ClimberFlag == false){
+			ReLoad();
+			RopoDevice::ThreeWire::ClimberPneumatic.set_value(true);
+			ControllerModule::ClimberFlag = true;
+		}
+		else if(ControllerModule::ClimberFlag == true){
+			RopoDevice::ThreeWire::ClimberPneumatic.set_value(false);
+			ControllerModule::ClimberFlag = false;
+			Shoot();
+		}
 	}
 
 
