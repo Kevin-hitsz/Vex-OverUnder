@@ -241,6 +241,7 @@ void opcontrol()
 
 void autonomous_1(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	RopoDevice::ChassisBrake();
 	// --------- begin ------------
 	//RopoDevice::Motors::IntakeMotor.move_velocity(500);
 	RopoDevice::Chassis.MoveVelocity(0.8, 0);
@@ -289,7 +290,7 @@ void autonomous_2(){
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-
+	RopoDevice::ChassisBrake();
 	RopoDevice::Chassis.AutoPositionMove(1.12, -0.287);
 
 	// --------- end --------------

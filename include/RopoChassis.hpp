@@ -24,7 +24,7 @@ namespace RopoChassis{
 			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.004;  //加速过程每SampleTime的增加的速度	0.0025
 			static constexpr float AccelerationVelocityLimits = 1.2;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004 ,0.0002  ,0.00001 ,0.0014,-0.0014,0.02,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00010 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2};
 			//0.00007,0.000003,0.000001,0.0030 ,-0.0030 ,3   ,0.2
@@ -142,7 +142,7 @@ namespace RopoChassis{
 									
 									//pid计算直行控制量
 									DisRes = DistanceRegulator.Update(DeltaDis);
-									if( (This->AccelerationProcessSpeed < DisRes / ( This->SampleTime / 1000.0)) && DeltaDis/aimDistance>0.2){
+									if( (This->AccelerationProcessSpeed < DisRes / ( This->SampleTime / 1000.0)) && DeltaDis/aimDistance>0.35){
 										TempChassisVelocity[1] = (This->moveReverse?-1:1)*This->AccelerationProcessSpeed;
 										This->AccelerationProcessSpeed += This->DeltaVelocity_in_AccelerationProcess;
 										if(This->AccelerationProcessSpeed > This->AccelerationVelocityLimits)This->AccelerationProcessSpeed = This->AccelerationVelocityLimits;
