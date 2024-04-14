@@ -6,6 +6,7 @@
 #include "pros/rtos.hpp"
 void autonomous_1();
 void autonomous_2();
+void test();
 namespace ControllerModule {
 
 	void BoolSwitch(void * Parameter){
@@ -207,7 +208,8 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::WideExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_1);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Pressing,  autonomous_1);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::DoubleClick,  test);
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
@@ -280,6 +282,16 @@ void autonomous_2(){
 
 	// --------- stage 4 ----------
 	
+	// --------- end --------------
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+}
+
+void test(){
+	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+
+	RopoDevice::Chassis.AutoPositionMove(1.12, -0.287);
+
 	// --------- end --------------
 	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0,0);
