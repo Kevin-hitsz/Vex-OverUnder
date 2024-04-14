@@ -23,13 +23,13 @@ namespace RopoDevice{
 		const char WideExternPneumaticPort = 'A';
 		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
 		
-		const char LeftExternPneumaticPort = 'C';
+		const char LeftExternPneumaticPort = 'D';
 		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
 
-		const char RightExternPneumaticPort = 'B';
+		const char RightExternPneumaticPort = 'E';
 		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
 
-		const char CatchPneumaticPort  = 'D';
+		const char CatchPneumaticPort  = 'F';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 	}
@@ -97,7 +97,7 @@ namespace RopoDevice{
 			RightWheelMove(RV);
 		}
 
-		const int LeftLiftMotorPort		= 4;
+		const int LeftLiftMotorPort		= 8;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_GREEN;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
 
