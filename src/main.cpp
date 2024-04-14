@@ -61,7 +61,7 @@ namespace ControllerModule {
 	}
 
 	bool wing_status = false;
-	bool spade_status = false;
+	bool spade_status = true;
 	void TogetherPush(){
 		wing_status = true;
 		spade_status = true;
