@@ -196,22 +196,26 @@ namespace ControllerModule {
 		RopoDevice::Chassis.MoveVelocity(-0.3,-0.00);
 		while(RopoDevice::Sensors::distance.get()  > 150) pros::delay(20);
 		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(300);
+		ChangeExtern();
 		pros::delay(200);
 		ChangeExtern();
 		pros::delay(300);
-		ChangeExtern();
-		pros::delay(400);
 		RopoDevice::Chassis.MoveVelocity(-0.4,-0.00);
-		pros::delay(400);
+		pros::delay(360);
 		RopoDevice::Chassis.MoveVelocity(-0.2,-0.00);
 		pros::delay(200);
-		RopoDevice::Chassis.AutoRotateAbs(90);
-		pros::delay(400);
+		
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(300);
+		RopoDevice::Chassis.MoveVelocity(-0.0,-1.00);
+		pros::delay(110);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(200);
 		ChangeExtern();
 		
 
-		pros::delay(100);
-		RopoDevice::Chassis.MoveVelocity(0,0);
+	
 	}
 
 	void ControllerPrint(){
