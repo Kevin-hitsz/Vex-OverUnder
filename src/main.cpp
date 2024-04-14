@@ -64,13 +64,13 @@ namespace ControllerModule {
 	bool spade_status = true;
 	void TogetherPush(){
 		wing_status = true;
-		spade_status = true;
+		spade_status = false;
 		RopoDevice::ThreeWire::WingPneumatic.set_value(true);
 		RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
 	}
 	void TogetherUnpush(){
 		wing_status = false;
-		spade_status = false;
+		spade_status = true;
 		RopoDevice::ThreeWire::WingPneumatic.set_value(false);
 		RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
 	}
@@ -90,7 +90,7 @@ namespace ControllerModule {
 		}
 		else {
 			wing_status = false;
-			spade_status = false;
+			spade_status = true;
 			RopoDevice::ThreeWire::WingPneumatic.set_value(false);
 			RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
 		}
@@ -99,13 +99,13 @@ namespace ControllerModule {
 	void ChangeTogetherWingStatus(){
 		if(wing_status == true) {
 			wing_status = false;
-			spade_status = false;
+			spade_status = true;
 			RopoDevice::ThreeWire::WingPneumatic.set_value(false);
 			RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
 		}
 		else {
 			wing_status = true;
-			spade_status = true;
+			spade_status = false;
 			RopoDevice::ThreeWire::WingPneumatic.set_value(true);
 			RopoDevice::ThreeWire::SpadePneumatic.set_value(false);
 		}
