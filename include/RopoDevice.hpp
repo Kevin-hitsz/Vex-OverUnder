@@ -96,7 +96,7 @@ RopoDiffySwerve::DiffySwerve LF(Motors::LFMotor,Motors::LFMotor_); // Define the
 RopoDiffySwerve::DiffySwerve LB(Motors::LBMotor,Motors::LBMotor_);
 RopoDiffySwerve::DiffySwerve RF(Motors::RFMotor,Motors::RFMotor_);
 RopoDiffySwerve::DiffySwerve RB(Motors::RBMotor,Motors::RBMotor_);
-Chassis Chassis(LF,LB,RF,RB,Sensors::Inertial, Sensors::Encoder);
+Chassis Chassis(LF,LB,RF,RB,Sensors::Inertial, Sensors::Encoder, RopoMath::Pi / 4);
 
 /* bool Position_OK = false;
 bool Time_Out = false;

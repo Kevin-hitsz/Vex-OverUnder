@@ -27,7 +27,7 @@ namespace RopoChassis{
             const FloatType Width  = 0.276;
             //const int GainOfLowPassFilter = 1 ;
             //const FloatType CutoffFrequency = 1;
-            
+            FloatType InitialAngle;        //Rad
 
             RopoDiffySwerve::DiffySwerve &LF, &LB, &RF, &RB;
             RopoSensor::EncodingDisk &EncodingDisk;
@@ -103,8 +103,8 @@ namespace RopoChassis{
 
             inline void MovingCalculate(){
                 if(ControlMode){
-                    double a =  AimStatus[1][1] * cos(ActualPosition[3][1]) - AimStatus[2][1] * sin(ActualPosition[3][1]);
-                    double b =  AimStatus[2][1] * cos(ActualPosition[3][1]) + AimStatus[1][1] * sin(ActualPosition[3][1]);
+                    double a =  AimStatus[1][1] * cos(ActualPosition[3][1] + InitialAngle) - AimStatus[2][1] * sin(ActualPosition[3][1] + InitialAngle);
+                    double b =  AimStatus[2][1] * cos(ActualPosition[3][1] + InitialAngle) + AimStatus[1][1] * sin(ActualPosition[3][1] + InitialAngle);
                     AimStatus[1][1] = a;
                     AimStatus[2][1] = b;
                 }
@@ -118,8 +118,8 @@ namespace RopoChassis{
             }
 
         public:
-            Chassis(RopoDiffySwerve::DiffySwerve& LF_, RopoDiffySwerve::DiffySwerve& LB_, RopoDiffySwerve::DiffySwerve& RF_, RopoDiffySwerve::DiffySwerve& RB_, pros::IMU& Imu, RopoSensor::EncodingDisk& Encoding_Disk)
-            :LF(LF_), LB(LB_), RF(RF_), RB(RB_), InertialSensor(Imu), EncodingDisk(Encoding_Disk),
+            Chassis(RopoDiffySwerve::DiffySwerve& LF_, RopoDiffySwerve::DiffySwerve& LB_, RopoDiffySwerve::DiffySwerve& RF_, RopoDiffySwerve::DiffySwerve& RB_, pros::IMU& Imu, RopoSensor::EncodingDisk& Encoding_Disk, FloatType InitialAngle_)
+            :LF(LF_), LB(LB_), RF(RF_), RB(RB_), InertialSensor(Imu), EncodingDisk(Encoding_Disk), InitialAngle(InitialAngle_),
             AimStatus(3, 1), SwerveAimStatus(8, 1), SwerveAimStatus_X_Y(8, 1),
             Transfer_M(8, 3), BackgroundTaskPtr(nullptr) {
                 LF.Initialize(); RF.Initialize(); LB.Initialize(); RB.Initialize();
