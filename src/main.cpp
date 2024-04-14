@@ -84,7 +84,7 @@ namespace ControllerModule {
 	}
 
 	void ChangeWingStatus(){
-		if(spade_status == false) {
+		if(spade_status == true) {
 			wing_status ^= 1;
 			RopoDevice::ThreeWire::WingPneumatic.set_value(wing_status);
 		}
