@@ -251,6 +251,9 @@ namespace RopoChassis{
             RopoMath::Matrix<FloatType> GetAimStatus(){
                 return AimStatus;
             }
+            void SetInitialAngle(FloatType Angle){
+                InitialAngle = Angle;
+            }
     }; 
 }
 typedef RopoChassis::Chassis Chassis;

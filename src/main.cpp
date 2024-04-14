@@ -156,6 +156,10 @@ namespace RopoFunction{
 			pros::delay(20);
 		}
 	}
+	void openmove(float Vx, float Vy, float Vw, int move_time){
+		RopoDevice::Chassis.AutoSetAimStatus(Vx, Vy, Vw);
+		pros::delay(move_time);
+	}
 
 
 
@@ -349,21 +353,45 @@ void autonomous_A1(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
+void autonomous_Wisco(){
+	RopoDevice::Chassis.SetInitialAngle(RopoMath::Pi / 2);
+	using namespace RopoFunction;
+	Intake();
+	openmove(1.57, 0.0, 0.0, 500);
+	closemove(0.85, -0.21, -36.16, 900);
+	openmove(0.07, 0.02, 0.0, 700);
+	closemove(1.13, 0.01, 86.91, 1000);
+	ExternRight();
+	openmove(-1.57, 0.0, 0.0, 1200);
+	openmove( 1.50, 0.0, 0.0, 600);
+	openmove( -1.57, 0.0, 0.0, 1000);
+	ExternRight();
+	closemove(0.47, 0.00, 169.58, 2500);
+	closemove(0.01, 0.29, -120.52, 2500);
+	StopIn();
+	int load_number = 8;
+	ExternRight();
+	pros::delay(300);
+	for (int i = 1; i <= load_number; i++) {
+		if(i % 3 == 0)
+		{
+			closemove(0.01, 0.29, -120.52, 500);
+		}
+		openmove(0.0, 0.0,  8.0, 300);
+		openmove(0.0, 0.0,  0.0, 150);
+		if(i == load_number){break;}
+		openmove(0.0, 0.0, -8.0, 300);
+		openmove(0.0, 0.0,  0.0, 600);
+	}
+	ExternRight();
+	pros::delay(300);
+	closemove(-0.02, -0.04, 62.68, 1200);
+	closemove(-0.12, -1.22, 90.0, 1500);
+	closemove(-0.02, 1.87, -105.9, 1000);
+	openmove( -0.57, 0.0, 0.5, 800);
+	openmove( -1.57, 0.0, 0.5, 1500);
+	RopoDevice::Chassis.Operator();
 
 
 }
@@ -430,7 +458,7 @@ void opcontrol() {
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::Test);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, autonomous_Wisco);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::autonomous_1);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
