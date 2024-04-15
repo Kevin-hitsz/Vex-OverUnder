@@ -16,14 +16,14 @@ namespace RopoParameter {
 	
 	static constexpr int GPS_PORT = 10;
 	static constexpr double GPSX_INITIAL_0 = -0.91;
-	static constexpr double GPSY_INITIAL_0 = -1.33;
+	static constexpr double GPSY_INITIAL_0 = -1.28;
 	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
 	static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
 	
 	static constexpr double GPS_HEADING_INITIAL_0 = 270;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
-	static constexpr double GPSX_OFFSET = -0.075;
+	static constexpr double GPSX_OFFSET = -0.115;
 	static constexpr double GPSY_OFFSET = 0.14;
 
 
@@ -46,9 +46,9 @@ namespace RopoParameter {
 	//Chassis
 	static constexpr double CHASSIS_PARAMETER = 0.3006 ; 				//车体宽度
 	static constexpr double WHEEL_RAD = 0.034925;						//轮子半径
-	static constexpr double CHASSIS_RATIO = 23.0 / 22.0;	      		//减速比
+	static constexpr double CHASSIS_RATIO = 25.0 / 20.0;	      		//减速比
 	static constexpr double CHASSIS_SPPED_MAX= 600;					//底盘电机最高转速
-	static constexpr double RAD_TO_RPM= CHASSIS_SPPED_MAX / 62.83;		//角速度转化为rpm
+	static constexpr double RAD_TO_RPM = CHASSIS_SPPED_MAX / 62.83;		//角速度转化为rpm
 
 };
 

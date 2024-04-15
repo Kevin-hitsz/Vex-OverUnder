@@ -50,7 +50,7 @@ namespace RopoGpsAddPosition {
                     pros::delay(This -> sampleTime);
                     if(This -> updateFlag != 0) {
                         This -> cnt_update++;
-                        if((This -> gps1.get_status().x != PROS_ERR_F) && This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.02 ){
+                        if((This -> gps1.get_status().x != PROS_ERR_F && fabs(This -> gps1.get_status().x) > 0.001 && fabs(This -> gps1.get_status().y) > 0.001) && This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.02 ){
                             This -> GpsUpdate();
                             This -> cnt_update = 0;
                         }
@@ -63,8 +63,8 @@ namespace RopoGpsAddPosition {
                     double X = gps1.get_status().x - RopoParameter::GPSX_INITIAL;
                     double Y = gps1.get_status().y - RopoParameter::GPSY_INITIAL;
                     double theta = RopoParameter::ROPO_HEADING_INITIAL;
-                    gpsRelativeX = ( X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta)) * 0.7 + gpsRelativeX * 0.3;
-                    gpsRelativeY = (-X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta)) * 0.7 + gpsRelativeY * 0.3;
+                    gpsRelativeX = ( X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta)) * 0.9 + gpsRelativeX * 0.1;
+                    gpsRelativeY = (-X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta)) * 0.9 + gpsRelativeY * 0.1;
                     originalX = originalPosition[1];
                     originalY = originalPosition[2];
                 }

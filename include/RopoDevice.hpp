@@ -40,7 +40,7 @@ namespace RopoDevice{
 	namespace Sensors{
 		const int InertialPort = 8;
 		pros::IMU Inertial(InertialPort);
-		const int OpenmvPort = 18;
+		const int OpenmvPort = 19;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 		const int DistancePort = 11;
 		pros::Distance distance(DistancePort);
@@ -88,11 +88,28 @@ namespace RopoDevice{
 		}
 
 		void RightWheelMove (FloatType Velocity){
+
 			RightChassisMotor1.move_velocity(Velocity );
 			RightChassisMotor2.move_velocity(Velocity );
 			RightChassisMotor3.move_velocity(Velocity );
 			RightChassisMotor4.move_velocity(Velocity );
 			
+		}
+
+		void LeftWheelMove1	(FloatType Velocity){
+
+			LeftChassisMotor1.move_voltage(Velocity * 20);
+			LeftChassisMotor2.move_voltage(Velocity * 20);
+			LeftChassisMotor3.move_voltage(Velocity * 20);
+			LeftChassisMotor4.move_voltage(Velocity * 20);
+		}
+
+		void RightWheelMove1 (FloatType Velocity){
+			
+			RightChassisMotor1.move_voltage(Velocity * 20);
+			RightChassisMotor2.move_voltage(Velocity * 20);
+			RightChassisMotor3.move_voltage(Velocity * 20);
+			RightChassisMotor4.move_voltage(Velocity * 20);
 		}
 
 		FloatType LV,RV,Kv;//Kv为速度大于600时的缩小比例
@@ -106,11 +123,11 @@ namespace RopoDevice{
 				LV *= Kv;
 				RV *= Kv;
 			}
-			LeftWheelMove(LV);
-			RightWheelMove(RV);
+			LeftWheelMove1(LV);
+			RightWheelMove1(RV);
 		}
 
-		const int RightLiftMotorPort		= 17;
+		const int RightLiftMotorPort		= 18;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false);
 
@@ -135,7 +152,7 @@ namespace RopoDevice{
 // 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::RightLiftMotor);
 	FloatType GetHeading(){
-		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 
+		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.011; 
 	}
 
 // 坐标获取函数
@@ -148,7 +165,7 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,10);
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20);
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
