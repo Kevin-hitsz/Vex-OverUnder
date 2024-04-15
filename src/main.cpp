@@ -358,39 +358,43 @@ void autonomous_Wisco(){
 	RopoDevice::Chassis.SetInitialAngle(RopoMath::Pi / 2);
 	using namespace RopoFunction;
 	Intake();
-	openmove(1.57, 0.0, 0.0, 500);
-	closemove(0.85, -0.21, -36.16, 900);
-	openmove(0.07, 0.02, 0.0, 700);
-	closemove(1.13, 0.01, 86.91, 1000);
+	openmove(1.57, 0.0, 0.0, 500);             //出黑杆范围
+	closemove(0.78, -0.12, -36.92, 900);       //到吃第一个球点位
+	openmove(0.47, 0.02, 0.0, 500);            //往前慢点走，吃第一个球
+	closemove(1.13, 0.01, 86.91, 1000);        //到推球点位
 	ExternRight();
-	openmove(-1.57, 0.0, 0.0, 1200);
-	openmove( 1.50, 0.0, 0.0, 600);
-	openmove( -1.57, 0.0, 0.0, 1000);
+	openmove(-1.57, 0.0, 0.0, 1200);           //往前推
+	openmove( 1.00, 0.0, 0.0, 600);            //回来一点，准备再推一次
+	openmove( -1.57, 0.0, 0.0, 1000);          //再推一次
 	ExternRight();
-	closemove(0.47, 0.00, 169.58, 2500);
-	closemove(0.01, 0.29, -120.52, 2500);
 	StopIn();
+	closemove(0.47, 0.00, 169.58, 2500);       //到中间过渡以下，准备导入
+	closemove(0.01, 0.29, -120.52, 2500);      //进入导入点位
 	int load_number = 8;
 	ExternRight();
 	pros::delay(300);
-	for (int i = 1; i <= load_number; i++) {
+	for (int i = 1; i <= load_number; i++) {                          //导入八次球
 		if(i % 3 == 0)
-		{
+		{                                                             //导三次校准一次
 			closemove(0.01, 0.29, -120.52, 500);
 		}
-		openmove(0.0, 0.0,  8.0, 300);
+		openmove(0.0, 0.0,  8.0, 300);           //开导
 		openmove(0.0, 0.0,  0.0, 150);
 		if(i == load_number){break;}
-		openmove(0.0, 0.0, -8.0, 300);
+		openmove(0.0, 0.0, -8.0, 300);           //回
 		openmove(0.0, 0.0,  0.0, 600);
 	}
 	ExternRight();
 	pros::delay(300);
-	closemove(-0.02, -0.04, 62.68, 1200);
-	closemove(-0.12, -1.22, 90.0, 1500);
-	closemove(-0.02, 1.87, -105.9, 1000);
-	openmove( -0.57, 0.0, 0.5, 800);
-	openmove( -1.57, 0.0, 0.5, 1500);
+	closemove(-0.08, -0.09, 62.68, 1200);        //刚要进入通道
+	closemove(-0.16, -1.27, 90.0, 1500);         //即将出通道，屁股与黑杆齐平
+	ExternRight();
+	closemove(-0.15, -1.90, 99.0, 1000);        //刚出通道，准备将球推进网
+	closemove(0.20, -2.28, 132.09, 1000);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
+	closemove(1.0, -2.45, -168.59, 800);         //闭环撞入球门
+	openmove( -1.57, 0.0, 0.0, 800);             //往球门猛猛撞
+	openmove( 1.50, 0.0, 0.0, 600);              //往前退一点，准备再撞一次
+	openmove( -1.50, 0.0, 0.0, 800);             //再撞一次
 	RopoDevice::Chassis.Operator();
 
 
