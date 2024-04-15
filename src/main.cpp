@@ -359,18 +359,19 @@ void autonomous_Wisco(){
 	using namespace RopoFunction;
 	Intake();
 	openmove(1.57, 0.0, 0.0, 500);             //出黑杆范围
-	closemove(0.78, -0.12, -36.92, 900);       //到吃第一个球点位
+	closemove(0.78, -0.14, -36.92, 900);       //到吃第一个球点位
 	openmove(0.47, 0.02, 0.0, 500);            //往前慢点走，吃第一个球
-	closemove(1.13, 0.01, 86.91, 1000);        //到推球点位
+	closemove(1.03, 0.01, 86.91, 1000);        //到推球点位
 	ExternRight();
 	openmove(-1.57, 0.0, 0.0, 1200);           //往前推
 	openmove( 1.00, 0.0, 0.0, 600);            //回来一点，准备再推一次
 	openmove( -1.57, 0.0, 0.0, 1000);          //再推一次
+	pros::delay(3000);
 	ExternRight();
 	StopIn();
-	closemove(0.47, 0.00, 169.58, 2500);       //到中间过渡以下，准备导入
+	closemove(0.47, 0.00, 169.58, 2500);       //到中间过渡一下，准备导入
 	closemove(0.01, 0.29, -120.52, 2500);      //进入导入点位
-	int load_number = 8;
+	int load_number = 9;
 	ExternRight();
 	pros::delay(300);
 	for (int i = 1; i <= load_number; i++) {                          //导入八次球
@@ -385,8 +386,9 @@ void autonomous_Wisco(){
 		openmove(0.0, 0.0,  0.0, 600);
 	}
 	ExternRight();
-	pros::delay(300);
+	pros::delay(3000);
 	closemove(-0.08, -0.09, 62.68, 1200);        //刚要进入通道
+	pros::delay(2000);
 	closemove(-0.16, -1.27, 90.0, 1500);         //即将出通道，屁股与黑杆齐平
 	ExternRight();
 	closemove(-0.15, -1.90, 99.0, 1000);        //刚出通道，准备将球推进网
@@ -395,15 +397,17 @@ void autonomous_Wisco(){
 	openmove( -1.57, 0.0, 0.0, 800);             //往球门猛猛撞
 	openmove( 1.50, 0.0, 0.0, 600);              //往前退一点，准备再撞一次
 	openmove( -1.50, 0.0, 0.0, 800);             //再撞一次
+	ExternRight();
+	Intake();
+	closemove(0.20, -2.28, 132.09, 1000);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
+	closemove(-0.15, -1.90, 99.0, 1000);        //准备进入通道
+	closemove(-0.16, -1.27, 90.0, 1500);        //进入通道
+	closemove(-0.15, -0.09, 62.68, 1200);       //即将回到战略点
+	closemove(0.0, 0.0, -90.0, 1200);           //到达战略点
+	StopIn();
+	RopoDevice::Chassis.ChangeControlMode();
 	RopoDevice::Chassis.Operator();
-
-
 }
-
-
-
-
-
 
 void disabled() {}
 
@@ -414,6 +418,7 @@ void skill() {
 }
 
 void autonomous(){
+	autonomous_Wisco();
 }
 
 void opcontrol() {
@@ -422,13 +427,6 @@ void opcontrol() {
 
 	FloatType VelocityMax = 1.57;
 	FloatType RopoWcLimit = 8;
-
-	/*FloatType LastXInput = 0;
-	FloatType LastYInput = 0;
-	FloatType LastWInput = 0;
-	FloatType XInput = 0;
-	FloatType YInput = 0;
-	FloatType WInput = 0;*/
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Ln);
 	RopoController::AxisValueCast YVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_X,RopoController::Ln);
@@ -436,7 +434,6 @@ void opcontrol() {
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 	MasterController.clear();
 
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising, autonomous_A1);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising, RopoFunction::Intake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, RopoFunction::StopIn);
@@ -450,61 +447,25 @@ void opcontrol() {
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::Climber);
 
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::IntakerUp);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Falling, RopoFunction::IntakerDown);
-
-
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::ShooterInit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Falling, RopoFunction::ShooterStopInit);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::Hit);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Falling, RopoFunction::HitterReset);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, autonomous_Wisco);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::autonomous_1);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising, RopoFunction::Import);
+
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	while (true) {
-
-		/*XInput = RopoMath::LowPassFilter(3 * XVelocityInput.GetAxisValue(),LastXInput,50,1000);
-		YInput = RopoMath::LowPassFilter(3 * YVelocityInput.GetAxisValue(),LastYInput,50,1000);
-		WInput = RopoMath::LowPassFilter(-5 * WVelocityInput.GetAxisValue(),LastWInput,50,1000);*/
-
-
-
 		FloatType XInput =  VelocityMax * XVelocityInput.GetAxisValue();
 		FloatType YInput =  VelocityMax * YVelocityInput.GetAxisValue();
 		FloatType WInput = -RopoWcLimit * WVelocityInput.GetAxisValue();
-		/* if(RopoFunction::ControlMode){
-                    double a =  XInput * cos(RopoDevice::Chassis.GetTheta()) - YInput * sin(RopoDevice::Chassis.GetTheta());
-                    double b =  YInput * cos(RopoDevice::Chassis.GetTheta()) + XInput * sin(RopoDevice::Chassis.GetTheta());
-                    XInput = a;
-                    YInput = b;
-                } */
-		/*FloatType YInput = 1;
-		FloatType XInput = 0;
-		FloatType WInput = 0;*/
 
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.OpSetAimStatus(XInput, YInput, WInput);
-
-		/*LastXInput = XInput;
-		LastYInput = YInput;
-		LastWInput = WInput;*/
-
-		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetAimStatus()[1][1], RopoDevice::Chassis.GetAimStatus()[2][1], RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
-		//MasterController.print(0,0,"%.2f, %.2f", 180 * RopoDevice::LF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::LB.get_Angle() / RopoMath::Pi);
-		//MasterController.print(1,0,"%.2f, %.2f", 180 * RopoDevice::RF.get_Angle() / RopoMath::Pi, 180 * RopoDevice::RB.get_Angle() / RopoMath::Pi);
-		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(4,1) * 180 / RopoMath::Pi,RopoDevice::Chassis.GetSwerveAimStatus(6,1) * 180 / RopoMath::Pi);
-		//MasterController.print(0,0,"%.2f, %.2f", RopoDevice::Chassis.GetSwerveAimStatus(2,1) * 180 /RopoMath::Pi,RopoDevice::LF.x * 180 /RopoMath::Pi);
-		//MasterController.print(0,0,"%.2f",RopoDevice::LF.x);
-		//MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::LF.GetStatusError(1),RopoDevice::LF.GetStatusError(2),RopoDevice::LF.GetStatusError(3));
 		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::Encoder.GetPosX()/1000, RopoDevice::Sensors::Encoder.GetPosY()/1000, RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
 		pros::delay(5);
-		//MasterController.print(1,0,"%s", RopoDevice::Sensors::Encoder.IsReading()?"1":"2");
-		//pros::delay(5);
 	}
 }

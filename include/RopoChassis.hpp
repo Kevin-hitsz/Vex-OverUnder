@@ -134,7 +134,7 @@ namespace RopoChassis{
                 Transfer_M[7][1] = -1,Transfer_M[7][2]= 0,Transfer_M[7][3] = - Width  * 0.5;
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
 
-                Kp[1][1] = 7; Kp[2][2] = 7; Kp[3][3] = 10;  // 控制参数调整
+                Kp[1][1] = 6.5; Kp[2][2] = 6.5; Kp[3][3] = 10;  // 控制参数调整
 
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
@@ -199,16 +199,9 @@ namespace RopoChassis{
             void OpenAuto(){
                 MoveMode = OpenLoop;
             }
-            /* void CloseAuto(){
-                MoveMode = CloseLoop;
-            } */
             void Operator(){
                 MoveMode = Opcontrol;
             }
-            /* void CloseAuto(){
-                MoveMode = CloseLoop;
-            } */
-
             bool IsAuto(){
                 if(MoveMode != Opcontrol) return true;
                 if(MoveMode != Opcontrol) return true;
