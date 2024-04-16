@@ -198,7 +198,7 @@ namespace RopoFunction{
 	RopoDevice::Chassis.AutoSetAimStatus(-1, 0, -6);		 //拨出联队球
 	pros::delay(600);
 	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(200);
+	pros::delay(500);
 	RopoFunction::ExternRight();
 
 	RopoFunction::closemove(-0.38, 0.09, -45, 500); 		 // 对准推球位置
@@ -233,7 +233,7 @@ namespace RopoFunction{
 	RopoFunction::ExternRight();
 
 	RopoFunction::closemove(-0.04,1.06,86.179, 800);		// 前往导球位置
-	RopoFunction::closemove(0.20, 0.57, 88.65, 800);
+	RopoFunction::closemove(0.03, 0.48, 85.65, 800);
 	RopoFunction::closemove(0.12, 0.00, 72.12, 2000);
 	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
 	pros::delay(100);
