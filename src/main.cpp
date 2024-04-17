@@ -15,7 +15,6 @@ void autonomous_C1b();
 void autonomous_C2();
 
 namespace ControllerModule {
-	FloatType VelocityMax = 1.6;//1.4
 	void BoolSwitch(void * Parameter){
 		bool *p = static_cast<bool *>(Parameter);
 		(*p) ^= 1;
@@ -191,10 +190,11 @@ namespace ControllerModule {
 	void AutoLift(){
 		RopoDevice::LiftMotors.Wait2();
 		RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+		RopoDevice::ChassisBrake();
 		//RopoDevice::Chassis.AutoRotateAbs(-90);
 		//pros::delay(500);
 		RopoDevice::Chassis.MoveVelocity(-0.3,-0.00);
-		while(RopoDevice::Sensors::distance.get()  > 150) pros::delay(20);
+		while(RopoDevice::Sensors::distance.get()  > 150 || RopoDevice::Sensors::distance.get() < 10 || RopoDevice::Sensors::distance.get() == PROS_ERR) pros::delay(20);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(300);
 		ChangeExtern();
@@ -279,6 +279,7 @@ void opcontrol()
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType opTime = pros::millis();
+	FloatType VelocityMax = 1.6;//1.4
 	FloatType RopoWcLimit = 8;
 	bool ChassisMove = false;
 	
@@ -317,9 +318,9 @@ void opcontrol()
 		FloatType XInput =  XVelocityInput.GetAxisValue();
 		FloatType WInput = -WVelocityInput.GetAxisValue();
 		FloatType RopoWc = RopoWcLimit-fabs(XInput) * 4.9;			
-		FloatType RopoVx = ControllerModule::VelocityMax-fabs(WInput) * 0.7;	
+		FloatType RopoVx = VelocityMax-fabs(WInput) * 0.7;	
 		if(opTime - pros::millis() > 55000) {
-			ControllerModule::VelocityMax = 1.77;
+			VelocityMax = 1.77;
 			RopoWcLimit = 8.5;
 			RopoDevice::ChassisBrake();
 		}
@@ -334,13 +335,18 @@ void opcontrol()
 			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
 			ChassisMove = true;
 		}
-		pros::delay(4);
+		pros::delay(2);
 	}
 }
 
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 	RopoDevice::ChassisBrake();
+	RopoDevice::Chassis.AutoRotateAbs(90);
+	while(!RopoDevice::Chassis.IfDegArrived() )pros::delay(20);
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	while(!RopoDevice::Chassis.IfDegArrived() )pros::delay(20);
+	/*
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(10);//开启gps
@@ -366,6 +372,7 @@ void test(){
 	//RopoDevice::Chassis.AutoRotateAbs(00);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	//ControllerModule::ChangeIntakerPneumatic();
+	*/
 
 }
 
@@ -390,10 +397,10 @@ void autonomous_C1b(){
 	ControllerModule::ChangeIntakerPneumatic0();
 	pros::delay(800);
 	for(int i = 0; i < 3; i++){
-		RopoDevice::Chassis.AutoRotateAbs(50);
-		pros::delay(550);
-		RopoDevice::Chassis.AutoRotateAbs(-3);
-		pros::delay(750);
+		RopoDevice::Chassis.MoveVelocity(0.0,3.0);
+		pros::delay(420);
+		RopoDevice::Chassis.AutoRotateAbs(-4.5);
+		pros::delay(850);
 		RopoDevice::Chassis.MoveVelocity(0.33,0.02);
 		pros::delay(340);
 	}
@@ -410,7 +417,7 @@ void autonomous_C1b(){
 	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(-0.8,-0.02);
 	pros::delay(2500);
-	RopoDevice::Chassis.AutoDirectMove(-1.34,1.67,1);
+	RopoDevice::Chassis.AutoDirectMove(-1.38,1.71,1);
 	pros::delay(500);
 
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
@@ -426,7 +433,7 @@ void autonomous_C1b(){
 
 
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
-	pros::delay(300);
+	pros::delay(400);
 
 	//弧线推球
 	RopoDevice::Chassis.MoveVelocity(-0.6,0.8);
@@ -455,7 +462,7 @@ void autonomous_C1b(){
 
 	RopoDevice::Chassis.AutoPositionMove(-1.93,1.82,90,5000);
 
-	RopoDevice::Chassis.MoveVelocity(0.2,0);
+	RopoDevice::Chassis.MoveVelocity(0.21,0);
 	pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	
@@ -465,11 +472,12 @@ void autonomous_C1b(){
 
 	RopoDevice::Chassis.MoveVelocity(-0.44,0);
 	pros::delay(700);
-	
+	RopoDevice::Chassis.MoveVelocity(0.0,1.8);
+	pros::delay(700);
 	RopoDevice::Chassis.AutoRotateAbs(-180);
 	pros::delay(900);
 	ControllerModule::ChangeLift();
-	pros::delay(500);
+	pros::delay(400);
 	//怼
 	RopoDevice::Chassis.MoveVelocity(1.0,1.0);
 	pros::delay(330);
@@ -524,30 +532,20 @@ void autonomous_C1b(){
 	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(1.0,0);
 	pros::delay(840);
-	RopoDevice::Chassis.AutoRotateAbs(-11);
+	RopoDevice::Chassis.AutoRotateAbs(31);
 	pros::delay(350);
+	RopoDevice::Chassis.MoveVelocity(-0.8,1.2);
+	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	pros::delay(250);
+	pros::delay(300);
 	RopoDevice::Chassis.AutoRotateAbs(135);
 	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0);
 	pros::delay(600);
-	RopoDevice::Chassis.MoveVelocity(1.0,0);
-	pros::delay(-600);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	pros::delay(100);
-
-
-	
-
-	//断点
-	while(1) 
-	{
-		RopoDevice::Chassis.MoveVelocity(0.0,0.0);
-		pros::delay(10);
-	}
-   
-   
+	pros::delay(100);   
 
 /*	
 //	//中间的旁边吃球
