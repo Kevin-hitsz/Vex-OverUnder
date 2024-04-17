@@ -68,18 +68,33 @@ namespace RopoDevice{
         pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
 		
 		void LeftWheelMove(FloatType Velocity){
-			LeftChassisMotor1.move_velocity(-Velocity );
-			LeftChassisMotor2.move_velocity(-Velocity );
-			LeftChassisMotor3.move_velocity(-Velocity );
-			LeftChassisMotor4.move_velocity(-Velocity );
+			LeftChassisMotor1.move_velocity(-Velocity);
+			LeftChassisMotor2.move_velocity(-Velocity);
+			LeftChassisMotor3.move_velocity(-Velocity);
+			LeftChassisMotor4.move_velocity(-Velocity);
+		}
+		
+		void RightWheelMove(FloatType Velocity){
+			RightChassisMotor1.move_velocity(Velocity);
+			RightChassisMotor2.move_velocity(Velocity);
+			RightChassisMotor3.move_velocity(Velocity);
+			RightChassisMotor4.move_velocity(Velocity);
 		}
 
-		void RightWheelMove(FloatType Velocity){
-			RightChassisMotor1.move_velocity(Velocity );
-			RightChassisMotor2.move_velocity(Velocity );
-			RightChassisMotor3.move_velocity(Velocity );
-			RightChassisMotor4.move_velocity(Velocity );
-			
+		void LeftWheelMoveVoltage(FloatType Velocity){
+			static constexpr float VecToVolRatio = RopoParameter::CHASSIS_SPPED_MAX_VOLTAGE / RopoParameter::CHASSIS_SPPED_MAX;
+			LeftChassisMotor1.move_voltage(-Velocity * VecToVolRatio);
+			LeftChassisMotor2.move_voltage(-Velocity * VecToVolRatio);
+			LeftChassisMotor3.move_voltage(-Velocity * VecToVolRatio);
+			LeftChassisMotor4.move_voltage(-Velocity * VecToVolRatio);
+		}
+
+		void RightWheelMoveVoltage(FloatType Velocity){
+			static constexpr float VecToVolRatio = RopoParameter::CHASSIS_SPPED_MAX_VOLTAGE / RopoParameter::CHASSIS_SPPED_MAX;
+			RightChassisMotor1.move_voltage(Velocity * VecToVolRatio);
+			RightChassisMotor2.move_voltage(Velocity * VecToVolRatio);
+			RightChassisMotor3.move_voltage(Velocity * VecToVolRatio);
+			RightChassisMotor4.move_voltage(Velocity * VecToVolRatio);
 		}
 
 		FloatType LV,RV,Kv;//Kv为速度大于600时的缩小比例
@@ -93,8 +108,8 @@ namespace RopoDevice{
 				LV *= Kv;
 				RV *= Kv;
 			}
-			LeftWheelMove(LV);
-			RightWheelMove(RV);
+			LeftWheelMoveVoltage(LV);
+			RightWheelMoveVoltage(RV);
 		}
 
 		const int LiftMotorPort		= 7;
