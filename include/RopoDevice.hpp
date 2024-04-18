@@ -38,7 +38,7 @@ namespace RopoDevice{
 	namespace Sensors{
 		const int InertialPort = 13;
 		pros::IMU Inertial(InertialPort);
-		const int OpenmvPort = 11;
+		const int OpenmvPort = 14;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
@@ -112,9 +112,12 @@ namespace RopoDevice{
 			RightWheelMoveVoltage(RV);
 		}
 
-		const int LiftMotorPort		= 7;
+		const int LeftLiftMotorPort		= 11;
+		const int RightLiftMotorPort		= 7;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
-		pros::Motor   LiftMotor ( LiftMotorPort  , 	LiftGearset, true );
+		
+		pros::Motor   LeftLiftMotor  ( LeftLiftMotorPort  , 	LiftGearset, true );
+		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false );
 
 		const int IntakeMotorPort		= 3;
 		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -135,7 +138,8 @@ namespace RopoDevice{
 
 
 // 创建运球模块
-	RopoLifter::LifterModule LiftMotors(Motors::LiftMotor);
+	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor, Motors::RightLiftMotor);
+
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 	// 修正每圈6度的误差
 	}
@@ -180,7 +184,7 @@ namespace RopoDevice{
 		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
-		Motors::LiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 	}
 
