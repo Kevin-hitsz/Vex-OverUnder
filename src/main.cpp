@@ -6,6 +6,7 @@
 #include "pros/rtos.hpp"
 void autonomous_1();
 void autonomous_2();
+void autonomous_3();
 void test();
 namespace ControllerModule {
 
@@ -368,6 +369,90 @@ void autonomous_2(){
 	ControllerModule::BothExternSwitch();	// 开两侧翅膀
 	RopoDevice::Chassis.MoveVelocity(1.2, 0);
 	pros::delay(800);
+	
+	
+	// --------- end --------------
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+}
+
+void autonomous_3() {
+	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	RopoDevice::ChassisBrake();
+	// --------- begin ------------
+	//ControllerModule::RightExternSwitch();
+	
+	// --------- stage 1 --------
+	RopoDevice::Chassis.AutoDirectMove(1.35, 0, false);
+	pros::delay(1100);
+
+	//RopoDevice::gpsAddPosition.SetUpdateFlag(1);
+	RopoDevice::Chassis.MoveVelocity(0.9, 0.8);
+	pros::delay(400);
+	//RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+
+	// ControllerModule::RightExternSwitch();
+	// RopoDevice::Chassis.AutoPositionMove(2.60,0.22);
+	// ControllerModule::RightExternSwitch();
+	// pros::delay(500);
+	// RopoDevice::Chassis.AutoRotateAbs(75);
+	// pros::delay(500);
+
+	ControllerModule::RightExternSwitch();
+	pros::delay(600);
+
+	RopoDevice::Chassis.AutoPositionMove(1.8, 0.6, 90);
+	ControllerModule::SwitchIntakerFor();	// 关 roller 避免球脱落
+	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
+	for (int i = 0; i < 2; i++)
+	{
+		RopoDevice::Chassis.MoveVelocity(-0.5, 0);
+		pros::delay(300);
+		RopoDevice::Chassis.MoveVelocity(1.2, 0);
+		pros::delay(600);
+	}
+	RopoDevice::Chassis.MoveVelocity(0, 0);
+	pros::delay(200);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+
+	// --------- stage 2 ----------
+	RopoDevice::Chassis.MoveVelocity(-0.8, -0.8);
+	pros::delay(500);
+	ControllerModule::RightExternSwitch();
+	pros::delay(1000);
+	RopoDevice::Chassis.AutoPositionMove(1.42, 1.3);
+	
+	pros::delay(500);
+	RopoDevice::Chassis.AutoRotateAbs(182);
+	pros::delay(400);
+	ControllerModule::Hide();
+	pros::delay(600);
+	ControllerModule::SwitchIntakerFor();	// 开 roller 吃球
+	
+	ControllerModule::WideExternSwitch();	// 开横翅膀
+	pros::delay(500);
+	RopoDevice::Chassis.MoveVelocity(-1.2, 0);
+	pros::delay(800);
+
+	RopoDevice::Chassis.MoveVelocity(0.4, 0);
+	pros::delay(300);
+	ControllerModule::WideExternSwitch();	// 关横翅膀
+	RopoDevice::Chassis.AutoPositionMove(1.65, 1.25, -1);
+	ControllerModule::SwitchIntakerFor();	// 关 roller 吃球
+	ControllerModule::BothExternSwitch();	// 开两侧翅膀
+	pros::delay(300);
+
+	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
+	RopoDevice::Chassis.MoveVelocity(1, 0);
+	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(0, 0);
+	RopoDevice::ChassisHold();
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+	pros::delay(500);
+	RopoDevice::ChassisBrake();
+	
+	// --------- stage 3 --------------
+
 	
 	
 	// --------- end --------------
