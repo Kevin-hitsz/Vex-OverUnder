@@ -232,7 +232,7 @@ namespace RopoFunction{
 
 	RopoFunction::closemove(-0.04,1.06,86.179, 800);		// 前往导球位置
 	RopoFunction::closemove(0.03, 0.48, 85.65, 800);
-	RopoFunction::closemove(0.12, 0.00, 72.12, 2000);
+	RopoFunction::closemove(0.12, 0.00, 72.12, 2000);		// 导球位置
 	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
 	pros::delay(100);
 	/*	step_2 end	*/ 
@@ -284,13 +284,43 @@ namespace RopoFunction{
 
 
 	/*  step_4 将导出的球推入球网  */
-	RopoFunction::ExternRight();
-	RopoFunction::closemove(0.23, 0.17, -160.32, 800);
-	RopoFunction::ExternRight();
-	RopoFunction::closemove(0.57, 0.24, -134.25, 500);
-	RopoFunction::closemove(0.85, 0.53, -133.61, 500);
-	RopoFunction::ExternRight();
+	closemove(0.10, 0.04, 19.52, 1000);	//仅测试时使用
+	ExternRight();	//仅测试时使用
+	closemove(0.23, 0.17, -160.32, 1500);	// 准备进入通道
+	closemove(0.51, 0.16, -135, 1500);	// 通道起始位置
+	openmove(-1.57, 0,0,200);
+	ExternRight();
+	openmove(-0.5, 0,0,800);				//通过通道
+	closemove(1.15, 0.81, -135, 1500);	// 矫正位置
+	ExternRight();
+	openmove(-1.57, 0,0,200);	
+	openmove(-0.5, 0,0,800);				//行使至通道出口
+	closemove(1.60, 1.21, -135, 800);	// 通道出口位置矫正
+	openmove(-0.5, 0,0.5,1000);
+
+	/*closemove(1.86, 1.66, -90, 1000);
+	openmove(-1.57, 0,0,200);	
+	openmove(-0.5, 0,0,1000);
+	closemove(1.84, 2.14, -90, 1000);
+	openmove(0, 0,8,300);
+	closemove(1.75,2.14,-50, 1500);
+	openmove(-1.57, 0,0,1200);
+	openmove(0, 0,0,200);
+	closemove(1.78,2.15,-50, 1500);
+	ExternRight();
 	pros::delay(200);
+	openmove(-1.57, 0,0,1500);
+	openmove(0, 0,0,200);
+	openmove(1, 0,0,300);
+	openmove(0, 0,0,200);
+	
+	
+
+
+
+
+	/*RopoFunction::closemove(0.57, 0.24, -134.25, 500);
+	RopoFunction::closemove(0.85, 0.53, -133.61, 500);
 	RopoFunction::closemove(1.07,0.74,-133.91, 500);
 	RopoFunction::ExternRight();
 	pros::delay(200);
