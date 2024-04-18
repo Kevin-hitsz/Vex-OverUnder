@@ -294,7 +294,9 @@ void autonomous_1(){
 			ControllerModule::RightExternSwitch();
 			RopoDevice::Chassis.MoveVelocity(-0.4,-0.3);
 			pros::delay(800);
-			RopoDevice::Chassis.MoveVelocity(0.2,0);
+			RopoDevice::Chassis.AutoRotateAbs(-135);
+			pros::delay(500);
+			RopoDevice::Chassis.MoveVelocity(0.2,0.0);
 			pros::delay(250);
 		}else{
 			ControllerModule::RightExternSwitch();
@@ -358,10 +360,10 @@ void autonomous_1(){
 	delay();
 	ControllerModule::BothExternSwitch();
 	RopoDevice::Chassis.MoveVelocity(0.5, 0);	
-	while (fabs(RopoDevice::Position_Motor::MyPosition.Get_Angle() + 135) < 3 ){
-		pros::delay(50);
+	while (fabs(RopoDevice::Position_Motor::MyPosition.Get_Angle() + 135) < 2 ){
+		pros::delay(20);
 	}
-	RopoDevice::Chassis.MoveVelocity(0,0);
+	RopoDevice::Chassis.MoveVelocity(0, 0);
 	RopoDevice::Chassis.AutoRotateAbs(-100);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(0.75,0);
@@ -381,17 +383,24 @@ void autonomous_1(){
 	// }
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::LeftExternSwitch();
-	RopoDevice::Chassis.AutoRotateAbs(90);
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	pros::delay(200);
 	RopoDevice::Chassis.MoveVelocity(0.67,0.95);
 	pros::delay(700);
 	// ControllerModule::RightExternSwitch();
 	pros::delay(950);
-	ControllerModule::BothExternSwitch();
+	ControllerModule::LeftExternSwitch();
 	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(-0.6,0);
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0.9,0);
-	pros::delay(500);
+	for (int i = 0; i < 2; i++)
+	{	
+		RopoDevice::Chassis.AutoRotateAbs(0);
+		pros::delay(500);
+		RopoDevice::Chassis.MoveVelocity(-0.6,0);
+		pros::delay(500);
+		RopoDevice::Chassis.MoveVelocity(1.4,0);
+		pros::delay(500);
+	}
+
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	// RopoDevice::Chassis.MoveVelocity(0.5,0);
 	// pros::delay(600);
