@@ -44,8 +44,11 @@ namespace RopoChassis{
             Matrix AimPosition = Matrix(3,1);
             Matrix ActualPosition = Matrix(3,1);
             Matrix PositionError = Matrix(3,1);
+            Matrix LastPositionError = Matrix(3,1);
+            Matrix DeltaPositoinError = Matrix(3,1);
             Matrix Kp = Matrix(3,3);
             Matrix Ki = Matrix(3,3);
+            Matrix Kd = Matrix(3,3);
             Matrix Integrator = Matrix(3,1);
             Matrix Parameter = Matrix(3,3);
 
@@ -135,6 +138,7 @@ namespace RopoChassis{
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
 
                 Kp[1][1] = 6.5; Kp[2][2] = 6.5; Kp[3][3] = 10;  // 控制参数调整
+                Kd[1][1] = 80.0; Kd[2][2] = 80.0; Kd[3][3] = 160.0;
 
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
@@ -158,8 +162,9 @@ namespace RopoChassis{
                 DelayTime = Time;
             }
             void PositionControl(){
-    
+                LastPositionError = PositionError;
                 PositionError = AimPosition - ActualPosition;
+                DeltaPositoinError = PositionError - LastPositionError;
                 if(fabsf(PositionError[3][1]) > RopoMath::Pi) PositionError[3][1] -= 2 * RopoMath::Pi * RopoMath::Sign(PositionError[3][1]);
                 if(fabsf(PositionError[1][1]) < XYMinError && fabsf(PositionError[2][1]) < XYMinError && fabsf(PositionError[3][1]) < ThetaMinError){
                     counter_for_error++;
@@ -173,7 +178,7 @@ namespace RopoChassis{
                 }
                 if(Position_OK) AimStatus[1][1] = AimStatus[2][1] = AimStatus[3][1] = 0;
                 else{
-                    AimStatus = Kp * PositionError;
+                    AimStatus = Kp * PositionError + Kd * DeltaPositoinError;
                     AimStatus[1][1] = fabsf(AimStatus[1][1]) > 1.2 ? 1.2 * RopoMath::Sign(AimStatus[1][1]) : AimStatus[1][1];
                     AimStatus[2][1] = fabsf(AimStatus[2][1]) > 1.2 ? 1.2 * RopoMath::Sign(AimStatus[2][1]) : AimStatus[2][1];
                     AimStatus[3][1] = fabsf(AimStatus[3][1]) > (1.5 * RopoMath::Pi) ? (1.5 * RopoMath::Pi * RopoMath::Sign(AimStatus[3][1])) : AimStatus[3][1];
@@ -246,6 +251,16 @@ namespace RopoChassis{
             }
             void SetInitialAngle(FloatType Angle){
                 InitialAngle = Angle;
+            }
+            void SetKp(FloatType Kpx, FloatType Kpy, FloatType Kpw){
+                Kp[1][1] = Kpx;
+                Kp[2][2] = Kpy;
+                Kp[3][3] = Kpw;
+            }
+            void SetKd(FloatType Kdx, FloatType Kdy, FloatType Kdw){
+                Kd[1][1] = Kdx;
+                Kd[2][2] = Kdy;
+                Kd[3][3] = Kdw;
             }
     }; 
 }
