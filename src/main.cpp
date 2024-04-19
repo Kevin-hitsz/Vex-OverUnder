@@ -410,14 +410,14 @@ void autonomous_Wisco(){
 	using namespace RopoFunction;
 	Intake();
 	openmove(1.57, 0.0, 0.0, 500);             //出黑杆范围
-	closemove(0.78, -0.14, -36.92, 900);       //到吃第一个球点位
+	closemove(0.78, -0.04, -36.92, 900);       //到吃第一个球点位
 	openmove(0.47, 0.02, 0.0, 500);            //往前慢点走，吃第一个球
-	closemove(1.03, 0.01, 86.91, 1000);        //到推球点位
+	closemove(1.03, 0.01, 90.0, 1500);        //到推球点位
 	ExternRight();
 	openmove(-1.57, 0.0, 0.0, 1200);           //往前推
 	openmove( 1.00, 0.0, 0.0, 600);            //回来一点，准备再推一次
 	openmove( -1.57, 0.0, 0.0, 1000);          //再推一次
-	pros::delay(3000);
+	openmove( 0.0, 0.0, 0.0, 2400);    
 	ExternRight();
 	StopIn();
 	closemove(0.47, 0.00, 169.58, 2500);       //到中间过渡一下，准备导入
@@ -425,28 +425,29 @@ void autonomous_Wisco(){
 	int load_number = 9;
 	ExternRight();
 	pros::delay(300);
-	for (int i = 1; i <= load_number; i++) {                          //导入八次球
+	for (int i = 1; i <= load_number; i++) {                          //导入n次球
 		if(i % 3 == 0)
 		{                                                             //导三次校准一次
-			closemove(0.01, 0.29, -120.52, 500);
+		closemove(0.01, 0.29, -120.52, 500);
 		}
 		openmove(0.0, 0.0,  8.0, 300);           //开导
 		openmove(0.0, 0.0,  0.0, 150);
 		if(i == load_number){break;}
-		openmove(0.0, 0.0, -8.0, 300);           //回
+		openmove(0.0, 0.0, -8.0, 280);            //回
 		openmove(0.0, 0.0,  0.0, 600);
-	}
+		}        
+	pros::delay(2000);
 	ExternRight();
 	pros::delay(3000);
-	closemove(-0.08, -0.09, 62.68, 1200);        //刚要进入通道
-	pros::delay(2000);
-	closemove(-0.16, -1.27, 90.0, 1500);         //即将出通道，屁股与黑杆齐平
+	closemove(-0.12, -0.09, 62.68, 1200);        //刚要进入通道
+	closemove(-0.18, -1.27, 90.0, 1300);         //即将出通道，屁股与黑杆齐平
 	ExternRight();
-	closemove(-0.15, -1.90, 99.0, 1000);        //刚出通道，准备将球推进网
-	closemove(0.20, -2.28, 132.09, 1000);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
-	closemove(1.0, -2.45, -168.59, 800);         //闭环撞入球门
+	closemove(-0.4, 0.0, 0.0, 800);        //刚出通道，准备将球推进网
+	openmove( -1.50, 0.0, 0.0, 1000);
+	closemove(0.18, -2.32, 132.09, 500);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
+	closemove(1.0, -2.45, -180.00, 800);         //闭环撞入球门
 	openmove( -1.57, 0.0, 0.0, 800);             //往球门猛猛撞
-	openmove( 1.50, 0.0, 0.0, 600);              //往前退一点，准备再撞一次
+	openmove( 1.20, 0.0, 0.0, 500);              //往前退一点，准备再撞一次
 	openmove( -1.50, 0.0, 0.0, 800);             //再撞一次
 	ExternRight();
 	Intake();
@@ -458,15 +459,65 @@ void autonomous_Wisco(){
 	StopIn();
 	RopoDevice::Chassis.ChangeControlMode();
 	RopoDevice::Chassis.Operator();
+	
 }
+
 
 void disabled() {}
 
 void competition_initialize() {}
 
 void skill() {
-	
+  RopoDevice::Chassis.SetInitialAngle(0.0);
+  using namespace RopoFunction;
+  openmove(0.0, 1.5, 0.0, 700);
+  closemove(0.29, 0.39, -29.984, 1800);
+  const int throw_number = 2;
+  ReLoad();
+  ShooterPneumatic();
+  for(int i = 1; i <= throw_number - 1; i++){
+    Shoot();
+    ReLoad();
+    if(i != throw_number - 1) pros::delay(800);
+  }
+  pros::delay(100);
+  ShooterPneumatic();
+  Shoot();
+  closemove(0.37, 0.40, -100.75, 1500);
+  int load_number = 2;
+  ExternRight();                                                    //开翅膀
+  for (int i = 1; i <= load_number; i++) {                          //导入n次球
+    if(i % 3 == 0)
+    {                                                             //导三次校准一次
+      closemove(0.01, 0.29, -120.52, 500);
+    }
+    openmove(0.0, 0.0,  -8.0, 300);           //开导
+    openmove(0.0, 0.0,  0.0, 150);
+    if(i == load_number){break;}
+    openmove(0.0, 0.0, 8.0, 280);           //回
+    openmove(0.0, 0.0,  0.0, 600);
+  }
+  ExternRight();                                                    //收翅膀
+  closemove(0.69, 0.48, 180.0, 1000);
+  openmove(-1.75, 0.0, 0.0, 1200);
+  closemove(2.63, 0.54, 180.0, 2000);
+  ExternRight();                                                    //开翅膀
+  closemove(2.95, 0.26, 113.29, 1200);
+  //ExternRight();                                                    //收翅膀  
+  closemove(3.09, 0.07, 67.5620, 500);
+  openmove(-1.57, 0.0, 0.0, 1000);
+  //ExternRight();                                                     //开翅膀
+  openmove(0.8, 0.0, 0.0, 600);
+  openmove(-1.57, 0.0, 0.0, 800);
+  ExternRight();                                                     //收翅膀
+  openmove(0.8, 0.0, 0.0, 700);
+  closemove(2.43, 0.04, 27.3117, 1200);
+  ExternRight();                                                     //开翅膀
+  openmove(-0.7, 0.0, 1.0,4000);
+  ExternRight();                                                    //收翅膀 
+  RopoDevice::Chassis.Operator();
 }
+
 
 void autonomous(){
 	//autonomous_Wisco();
