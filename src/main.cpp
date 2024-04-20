@@ -283,7 +283,6 @@ namespace RopoFunction{
 			openmove(0,0,0,600);
 		}	
 	}
-	ExternRight();											  // 收起侧翼
 	openmove(0,0,6,300);					// 快速旋转对准通道
 	/*	step_3 end	*/ 
 
@@ -296,14 +295,12 @@ namespace RopoFunction{
 
 	closemove(0.23, 0.17, -140.32, 500);// 准备进入通道	p4.1
 	closemove(0.51, 0.19, -135, 800);	// 通道起始位置 p4.2
+	ExternRight();											// 收起侧翼
 
 	openmove(-1.57, 0,0,200);
 	openmove(-0.5, 0,0,400);
-	ExternRight();											// 打开侧翼	
-	x = RopoDevice::Chassis.GetX();
-	y = RopoDevice::Chassis.GetY();
-	closemove(x, y, -135, 500);				
-	ExternRight();											// 收起侧翼
+			
+	
 	openmove(-0.5, 0,0,400);			  // 缓慢通过通道前半段
 
 	closemove(1.07, 0.76, -135, 600);	// 矫正位置 p4.3
@@ -311,9 +308,9 @@ namespace RopoFunction{
 
 	openmove(-1.57, 0,0,200);
 	openmove(-0.5, 0,0,400);
-	x = RopoDevice::Chassis.GetX();
+	/*x = RopoDevice::Chassis.GetX();
 	y = RopoDevice::Chassis.GetY();
-	closemove(x, y, -135, 500);
+	closemove(x, y, -135, 500);*/
 	openmove(-0.5, 0,0,400);				//行使至通道出口
 
 
