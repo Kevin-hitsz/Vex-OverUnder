@@ -281,7 +281,7 @@ namespace RopoFunction{
 	RopoFunction::closemove(0.10, 0.04, 19.52, 1000);
 	RopoFunction::ExternRight();
 	pros::delay(200);
-	for (int i =1;i <= 6; i++) {
+	for (int i = 1; i <= 6; i++) {
 
 		if(i%4 == 0)
 		{
@@ -419,12 +419,12 @@ void autonomous_Wisco(){
 	openmove( 0.80, 0.0, 0.0, 500);            //回来一点，准备再推一次
 	openmove( -1.57, 0.0, 0.0, 1500);          //再推一次
 	openmove( 0.0, 0.0, 0.0, 300);            
-	ExternRight();                         
-	pros::delay(500);                         //收翅膀
+	ExternRight();                                                  //收翅膀
+	pros::delay(500);                         
 	closemove(0.47, 0.00, 169.58, 4000);       //到中间过渡一下，准备导入
 	closemove(0.01, 0.29, -132.52, 2800);      //进入导入点位
 	int load_number = 9;
-	ExternRight();
+	ExternRight();                                                      //开
 	pros::delay(1000);
 	for (int i = 1; i <= load_number; i++) {                          //导入n次球
 		if(i % 3 == 0)
@@ -439,13 +439,13 @@ void autonomous_Wisco(){
 		openmove(0.0, 0.0,  0.0, 600);
 		//ExternRight();
 		}        
-	ExternRight();
+	ExternRight();                                                     //关
 	pros::delay(2500);
 	closemove(-0.18, -0.09, 62.68, 1000);        //刚要进入通道
-	closemove(-0.18  , -0.55, 90.0, 800);  
-	openmove( -1.50, 0.0, 0.0, 500);
+	closemove(-0.18  , -0.55, 90.0, 800);        //进入通道
+	openmove( -1.50, 0.0, 0.0, 500);             //通过通道
 	closemove(-0.18, -1.27, 90.0, 600);         //即将出通道，屁股与黑杆齐平
-	ExternRight();
+	ExternRight();                                                   //开
 	closemove(-0.19, -1.75, 90.0, 700);        //屁股快到导入杆的地垫了，还差8厘米左右
 	closemove(-0.11, -1.97, 130.6, 700);       //进入导入杆所在地垫，车体开始略微倾斜
 	openmove(-0.5, 0.0, 0.0, 600);             //直线往前推一点
@@ -459,10 +459,11 @@ void autonomous_Wisco(){
 	Outtake();                                                        //吐球  
 	pros::delay(700);    
 	TurnAround2();                                                    //转回来
-	ExternRight();
+	ExternRight();                                                    //关
 	closemove(0.45, -2.42, 174.43, 700);        //第二次到达推球点
 	openmove(0.3, 0.0, 0.0, 300);                //往前挪一点，获得更大推球速度
 	openmove( -1.57, 0.0, 0.0, 1000);             //第二次撞球门 
+	//第一次参数
 	/* openmove(-0.6, 0.0, 0.0, 700);                //刚出通道，准备将球推进网
 	closemove(0.18, -2.30, 142.09, 1000);         //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
 	closemove(0.3, -2.30, -180.00, 1000);         //闭环撞入球门
@@ -480,7 +481,7 @@ void autonomous_Wisco(){
 	Intake();
 	closemove(0.20, -2.28, 132.09, 800);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
 	closemove(-0.15, -1.90, 99.0, 800);        //准备进入通道
-	closemove(-0.16, -1.27, 90.0, 1000);        //进入通道
+	closemove(-0.16, -1.27, 90.0, 800);        //进入通道
 	closemove(-0.15, -0.09, 62.68, 1000);       //即将回到战略点
 	closemove(0.0, 0.0, -90.0, 1000);           //到达战略点
 	StopIn();
@@ -500,7 +501,7 @@ void skill() {
   using namespace RopoFunction;
   openmove(0.0, 1.5, 0.0, 700);
   closemove(0.29, 0.39, -29.984, 1800);
-  const int throw_number = 2;
+  const int throw_number = 13;
   ReLoad();
   ShooterPneumatic();
   for(int i = 1; i <= throw_number - 1; i++){
@@ -512,7 +513,7 @@ void skill() {
   pros::delay(400);
   Shoot();
   closemove(0.37, 0.40, -94.75, 1500);
-  int load_number = 2;
+  int load_number = 10;
   ExternRight();                                                    //开翅膀
   for (int i = 1; i <= load_number; i++) {                          //导入n次球
     if(i % 3 == 0)
@@ -552,11 +553,11 @@ void skill() {
 void autonomous(){
 	autonomous_Wisco();
 	//RopoFunction::autonomous_1();
-	skill();
+	//skill();
 }
-void Test(){
+/* void Test(){
 	RopoFunction::closemove(0,0,0,4000);
-}
+} */
 
 void opcontrol() {
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
