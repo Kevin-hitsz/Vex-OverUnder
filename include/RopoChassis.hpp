@@ -334,6 +334,16 @@ namespace RopoChassis{
 				AutoMoveType = Rotate;
 				DegArrived = false; 
 			}
+
+			void AutoRotatePos(FloatType AimX,FloatType AimY)
+			{
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
+				//等待到达
+				pros::delay(20);
+
+			}
 			
 			/// @brief 直行到目标点
 			/// @param AimX 目标X
