@@ -508,16 +508,16 @@ void skill() {
     ReLoad();
     if(i != throw_number - 1) pros::delay(800);
   }
-  pros::delay(100);
   ShooterPneumatic();
+  pros::delay(400);
   Shoot();
-  closemove(0.37, 0.40, -100.75, 1500);
+  closemove(0.37, 0.40, -94.75, 1500);
   int load_number = 2;
   ExternRight();                                                    //开翅膀
   for (int i = 1; i <= load_number; i++) {                          //导入n次球
     if(i % 3 == 0)
     {                                                             //导三次校准一次
-      closemove(0.01, 0.29, -120.52, 500);
+      closemove(0.01, 0.29, -94.52, 500);
     }
     openmove(0.0, 0.0,  -8.0, 300);           //开导
     openmove(0.0, 0.0,  0.0, 150);
@@ -526,22 +526,24 @@ void skill() {
     openmove(0.0, 0.0,  0.0, 600);
   }
   ExternRight();                                                    //收翅膀
-  closemove(0.69, 0.48, 180.0, 1000);
-  openmove(-1.75, 0.0, 0.0, 1200);
-  closemove(2.63, 0.54, 180.0, 2000);
+  closemove(0.69, 0.53, -179.0, 2000);          //准备进通道
+  openmove(-1.75, 0.0, 0.0, 750);             //往后猛退
+  closemove(2.51, 0.53, -179.0, 2000);
+  closemove(2.51, 0.47, 140.67, 800);
   ExternRight();                                                    //开翅膀
-  closemove(2.95, 0.26, 113.29, 1200);
-  //ExternRight();                                                    //收翅膀  
-  closemove(3.09, 0.07, 67.5620, 500);
-  openmove(-1.57, 0.0, 0.0, 1000);
-  //ExternRight();                                                     //开翅膀
-  openmove(0.8, 0.0, 0.0, 600);
-  openmove(-1.57, 0.0, 0.0, 800);
-  ExternRight();                                                     //收翅膀
+  openmove(-0.4, 0.0, 0.0, 500);               //慢慢往前走一点
+  ExternRight();                                                    //收翅膀
+  closemove(2.92, 0.20, 135.0, 600);           //屁股与导入杆后端齐平
+  openmove(0.4, 0.4, 0.0, 300);                //往前调整位置，准备转身
+  closemove(3.08, -0.08, 87.0, 900);          //转身准备推球
+  openmove(0.3, 0.0, 0.0, 300);                //往前蓄力，准备推球 
+  openmove(-1.57, 0.0, 0.0, 1000);               //推球
+  openmove(0.8, 0.0, 0.0, 600);                 //蓄力准备再推
+  openmove(-1.57, 0.0, 0.0, 900);               //再推
   openmove(0.8, 0.0, 0.0, 700);
   closemove(2.43, 0.04, 27.3117, 1200);
   ExternRight();                                                     //开翅膀
-  openmove(-0.7, 0.0, 1.0,4000);
+  openmove(-0.7, 0.0, 1.5,3000);
   ExternRight();                                                    //收翅膀 
   RopoDevice::Chassis.Operator();
 }
@@ -550,6 +552,7 @@ void skill() {
 void autonomous(){
 	autonomous_Wisco();
 	//RopoFunction::autonomous_1();
+	skill();
 }
 void Test(){
 	RopoFunction::closemove(0,0,0,4000);
@@ -587,7 +590,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, autonomous_Wisco);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, skill);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, RopoFunction::autonomous_1);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
