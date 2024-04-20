@@ -197,172 +197,161 @@ namespace RopoFunction{
 
 	}
 
-	void StraightMove_x(double vx,int max_time){
-		int counter = 0;
-		double Angle = RopoDevice::Chassis.GetTheta();
-		int error = 3;
-		while (counter < max_time) {
-			if(fabs(RopoDevice::Chassis.GetTheta() - Angle) >error){
-				if (RopoDevice::Chassis.GetTheta() - Angle < -error || RopoDevice::Chassis.GetTheta() - Angle > 180) RopoDevice::Chassis.AutoSetAimStatus(vx, 0, 0.5);
-				if (RopoDevice::Chassis.GetTheta() - Angle >  error || RopoDevice::Chassis.GetTheta() - Angle <-180) RopoDevice::Chassis.AutoSetAimStatus(vx, 0, -0.5);
-			}
-			else RopoDevice::Chassis.AutoSetAimStatus(vx, 0, 0);
-			pros::delay(50);
-			counter = counter + 50;
-		}
-	}
 
 	void autonomous_1(){
+	double x,y,angle = 0;
 	RopoDevice::Chassis.SetInitialAngle(-RopoMath::Pi / 4);
 
 	/*	step_1 拨出联队球推入球网	*/
-	RopoFunction::ExternRight();							
-	pros::delay(700);
+	ExternRight();												   // 展开侧翼							
+	pros::delay(200);
 
-	RopoDevice::Chassis.AutoSetAimStatus(-1, 0, -6);		 //拨出联队球
-	pros::delay(600);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(500);
-	RopoFunction::ExternRight();
+	openmove(-1,0,-5,600);					 //拨出联队球
+	openmove(0,0,0,500);
 
-	RopoFunction::closemove(-0.38, 0.09, -45, 800); 		 // 对准推球位置
+	ExternRight();												   // 收起侧翼 防止被卡
+	pros::delay(200);
 
-	RopoDevice::Chassis.AutoSetAimStatus(-1.57, 0, 0);		   		// 推入联队球
-	pros::delay(800);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+	closemove(-0.38, 0.09, -45, 800); 		 // 对准推球位置 车尾对准球门
+	   		
+	openmove(-1.57,0,0,800);					 // 向后冲推入联队球
+	openmove(0,0,0,50);
 	/*	step_1 end	*/ 
 
 
 	/*  step_2 到中间撞球并返回导球点  */
-	pros::delay(50);											   // 前往场地中央推球位置
-	RopoDevice::Chassis.AutoSetAimStatus(1, 0, 5);
-	pros::delay(500);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(50);
-	RopoFunction::closemove(0.05,0.65,-108.9, 800);
-	RopoFunction::closemove( -0.17, 0.80, -125.7, 300);
-	RopoFunction::closemove( -0.33, 0.92, -127.8, 300);
-	RopoFunction::closemove( -0.47, 1.02, -132.5, 1000);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
+	openmove(1,0,5,500);						// 稍微离开球门并将车头朝外 车头朝向大致与三角区横杆呈30度角	
+	openmove(0,0,0,50);
 
-	RopoFunction::ExternRight();
+	closemove(0.05,0.65,-108.9, 800);        // 准备前往场地中央 p2.1
+	closemove( -0.17, 0.80, -125.7, 300);				// 中间过渡点 大概率无法走到 主要目的是使车尾在移动过程中逐渐对准对方球门方向
+	closemove( -0.33, 0.92, -127.8, 300);			    // 中间过渡点 同上
+	closemove( -0.47, 1.02, -132.5, 1000);				// 准备推球点 p2.2
+	openmove(0,0,0,50);
+
+	ExternRight();																		// 展开翅膀
 	pros::delay(200);
 		
-	RopoFunction::closemove( 0.43, 1.91, -132.5, 1200);	// 推球动作
+	closemove( 0.43, 1.91, -132.5, 1200);	// 推球动作 目标点设定在横杆后
 
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(50);
-	RopoFunction::ExternRight();
+	openmove(0,0,0,50);
+	ExternRight();												// 收起翅膀
 
-	RopoFunction::closemove(-0.04,1.06,86.179, 800);		// 前往导球位置
-	RopoFunction::closemove(0.03, 0.48, 85.65, 800);
-	RopoFunction::closemove(0.12, 0.00, 72.12, 1000);		// 导球位置
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(50);
+	closemove(-0.04,1.06,86.179, 800);		// 准备前往抛球 p2.3
+	closemove(0.03, 0.48, 85.65, 800);		// 路径中间点	p2.4	
+	closemove(0.12, 0.00, 72.12, 1000);		// 抛球位置
+	openmove(0,0,0,50);
 	/*	step_2 end	*/ 
 
 
 	/*  step_3 抛球x6 导球x5  */
-	RopoFunction::ReLoad();
+	ReLoad();													  // 放下抛投框
 	pros::delay(200);
-	RopoFunction::ShooterPneumatic();
+
+	ShooterPneumatic();											  // 弹出限位
 	pros::delay(200);
 
 	for(int i = 1; i <= 5; i++){
-		RopoFunction::Shoot();
-		if(i != 5) pros::delay(800);
-		RopoFunction::ReLoad();
+		Shoot();												  // 抛球
+		if(i != 5) pros::delay(800);				  //  抛起第5球后会快速放下抛投框
+		if(i == 5) pros::delay(200);
+		ReLoad();												 // 放框
 	} 
 
-	RopoFunction::ShooterPneumatic();
+	ShooterPneumatic();											// 收回限位
 	pros::delay(100);
-	RopoFunction::Shoot();
+	Shoot();													// 收起抛投
 
-	RopoFunction::closemove(0.10, 0.04, 19.52, 1000);
-	RopoFunction::ExternRight();
+	closemove(0.10, 0.04, 19.52, 1000);		// 导球位置
+
+	ExternRight();												// 展开翅膀
 	pros::delay(200);
+
 	for (int i = 1; i <= 6; i++) {
 
-		if(i%4 == 0)
+		if(i == 4)												// 在导第四球前校准一次位置
 		{
-			RopoFunction::closemove(0.10, 0.04, 19.52, 1000);
-			RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-			pros::delay(200);
+			closemove(0.10, 0.04, 19.52, 1000);
+			openmove(0,0,0,200);
 		}
 
-		RopoDevice::Chassis.AutoSetAimStatus(0, 0, 8);
-		pros::delay(400);
+		openmove(0, 0, 8, 300);
 		
-		if(i != 6){
-			RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-			pros::delay(300);
-			RopoDevice::Chassis.AutoSetAimStatus(0, 0, -8);
-			pros::delay(400);
-			RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-			pros::delay(600);
+		if(i != 6){												// 在击出最后一球后不会回拉 准备前往通道推球
+			openmove(0,0,0,300);
+			openmove(0, 0, -8, 300);
+			openmove(0,0,0,600);
 		}	
 	}
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(100);
+	ExternRight();											  // 收起侧翼
+	openmove(0,0,6,300);					// 快速旋转对准通道
 	/*	step_3 end	*/ 
 
 
 	/*  step_4 将导出的球推入球网  */
 
-	//closemove(0.10, 0.04, 19.52, 1000);	//  仅step4单步测试时使用
-	//ExternRight();	//  仅step4单步测试时使用
 
-	closemove(0.23, 0.17, -160.32, 800);// 准备进入通道
-	closemove(0.51, 0.19, -135, 1500);	// 通道起始位置
+	//closemove(0.10, 0.04, 19.52, 1000);						//  仅step_4单步测试时使用
+	//ExternRight();											//  仅step_4单步测试时使用
+
+	closemove(0.23, 0.17, -140.32, 500);// 准备进入通道	p4.1
+	closemove(0.51, 0.19, -135, 800);	// 通道起始位置 p4.2
 
 	openmove(-1.57, 0,0,200);
-	openmove(-0.5, 0,0,400);				
-	ExternRight();
 	openmove(-0.5, 0,0,400);
+	ExternRight();											// 打开侧翼	
+	x = RopoDevice::Chassis.GetX();
+	y = RopoDevice::Chassis.GetY();
+	closemove(x, y, -135, 500);				
+	ExternRight();											// 收起侧翼
+	openmove(-0.5, 0,0,400);			  // 缓慢通过通道前半段
 
-	closemove(1.07, 0.76, -135, 600);	// 矫正位置并打开侧翼
-	ExternRight();
+	closemove(1.07, 0.76, -135, 600);	// 矫正位置 p4.3
+	ExternRight();											  // 打开侧翼
 
 	openmove(-1.57, 0,0,200);
-	openmove(-0.5, 0,0,800);				//行使至通道出口
+	openmove(-0.5, 0,0,400);
+	x = RopoDevice::Chassis.GetX();
+	y = RopoDevice::Chassis.GetY();
+	closemove(x, y, -135, 500);
+	openmove(-0.5, 0,0,400);				//行使至通道出口
 
 
-	closemove(1.64, 1.33, -135, 800);	// 通道出口位置矫正 车头对齐地垫边缘
-	openmove(-0.5, 0,0.8,1000);			// 行使至三角区横杆边
+	closemove(1.64, 1.33, -135, 1500);	// 通道出口位置矫正 车头对齐地垫边缘 p4.4
+	openmove(-0.5, 0,0.8,1000);							  // 行使至三角区横杆边
 
-	openmove(-0.5, 0,0.4,600);			// 大致与三角区横杆平行
-	closemove(1.89, 2.07, -92.52, 800);	// 行使至三角区边缘 接触边界
+	openmove(-0.5, 0,0.4,600);			                  // 大致与三角区横杆平行
+	closemove(1.89, 2.07, -92.52, 800);	                      // 行使至三角区边缘 接触边界 p4.5
 
-	closemove(1.67, 1.99, -92.00, 800);
-	closemove(1.79, 2.20, -45, 800);		// 准备推球位置
+	closemove(1.67, 1.99, -92.00, 800);	// 调整点 使车侧方移动，防止被与墙壁紧贴的棕球卡死 p4.6
+
+	closemove(1.79, 2.20, -45, 1500);		// 预备推球位置
+
 	ExternRight();
-	pros::delay(100);							   // 防止入网被卡
+	pros::delay(100);						// 收起翅膀 防止入网被卡
 
-	openmove(-1.57, 0,0,1200);			// 第一次推球
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(100);
+	openmove(-1.57, 0,0,1000);				// 第一次推球
+	openmove(0,0,0,100);
 
 	openmove(1, 0,0,500);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(100);
-	closemove(1.79, 2.20, -45, 800);		// 准备推球位置
+	openmove(0,0,0,100);
+	closemove(1.79, 2.20, -45, 800);		// 预备推球位置
 
-	openmove(-1.57, 0,0,1200);			// 第二次推球
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	pros::delay(100);
+	openmove(-1.57, 0,0,1000);			// 第二次推球
+	openmove(0,0,0,100);
 
 	openmove(1, 0,0,300);				// 驶离球门区域，车头大致对准碰杆方向
 	openmove(0, 0,-8,400);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 0, 0);
-	Intake();
+	openmove(0,0,0,50);
+	Intake();							// 打开吃球装置
 	/*	step_4 end	*/ 
 	
 
 	/*  step_5 碰杆  */
-	RopoFunction::closemove(1.70, 1.47, -111.10, 1000);
-	RopoFunction::closemove(1.12, 0.74, -135, 1500);
-	RopoFunction::ReLoad();
-	StopIn();
+	closemove(1.70, 1.47, -111.10, 1000);	// 中间点 p5.1
+	closemove(1.12, 0.74, -135, 1500);		// 碰杆点
+	ReLoad();								// 碰杆
+	StopIn();								// 停止吃球
 	/*	step_5 end	*/
 
 	RopoDevice::Chassis.Operator();
