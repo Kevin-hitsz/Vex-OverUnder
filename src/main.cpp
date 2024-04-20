@@ -44,6 +44,7 @@ namespace ControllerModule {
 	void ChangeCatch(){
 		locktag ^= 1;
 		RopoDevice::ThreeWire::CatchPneumatic.set_value(locktag);
+		RopoDevice::ChassisHold();
 	}
 
 	void RumbleMe(){
