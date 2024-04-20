@@ -27,7 +27,7 @@ namespace RopoChassis{
             const FloatType Width  = 0.276;
             //const int GainOfLowPassFilter = 1 ;
             //const FloatType CutoffFrequency = 1;
-            FloatType InitialAngle;        //Rad
+            FloatType InitialAngle = 0.0;        //Rad
 
             RopoDiffySwerve::DiffySwerve &LF, &LB, &RF, &RB;
             RopoSensor::EncodingDisk &EncodingDisk;

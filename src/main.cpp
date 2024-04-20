@@ -112,6 +112,7 @@ namespace RopoFunction{
 		else if(ControllerModule::ClimberFlag == true){
 			RopoDevice::ThreeWire::ClimberPneumatic.set_value(false);
 			ControllerModule::ClimberFlag = false;
+			ShooterPneumatic();
 			Shoot();
 		}
 	}
@@ -161,7 +162,14 @@ namespace RopoFunction{
 		pros::delay(move_time);
 	}
 
-
+	void TurnAround1(){
+		openmove(0, 0, 8, 600);
+		openmove(0, 0, 0, 400);
+	}
+	void TurnAround2(){
+		openmove(0, 0,-8, 600);
+		openmove(0, 0, 0, 400);
+	}
 
 	/*void Hit(){
 		RopoDevice::Motors::HitterMotor.move_voltage(-12000);
@@ -205,6 +213,7 @@ namespace RopoFunction{
 	}
 
 	void autonomous_1(){
+	RopoDevice::Chassis.SetInitialAngle(-RopoMath::Pi / 4);
 
 	/*	step_1 拨出联队球推入球网	*/
 	RopoFunction::ExternRight();							
@@ -406,16 +415,17 @@ void autonomous_Wisco(){
 	closemove(1.03, 0.01, 90.0, 2600);        //到推球点位
 	ExternRight();                                                  //开翅膀
 	openmove(-1.57, 0.0, 0.0, 1200);           //往前推
-	openmove( 0.80, 0.0, 0.0, 600);            //回来一点，准备再推一次
-	openmove( -1.57, 0.0, 0.0, 1500);          //再推一次
-	openmove( 0.0, 0.0, 0.0, 1000);            
-	ExternRight();                                                  //收翅膀
 	StopIn();
-	closemove(0.47, 0.00, 169.58, 3000);       //到中间过渡一下，准备导入
+	openmove( 0.80, 0.0, 0.0, 500);            //回来一点，准备再推一次
+	openmove( -1.57, 0.0, 0.0, 1500);          //再推一次
+	openmove( 0.0, 0.0, 0.0, 300);            
+	ExternRight();                         
+	pros::delay(500);                         //收翅膀
+	closemove(0.47, 0.00, 169.58, 4000);       //到中间过渡一下，准备导入
 	closemove(0.01, 0.29, -132.52, 2800);      //进入导入点位
 	int load_number = 9;
 	ExternRight();
-	pros::delay(2300);
+	pros::delay(1000);
 	for (int i = 1; i <= load_number; i++) {                          //导入n次球
 		if(i % 3 == 0)
 		{                                                             //导三次校准一次
@@ -431,32 +441,54 @@ void autonomous_Wisco(){
 		}        
 	ExternRight();
 	pros::delay(2500);
-	closemove(-0.12, -0.09, 62.68, 1000);        //刚要进入通道
+	closemove(-0.18, -0.09, 62.68, 1000);        //刚要进入通道
+	closemove(-0.18  , -0.55, 90.0, 800);  
+	openmove( -1.50, 0.0, 0.0, 500);
 	closemove(-0.18, -1.27, 90.0, 600);         //即将出通道，屁股与黑杆齐平
 	ExternRight();
-	openmove( -1.50, 0.0, 0.0, 500);
-	closemove(-0.4, 0.0, 0.0, 800);              //刚出通道，准备将球推进网
+	closemove(-0.19, -1.75, 90.0, 700);        //屁股快到导入杆的地垫了，还差8厘米左右
+	closemove(-0.11, -1.97, 130.6, 700);       //进入导入杆所在地垫，车体开始略微倾斜
+	openmove(-0.5, 0.0, 0.0, 600);             //直线往前推一点
+	closemove(0.22, -2.31, 135.0, 500);        //屁股与导入杆末端齐平，准备转身
+	openmove(-0.4, -0.4, 0.0, 300);            //往前调整姿态，准备转身
+	closemove(0.45, -2.42, 174.43, 800);        //转身，到达推球点
+	openmove(0.3, 0.0, 0.0, 300);                //往前挪一点，获得更大推球速度
+	openmove(-1.57, 0.0, 0.0, 1000);             //推球
+	openmove( 1.20, 0.0, 0.0, 500);             //往前退一点，准备吐球
+	TurnAround1();                                                    //转身
+	Outtake();                                                        //吐球  
+	pros::delay(700);    
+	TurnAround2();                                                    //转回来
+	ExternRight();
+	closemove(0.45, -2.42, 174.43, 700);        //第二次到达推球点
+	openmove(0.3, 0.0, 0.0, 300);                //往前挪一点，获得更大推球速度
+	openmove( -1.57, 0.0, 0.0, 1000);             //第二次撞球门 
+	/* openmove(-0.6, 0.0, 0.0, 700);                //刚出通道，准备将球推进网
 	closemove(0.18, -2.30, 142.09, 1000);         //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
 	closemove(0.3, -2.30, -180.00, 1000);         //闭环撞入球门
-	closemove(0.5, -2.30, 180.00, 800);          //转身
-	Outtake();                                                         //吐球
-	closemove(0.5, -2.30, -180.00, 1000);         //再转身推
-
-	/* openmove( -1.57, 0.0, 0.0, 1000);             //往球门猛猛撞
-	openmove( 1.20, 0.0, 0.0, 500);              //往前退一点，准备再撞一次
-	openmove( -1.50, 0.0, 0.0, 1000);             //再撞一次
+	openmove( -1.57, 0.0, 0.0, 1000);             //往球门猛猛撞
 	ExternRight();
+	openmove( 1.20, 0.0, 0.0, 500);              //往前退一点，准备再撞一次
+	TurnAround1();                                                    //转身
+	Outtake();                                                        //吐球      
+	TurnAround2();                                                    //转回来
+	ExternRight();
+	closemove(0.3, -2.30, -180.00, 1000);         //闭环准备第二次撞入球门
+	
+	openmove( -1.50, 0.0, 0.0, 1000);             //第二次撞球门
+	ExternRight(); */
 	Intake();
 	closemove(0.20, -2.28, 132.09, 800);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
 	closemove(-0.15, -1.90, 99.0, 800);        //准备进入通道
 	closemove(-0.16, -1.27, 90.0, 1000);        //进入通道
 	closemove(-0.15, -0.09, 62.68, 1000);       //即将回到战略点
 	closemove(0.0, 0.0, -90.0, 1000);           //到达战略点
-	StopIn(); */
+	StopIn();
 	RopoDevice::Chassis.ChangeControlMode();
 	RopoDevice::Chassis.Operator();
 	
 }
+
 
 
 void disabled() {}
@@ -516,8 +548,8 @@ void skill() {
 
 
 void autonomous(){
-	//autonomous_Wisco();
-	RopoFunction::autonomous_1();
+	autonomous_Wisco();
+	//RopoFunction::autonomous_1();
 }
 void Test(){
 	RopoFunction::closemove(0,0,0,4000);
