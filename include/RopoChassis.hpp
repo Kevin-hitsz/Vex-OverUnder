@@ -45,7 +45,7 @@ namespace RopoChassis{
             Matrix ActualPosition = Matrix(3,1);
             Matrix PositionError = Matrix(3,1);
             Matrix LastPositionError = Matrix(3,1);
-            Matrix DeltaPositoinError = Matrix(3,1);
+            Matrix DeltaPositionError = Matrix(3,1);
             Matrix Kp = Matrix(3,3);
             Matrix Ki = Matrix(3,3);
             Matrix Kd = Matrix(3,3);
@@ -138,14 +138,14 @@ namespace RopoChassis{
                 Transfer_M[8][1] = 0,Transfer_M[8][2] =-1,Transfer_M[8][3] = - Length * 0.5;
 
                 Kp[1][1] = 6.5; Kp[2][2] = 6.5; Kp[3][3] = 10;  // 控制参数调整
-                Kd[1][1] = 80.0; Kd[2][2] = 80.0; Kd[3][3] = 160.0;
+                Kd[1][1] = 80.0; Kd[2][2] = 80.0; Kd[3][3] = 100.0;
 
                 BackgroundTaskPtr = new Task(ChassisControl,this);
             }
             inline void UpdatePosition(){
-                ActualPosition[1][1] = EncodingDisk.GetPosX() / 1000;
-                ActualPosition[2][1] = EncodingDisk.GetPosY() / 1000;
-                ActualPosition[3][1] = - InertialSensor.get_yaw() * RopoMath::Pi /180.0;
+                ActualPosition[1][1] = EncodingDisk.GetPosX() / 1000.0;
+                ActualPosition[2][1] = EncodingDisk.GetPosY() / 1000.0;
+                ActualPosition[3][1] = - InertialSensor.get_yaw() * RopoMath::Pi / 180.0;
             }
             inline void AutoSetAimStatus(FloatType const Vx, FloatType const Vy, FloatType const W, int Time = 5){
                 MoveMode = OpenLoop;
@@ -164,8 +164,8 @@ namespace RopoChassis{
             void PositionControl(){
                 LastPositionError = PositionError;
                 PositionError = AimPosition - ActualPosition;
-                DeltaPositoinError = PositionError - LastPositionError;
                 if(fabsf(PositionError[3][1]) > RopoMath::Pi) PositionError[3][1] -= 2 * RopoMath::Pi * RopoMath::Sign(PositionError[3][1]);
+                DeltaPositionError = PositionError - LastPositionError;
                 if(fabsf(PositionError[1][1]) < XYMinError && fabsf(PositionError[2][1]) < XYMinError && fabsf(PositionError[3][1]) < ThetaMinError){
                     counter_for_error++;
                     if (counter_for_error > max_counter){
@@ -176,30 +176,35 @@ namespace RopoChassis{
                     counter_for_error = 0;
                     Position_OK = false;
                 }
-                if(Position_OK) AimStatus[1][1] = AimStatus[2][1] = AimStatus[3][1] = 0;
+                if(Position_OK) {
+                    AimStatus[1][1] = AimStatus[2][1] = AimStatus[3][1] = 0.0;
+                    PositionError[1][1] = PositionError[2][1] = PositionError[3][1] = 0.0;
+                    LastPositionError[1][1] = LastPositionError[2][1] = LastPositionError[3][1] = 0.0;
+                    DeltaPositionError[1][1] = DeltaPositionError[2][1] = DeltaPositionError[3][1] = 0.0;
+                }
                 else{
-                    AimStatus = Kp * PositionError + Kd * DeltaPositoinError;
+                    AimStatus = Kp * PositionError + Kd * DeltaPositionError;
                     AimStatus[1][1] = fabsf(AimStatus[1][1]) > 1.2 ? 1.2 * RopoMath::Sign(AimStatus[1][1]) : AimStatus[1][1];
                     AimStatus[2][1] = fabsf(AimStatus[2][1]) > 1.2 ? 1.2 * RopoMath::Sign(AimStatus[2][1]) : AimStatus[2][1];
                     AimStatus[3][1] = fabsf(AimStatus[3][1]) > (1.5 * RopoMath::Pi) ? (1.5 * RopoMath::Pi * RopoMath::Sign(AimStatus[3][1])) : AimStatus[3][1];
                     // Rotaion Matrix
-                    Parameter[1][1] = cosf(ActualPosition[3][1]) , Parameter[1][2] = sinf(ActualPosition[3][1]) , Parameter[1][3] = 0;
-                    Parameter[2][1] =-sinf(ActualPosition[3][1]) , Parameter[2][2] = cosf(ActualPosition[3][1]) , Parameter[2][3] = 0;
-                    Parameter[3][1] = 0                          , Parameter[3][2] = 0                          , Parameter[3][3] = 1;
+                    Parameter[1][1] = cosf(ActualPosition[3][1]) , Parameter[1][2] = sinf(ActualPosition[3][1]) , Parameter[1][3] = 0.0;
+                    Parameter[2][1] =-sinf(ActualPosition[3][1]) , Parameter[2][2] = cosf(ActualPosition[3][1]) , Parameter[2][3] = 0.0;
+                    Parameter[3][1] = 0.0                        , Parameter[3][2] = 0.0                        , Parameter[3][3] = 1.0;
                     AimStatus = Parameter * AimStatus;
+                    AimStatus[2][1] = -AimStatus[2][1];             // ???
                 }
-                AimStatus[2][1] = -AimStatus[2][1];             // ???
             }
 
             void AutoSetPosition(FloatType x, FloatType y, FloatType theta, int _max_time){
                 MoveMode = CloseLoop;
                 counter_for_error = 0;
-                Integrator[1][1] = Integrator[2][1] = Integrator[3][1] = 0;
+                //Integrator[1][1] = Integrator[2][1] = Integrator[3][1] = 0;
                 max_time = _max_time;
                 Position_OK = false;
                 AimPosition[1][1] = x;
                 AimPosition[2][1] = y;
-                AimPosition[3][1] = theta* RopoMath::Pi / 180;
+                AimPosition[3][1] = theta * RopoMath::Pi / 180.0;
             }
             void OpenAuto(){
                 MoveMode = OpenLoop;

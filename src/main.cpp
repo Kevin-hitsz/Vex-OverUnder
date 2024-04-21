@@ -23,6 +23,8 @@ void initialize() {
 }
 
 namespace RopoFunction{
+	
+	int InitialTime = 0;
 
 	void ShooterPneumatic(){
 		if(ControllerModule::ShooterPneumaticFlag == false){
@@ -170,6 +172,10 @@ namespace RopoFunction{
 		openmove(0, 0,-8, 600);
 		openmove(0, 0, 0, 400);
 	}
+	void MoveToZero(){
+		RopoDevice::Chassis.AutoSetPosition(0.0, 0.0, 0.0, 4000);
+	}
+
 
 	/*void Hit(){
 		RopoDevice::Motors::HitterMotor.move_voltage(-12000);
@@ -358,8 +364,6 @@ namespace RopoFunction{
 
 
 
-
-
 /*void autonomous_A1(){
 	float x,y,theta;
 	RopoFunction::ReLoad();
@@ -406,7 +410,7 @@ void autonomous_Wisco(){
 	openmove( -1.57, 0.0, 0.0, 1500);          //再推一次
 	openmove( 0.0, 0.0, 0.0, 300);            
 	ExternRight();                                                  //收翅膀
-	pros::delay(500);                         
+	pros::delay(1500);                         
 	closemove(0.47, 0.00, 169.58, 4000);       //到中间过渡一下，准备导入
 	closemove(0.01, 0.29, -132.52, 2800);      //进入导入点位
 	int load_number = 9;
@@ -426,7 +430,7 @@ void autonomous_Wisco(){
 		//ExternRight();
 		}        
 	ExternRight();                                                     //关
-	pros::delay(2500);
+	pros::delay(1500);
 	closemove(-0.18, -0.09, 62.68, 1000);        //刚要进入通道
 	closemove(-0.18  , -0.55, 90.0, 800);        //进入通道
 	openmove( -1.50, 0.0, 0.0, 500);             //通过通道
@@ -483,67 +487,77 @@ void disabled() {}
 void competition_initialize() {}
 
 void skill() {
-  RopoDevice::Chassis.SetInitialAngle(0.0);
-  using namespace RopoFunction;
-  openmove(0.0, 1.5, 0.0, 700);
-  closemove(0.29, 0.39, -29.984, 1800);
-  const int throw_number = 13;
-  ReLoad();
-  ShooterPneumatic();
-  for(int i = 1; i <= throw_number - 1; i++){
-    Shoot();
-    ReLoad();
-    if(i != throw_number - 1) pros::delay(800);
-  }
-  ShooterPneumatic();
-  pros::delay(400);
-  Shoot();
-  closemove(0.37, 0.40, -94.75, 1500);
-  int load_number = 10;
-  ExternRight();                                                    //开翅膀
-  for (int i = 1; i <= load_number; i++) {                          //导入n次球
-    if(i % 3 == 0)
-    {                                                             //导三次校准一次
-      closemove(0.01, 0.29, -94.52, 500);
-    }
-    openmove(0.0, 0.0,  -8.0, 300);           //开导
-    openmove(0.0, 0.0,  0.0, 150);
-    if(i == load_number){break;}
-    openmove(0.0, 0.0, 8.0, 280);           //回
-    openmove(0.0, 0.0,  0.0, 600);
-  }
-  ExternRight();                                                    //收翅膀
-  closemove(0.69, 0.53, -179.0, 2000);          //准备进通道
-  openmove(-1.75, 0.0, 0.0, 750);             //往后猛退
-  closemove(2.51, 0.53, -179.0, 2000);
-  closemove(2.51, 0.47, 140.67, 800);
-  ExternRight();                                                    //开翅膀
-  openmove(-0.4, 0.0, 0.0, 500);               //慢慢往前走一点
-  ExternRight();                                                    //收翅膀
-  closemove(2.92, 0.20, 135.0, 600);           //屁股与导入杆后端齐平
-  openmove(0.4, 0.4, 0.0, 300);                //往前调整位置，准备转身
-  closemove(3.08, -0.08, 87.0, 900);          //转身准备推球
-  openmove(0.3, 0.0, 0.0, 300);                //往前蓄力，准备推球 
-  openmove(-1.57, 0.0, 0.0, 1000);               //推球
-  openmove(0.8, 0.0, 0.0, 600);                 //蓄力准备再推
-  openmove(-1.57, 0.0, 0.0, 900);               //再推
-  openmove(0.8, 0.0, 0.0, 700);
-  closemove(2.43, 0.04, 27.3117, 1200);
-  ExternRight();                                                     //开翅膀
-  openmove(-0.7, 0.0, 1.5,3000);
-  ExternRight();                                                    //收翅膀 
-  RopoDevice::Chassis.Operator();
+	RopoFunction::InitialTime = pros::millis(); 
+	RopoDevice::Chassis.SetInitialAngle(0.0);
+	using namespace RopoFunction;
+	openmove(0.0, 1.5, 0.0, 700);
+	closemove(0.29, 0.39, -29.984, 1800);
+	const int throw_number = 2;
+	ReLoad();
+	ShooterPneumatic();
+	for(int i = 1; i <= throw_number - 1; i++){
+		Shoot();
+		if(i != throw_number - 1) pros::delay(800);
+		ReLoad();
+	}
+	ShooterPneumatic();
+	pros::delay(400);
+	Shoot();
+	closemove(0.26, 0.26, -94.52, 1800);
+	int load_number = 5;
+	ExternRight();                                                    //开翅膀
+	for (int i = 1; i <= load_number; i++) {                          //导入n次球
+		if(i % 3 == 0)
+		{                                                             //导三次校准一次
+		closemove(0.26, 0.26, -94.52, 500);
+		}
+		openmove(0.0, 0.0,  -8.0, 300);           //开导
+		openmove(0.0, 0.0,  0.0, 150);
+		if(i == load_number){break;}
+		openmove(0.0, 0.0, 8.0, 280);           //回
+		openmove(0.0, 0.0,  0.0, 600);
+	}
+	ExternRight();                                                    //收翅膀
+	closemove(0.54, 0.45, -147.51, 600);         //准备进通道
+	closemove(0.82, 0.47, -179.9, 1500);          //进通道
+	openmove(-1.75, 0.0, 0.0, 800);             //往后猛退
+	closemove(2.16, 0.48, 180.0, 500);
+	closemove(2.51, 0.51, 180.0, 1500);        //出通道
+	closemove(2.51, 0.47, 140.67, 800);        //
+	ExternRight();                                                    //开翅膀
+	openmove(-0.4, 0.0, 0.0, 500);               //慢慢往前走一点
+	ExternRight();                                                    //收翅膀
+	closemove(2.92, 0.20, 135.0, 600);           //屁股与导入杆后端齐平
+	openmove(0.4, 0.4, 0.0, 300);                //往前调整位置，准备转身
+	closemove(3.08, -0.08, 87.0, 900);          //转身准备推球
+	openmove(0.3, 0.0, 0.0, 300);                //往前蓄力，准备推球 
+	openmove(-1.57, 0.0, 0.0, 1000);               //推球
+	openmove(0.8, 0.0, 0.0, 600);                 //蓄力准备再推
+	openmove(-1.57, 0.0, 0.0, 900);               //再推
+	openmove(0.8, 0.0, 0.0, 700);
+	closemove(2.41, -0.12, 33.3117, 1200);
+	ExternRight();                                                     //开翅膀
+	openmove(-0.7, 0.0, 1.5,3000);                //圆弧形推进网
+	closemove(2.07, -0.46, 83.0, 1000);
+	ExternRight();                                                    //收翅膀 
+	closemove(2.51, 0.16, 155.0, 900);
+	closemove(2.34, 0.30, 179.0, 900);
+	closemove(2.00, 0.30, 180.0, 500);
+	Climber();
+	openmove(1.57, 0.0, 0.0, 2000);
+	Climber();
+	RopoDevice::Chassis.Operator();
 }
 
 
 void autonomous(){
-	autonomous_Wisco();
+	//autonomous_Wisco();
 	//RopoFunction::autonomous_1();
-	//skill();
+	skill();
 }
-/* void Test(){
-	RopoFunction::closemove(0,0,0,4000);
-} */
+void Test(){
+	RopoFunction::closemove(0.0, 0.0, 170.0, 4000);
+}
 
 void opcontrol() {
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
@@ -571,8 +585,7 @@ void opcontrol() {
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::Climber);
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::ShooterInit);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Falling, RopoFunction::ShooterStopInit);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, Test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
@@ -583,13 +596,14 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
+	float Second = 0;
 	while (true) {
 		FloatType XInput =  VelocityMax * XVelocityInput.GetAxisValue();
 		FloatType YInput =  VelocityMax * YVelocityInput.GetAxisValue();
 		FloatType WInput = -RopoWcLimit * WVelocityInput.GetAxisValue();
-
+		Second = (pros::millis() - RopoFunction::InitialTime) / 1000;
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.OpSetAimStatus(XInput, YInput, WInput);
-		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::Encoder.GetPosX()/1000, RopoDevice::Sensors::Encoder.GetPosY()/1000, RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
-		pros::delay(5);
+		MasterController.print(0,0,"%.2f, %.2f, %.2f, %.2f", RopoDevice::Sensors::Encoder.GetPosX()/1000, RopoDevice::Sensors::Encoder.GetPosY()/1000, RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi, Second);
+		pros::delay(50);
 	}
 }
