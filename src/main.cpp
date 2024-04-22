@@ -475,7 +475,7 @@ void autonomous_C1b(){
 	RopoDevice::Chassis.AutoRotateAbs(-45);
 	pros::delay(1000);
 
-	RopoDevice::Chassis.AutoPositionMove(-1.93,1.82,10000,5000);
+	RopoDevice::Chassis.AutoPositionMove(-1.88,1.82,10000,5000);
 	RopoDevice::Chassis.AutoRotateAbs(85);
 	pros::delay(800);
 

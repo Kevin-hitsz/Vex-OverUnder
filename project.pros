@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "C3_Turn",
+    "project_name": "C3_Turn_RED",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -310,7 +310,8 @@
     },
     "upload_options": {
       "slot": 3,
-      "icon": "pizza"
+      "icon": "pizza",
+      "description": "HITSZ1"
     }
   }
 }
