@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "skill",
+    "project_name": "autonomous_wisco",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -168,7 +168,7 @@
     },
     "upload_options": {
       "icon": "planet",
-      "slot": 3,
+      "slot": 2,
       "description": "2"
     }
   }

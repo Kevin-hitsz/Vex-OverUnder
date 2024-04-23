@@ -105,7 +105,7 @@ namespace RopoChassis{
             }
 
             inline void MovingCalculate(){
-                if(ControlMode){
+                if(ControlMode == Relative){
                     double a =  AimStatus[1][1] * cos(ActualPosition[3][1] + InitialAngle) - AimStatus[2][1] * sin(ActualPosition[3][1] + InitialAngle);
                     double b =  AimStatus[1][1] * sin(ActualPosition[3][1] + InitialAngle) + AimStatus[2][1] * cos(ActualPosition[3][1] + InitialAngle);
                     AimStatus[1][1] = a;

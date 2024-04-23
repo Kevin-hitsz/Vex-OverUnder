@@ -322,7 +322,7 @@ namespace RopoFunction{
 
 
 	closemove(1.64, 1.33, -135, 1500);	// 通道出口位置矫正 车头对齐地垫边缘 p4.4
-	openmove(-0.5, 0,0.8,1000);							  // 行使至三角区横杆边
+	//openmove(-0.5, 0,0.8,1000);							  // 行使至三角区横杆边
 
 	openmove(-0.5, 0,0.4,600);			                  // 大致与三角区横杆平行
 	closemove(1.89, 2.07, -92.52, 800);	                      // 行使至三角区边缘 接触边界 p4.5
@@ -403,14 +403,30 @@ void autonomous_Wisco(){
 	openmove(1.57, 0.0, 0.0, 500);             //出黑杆范围
 	closemove(0.78, -0.04, -36.92, 650);       //到吃第一个球点位
 	openmove(0.47, 0.02, 0.0, 500);            //往前慢点走，吃第一个球
-	closemove(1.03, 0.01, 90.0, 2600);        //到推球点位
+
+
+	/*直接推球方案（容易被翅膀卡球）**************/
+	/* closemove(1.03, 0.01, 90.0, 2600);        //到推球点位
 	ExternRight();                                                  //开翅膀
 	openmove(-1.57, 0.0, 0.0, 1200);           //往前推
 	StopIn();
 	openmove( 0.80, 0.0, 0.0, 500);            //回来一点，准备再推一次
 	openmove( -1.57, 0.0, 0.0, 1500);          //再推一次
 	openmove( 0.0, 0.0, 0.0, 300);            
-	ExternRight();                                                  //收翅膀
+	ExternRight();            */                                       //收翅膀
+	
+	
+	/*扫球推球方案（相对稳妥效率高）**************/
+	closemove(1.00, 0.01, 141.5, 1300);        //到扫球点位
+	ExternRight();                                                   //开翅膀
+	closemove(1.14, -0.2, 53.4, 700);          //扫球
+	ExternRight();                                                  //关翅膀
+	closemove(1.13, -0.2, 0.0, 1000);           //到推球点位
+	closemove(1.13, -1.5, 0.0, 800);            //推球
+	pros::delay(2800);
+	/****************************************/
+
+
 	pros::delay(1500);                         
 	closemove(0.47, 0.00, 169.58, 4000);       //到中间过渡一下，准备导入
 	closemove(0.01, 0.29, -132.52, 2800);      //进入导入点位
@@ -454,26 +470,11 @@ void autonomous_Wisco(){
 	closemove(0.45, -2.42, 174.43, 700);        //第二次到达推球点
 	openmove(0.3, 0.0, 0.0, 300);                //往前挪一点，获得更大推球速度
 	openmove( -1.57, 0.0, 0.0, 1000);             //第二次撞球门 
-	//第一次参数
-	/* openmove(-0.6, 0.0, 0.0, 700);                //刚出通道，准备将球推进网
-	closemove(0.18, -2.30, 142.09, 1000);         //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
-	closemove(0.3, -2.30, -180.00, 1000);         //闭环撞入球门
-	openmove( -1.57, 0.0, 0.0, 1000);             //往球门猛猛撞
-	ExternRight();
-	openmove( 1.20, 0.0, 0.0, 500);              //往前退一点，准备再撞一次
-	TurnAround1();                                                    //转身
-	Outtake();                                                        //吐球      
-	TurnAround2();                                                    //转回来
-	ExternRight();
-	closemove(0.3, -2.30, -180.00, 1000);         //闭环准备第二次撞入球门
-	
-	openmove( -1.50, 0.0, 0.0, 1000);             //第二次撞球门
-	ExternRight(); */
 	Intake();
-	closemove(0.20, -2.28, 132.09, 800);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
-	closemove(-0.15, -1.90, 99.0, 800);        //准备进入通道
-	closemove(-0.16, -1.27, 90.0, 800);        //进入通道
-	closemove(-0.15, -0.09, 62.68, 1000);       //即将回到战略点
+	closemove(0.20, -2.28, 132.09, 750);       //屁股与导入杆末端齐平，右后轮刚跨入球门前一个地垫
+	closemove(-0.15, -1.90, 99.0, 680);        //准备进入通道
+	closemove(-0.16, -1.27, 90.0, 680);        //进入通道
+	closemove(-0.15, -0.09, 62.68, 750);       //即将回到战略点
 	closemove(0.0, 0.0, -90.0, 1000);           //到达战略点
 	StopIn();
 	RopoDevice::Chassis.ChangeControlMode();
@@ -554,12 +555,9 @@ void skill() {
 
 
 void autonomous(){
-	//autonomous_Wisco();
+	autonomous_Wisco();
 	//RopoFunction::autonomous_1();
-	skill();
-}
-void Test(){
-	RopoFunction::closemove(0.0, 0.0, 170.0, 4000);
+	//skill();
 }
 
 void opcontrol() {
@@ -588,7 +586,7 @@ void opcontrol() {
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::Climber);
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, Test);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, Test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
@@ -605,7 +603,8 @@ void opcontrol() {
 		FloatType WInput = -RopoWcLimit * WVelocityInput.GetAxisValue();
 		if(!RopoFunction::TimeFlag) Second = (pros::millis() - RopoFunction::InitialTime) / 1000;
 		if(RopoDevice::Chassis.IsOpcontrol()) RopoDevice::Chassis.OpSetAimStatus(XInput, YInput, WInput);
-		MasterController.print(0,0,"%.1f, %.1f, %.1f, %.2f", RopoDevice::Sensors::Encoder.GetPosX()/1000, RopoDevice::Sensors::Encoder.GetPosY()/1000, RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi, Second);
-		pros::delay(50);
+		MasterController.print(0,0,"%.2f, %.2f, %.2f", RopoDevice::Sensors::Encoder.GetPosX()/1000, RopoDevice::Sensors::Encoder.GetPosY()/1000, RopoDevice::Chassis.GetTheta() * 180 / RopoMath::Pi);
+		MasterController.print(1, 0, "%.2f", Second);
+		pros::delay(5);
 	}
 }
