@@ -84,7 +84,7 @@ namespace RopoLifter{
                     case HIDDEN:
                         pros::lcd::print(1,"hid");
                         This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-                        This -> LeftMotor.move_absolute(HiddenPosition,0.7*(HiddenPosition-This->LifterPosition));
+                        This -> LeftMotor.move_absolute(HiddenPosition,0.9*(HiddenPosition-This->LifterPosition));
                         while (fabs(This->LifterPosition-HiddenPosition) > 2.0)
                         {
                             if (This -> breaktag) break;
