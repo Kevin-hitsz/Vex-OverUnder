@@ -20,7 +20,7 @@ namespace RopoDevice{
 
 	//创建三线接口
 	namespace ThreeWire{
-		const char WideExternPneumaticPort = 'A';
+		const char WideExternPneumaticPort = 'F';
 		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
 		
 		const char UnderExternPneumaticPort = 'B';
@@ -39,7 +39,7 @@ namespace RopoDevice{
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 13;
+		const int InertialPort = 16;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 14;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
@@ -49,9 +49,9 @@ namespace RopoDevice{
 	namespace Motors{
 
 		const int LeftChassisMotor1Port  	= 1;
-		const int LeftChassisMotor2Port  	= 5;
-		const int LeftChassisMotor3Port  	= 16;
-        const int LeftChassisMotor4Port  	= 17;
+		const int LeftChassisMotor2Port  	= 2;
+		const int LeftChassisMotor3Port  	= 12;
+        const int LeftChassisMotor4Port  	= 11;
 		const int RightChassisMotor1Port	= 10;
 		const int RightChassisMotor2Port	= 9;
 		const int RightChassisMotor3Port	= 19;
@@ -115,8 +115,8 @@ namespace RopoDevice{
 			RightWheelMoveVoltage(RV);
 		}
 
-		const int LeftLiftMotorPort		= 11;
-		const int RightLiftMotorPort		= 7;
+		const int LeftLiftMotorPort		= 15;
+		const int RightLiftMotorPort		= 13;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		
 		pros::Motor   LeftLiftMotor  ( LeftLiftMotorPort  , 	LiftGearset, true );
