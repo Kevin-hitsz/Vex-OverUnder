@@ -10,9 +10,9 @@ namespace RopoLifter{
     // Params
     const double LifterRatio = 1.0 / 1.0;   // 减速比(电机转三圈，举升杆转一圈)
 
-    const double HoldingPosition = 145.0 * LifterRatio;
-    const double TouchingPosition = 100.0 * LifterRatio;
-    const double HiddenPosition = 0.0 * LifterRatio;
+    const double HoldingPosition = 165.0 * LifterRatio;
+    const double TouchingPosition = 75.0 * LifterRatio;
+    const double HiddenPosition = -5.0 * LifterRatio;
     
     const int FullSpeedVoltage = 6000;
     const int Deltatime = 20;
@@ -89,8 +89,8 @@ namespace RopoLifter{
                         This -> LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
                         This -> RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
                         
-                        This -> LeftLiftMotor.move_absolute(HiddenPosition,0.5*(HiddenPosition-This->LifterPosition));
-                        This -> RightLiftMotor.move_absolute(HiddenPosition,0.5*(HiddenPosition-This->LifterPosition));
+                        This -> LeftLiftMotor.move_absolute(HiddenPosition,0.7*(HiddenPosition-This->LifterPosition));
+                        This -> RightLiftMotor.move_absolute(HiddenPosition,0.7*(HiddenPosition-This->LifterPosition));
                         
                         while (fabs(This->LifterPosition-HiddenPosition) > 2.0)
                         {
@@ -138,8 +138,8 @@ namespace RopoLifter{
                         break;
                     case TOUCHING:
                         //pros::lcd::print(1,"wait");
-                        This -> LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-                        This -> RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+                        This -> LeftLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+                        This -> RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
                         This -> LeftLiftMotor.move_absolute(TouchingPosition,100);
                         This -> RightLiftMotor.move_absolute(TouchingPosition,100);
                         while (fabs(This->LifterPosition-TouchingPosition) > 3.0)
@@ -152,8 +152,8 @@ namespace RopoLifter{
                         }
                         if (!This -> breaktag)
                         {
-                            This -> LeftLiftMotor.brake();
-                            This -> RightLiftMotor.brake();
+                            // This -> LeftLiftMotor.brake();
+                            // This -> RightLiftMotor.brake();
                             This->ifReady = true;
                         }
                         break;

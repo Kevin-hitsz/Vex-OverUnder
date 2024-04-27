@@ -21,8 +21,8 @@ namespace RopoChassis{
 			static constexpr float WheelRad = RopoParameter::WHEEL_RAD;						//轮子半径
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
-			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.004;  //加速过程每SampleTime的增加的速度	0.0025
-			static constexpr float AccelerationVelocityLimits = 1.0;
+			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.0045;  //加速过程每SampleTime的增加的速度	0.0025
+			static constexpr float AccelerationVelocityLimits = 1.0;		// 方案一 1.5 方案二\三 1.0
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00010 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
@@ -384,7 +384,7 @@ namespace RopoChassis{
 				while(!reachFlag) pros::delay(100);
 			}
 
-			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
+			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta,int _Time)
 			{
 				FloatType nowTime = pros::millis();
 
@@ -401,6 +401,24 @@ namespace RopoChassis{
 				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 				//旋转至目标角度
 				AutoRotateAbs(Theta);
+				pros::delay(20);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
+				reachFlag = true;
+			}
+
+			void AutoPositionMoveWithTimeLimit(FloatType AimX,FloatType AimY,int _Time)
+			{
+				FloatType nowTime = pros::millis();
+
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
+				//等待到达
+				pros::delay(20);
+				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,false);
+				//等待到达
 				pros::delay(20);
 				while(!reachFlag && pros::millis()-nowTime < _Time) pros::delay(100);
 				reachFlag = true;

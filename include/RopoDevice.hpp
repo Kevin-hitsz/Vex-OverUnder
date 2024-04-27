@@ -23,13 +23,16 @@ namespace RopoDevice{
 		const char WideExternPneumaticPort = 'A';
 		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
 		
+		const char UnderExternPneumaticPort = 'B';
+		pros::ADIDigitalOut UnderExternPneumatic(UnderExternPneumaticPort,false);
+
 		const char LeftExternPneumaticPort = 'D';
 		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
 
 		const char RightExternPneumaticPort = 'E';
 		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
 
-		const char CatchPneumaticPort  = 'F';
+		const char CatchPneumaticPort  = 'C';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 	}
@@ -46,7 +49,7 @@ namespace RopoDevice{
 	namespace Motors{
 
 		const int LeftChassisMotor1Port  	= 1;
-		const int LeftChassisMotor2Port  	= 2;
+		const int LeftChassisMotor2Port  	= 5;
 		const int LeftChassisMotor3Port  	= 16;
         const int LeftChassisMotor4Port  	= 17;
 		const int RightChassisMotor1Port	= 10;
