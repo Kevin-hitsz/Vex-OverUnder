@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "skill",
+    "project_name": "skillred",
     "target": "v5",
     "templates": {
       "kernel": {
