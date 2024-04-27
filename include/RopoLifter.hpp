@@ -10,7 +10,7 @@
 namespace RopoLifter{
 
     // Params
-    const double HoldingPosition = -370.0;
+    const double HoldingPosition = -375.0;
     const double Waiting1Position = -320.0;
     const double Waiting2Position = -160.0;
     const double HiddenPosition = 0.0;
