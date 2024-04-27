@@ -11,67 +11,17 @@ namespace RopoParameter {
 	//    第 4 个参数是gps传感器初始化时朝向场地的角度方向，y轴正方向为0°，角度遵循顺时针
 	//    第 5、6个参数gps位于车体的坐标，若gps所视方向为车体0°，车体y轴正方向为车体0°，则车体x轴正方向为车体90°，角度遵循顺时针
 
-
-	// // 自动一
-	// static constexpr double FIELD_HEADING_INITIAL = 180.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
-	// static constexpr double ROPO_HEADING_INITIAL  = 90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
-	
-	// static constexpr int GPS_PORT = 4;
-	// static constexpr double GPSX_INITIAL_0 = -0.88;
-	// static constexpr double GPSY_INITIAL_0 = -1.28;
-	// static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
-	// static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
-	
-	// static constexpr double GPS_HEADING_INITIAL_0 = 90;
-	// static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
-	
-	// static constexpr double GPSX_OFFSET = -0.03761;
-	// static constexpr double GPSY_OFFSET = -0.11660;
-
-	// // 自动二
-	// static constexpr double FIELD_HEADING_INITIAL = 0.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
-	// static constexpr double ROPO_HEADING_INITIAL  = 0.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
-	
-	// static constexpr int GPS_PORT = 4;
-	// static constexpr double GPSX_INITIAL_0 = -1.25;
-	// static constexpr double GPSY_INITIAL_0 = -1.50;
-	// static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
-	// static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
-	
-	// static constexpr double GPS_HEADING_INITIAL_0 = 180;
-	// static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
-	
-	// static constexpr double GPSX_OFFSET = -0.03761;
-	// static constexpr double GPSY_OFFSET = -0.11660;
-
-	// // 自动三
-	// static constexpr double FIELD_HEADING_INITIAL = 0.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
-	// static constexpr double ROPO_HEADING_INITIAL  = -45.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
-	
-	// static constexpr int GPS_PORT = 4;
-	// static constexpr double GPSX_INITIAL_0 = -1.36;
-	// static constexpr double GPSY_INITIAL_0 = -1.11;
-	// static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
-	// static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
-	
-	// static constexpr double GPS_HEADING_INITIAL_0 = 225;
-	// static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
-	
-	// static constexpr double GPSX_OFFSET = -0.03761;
-	// static constexpr double GPSY_OFFSET = -0.11660;
-
-
-	// skill
+	// 自动三
 	static constexpr double FIELD_HEADING_INITIAL = 0.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
-	static constexpr double ROPO_HEADING_INITIAL  = -90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
+	static constexpr double ROPO_HEADING_INITIAL  = -45.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
 	static constexpr int GPS_PORT = 4;
-	static constexpr double GPSX_INITIAL_0 = -1.42;
-	static constexpr double GPSY_INITIAL_0 = -1.00;
+	static constexpr double GPSX_INITIAL_0 = -1.36;
+	static constexpr double GPSY_INITIAL_0 = -1.11;
 	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
 	static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
 	
-	static constexpr double GPS_HEADING_INITIAL_0 = -90;
+	static constexpr double GPS_HEADING_INITIAL_0 = 225;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
 	static constexpr double GPSX_OFFSET = -0.03761;
