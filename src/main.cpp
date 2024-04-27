@@ -396,7 +396,7 @@ void autonomous_C1b(){
 	pros::delay(10);
 	ControllerModule::ChangeIntakerPneumatic0();
 	pros::delay(700);
-	for(int i = 0; i < 14; i++){
+	for(int i = 0; i < 1; i++){
 		RopoDevice::Chassis.MoveVelocity(0.0,3.6);
 		pros::delay(430);
 		ControllerModule::ChangeLift();
@@ -406,7 +406,7 @@ void autonomous_C1b(){
 		pros::delay(100);
 		RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 		pros::delay(50);
-		RopoDevice::Chassis.AutoRotateAbs(-7);
+		RopoDevice::Chassis.AutoRotateAbs(-6);
 		pros::delay(750);
 		ControllerModule::ChangeLift();
 		pros::delay(100);
@@ -428,7 +428,7 @@ void autonomous_C1b(){
 	pros::delay(100);
 
 	//中间推球
-	RopoDevice::Chassis.AutoPositionMove(-1.47,-0.80,10000,5000);
+	RopoDevice::Chassis.AutoPositionMove(-1.60,-1.00,10000,5000);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	
 	RopoDevice::Chassis.AutoRotateAbs(-45);
@@ -443,7 +443,8 @@ void autonomous_C1b(){
 	ControllerModule::TogetherUnpush();
 
 	//通道推球
-	RopoDevice::Chassis.AutoPositionMove(-0.10,0.35,10000,6000);
+	RopoDevice::Chassis.AutoPositionMoveBack(-0.10,0.35,10000,6000);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	RopoDevice::Chassis.AutoRotateAbs(-90);
 	pros::delay(700);
 	
@@ -454,23 +455,23 @@ void autonomous_C1b(){
 	ControllerModule::WingPush();
 	
 	RopoDevice::Chassis.MoveVelocity(-0.8,-0.02);
-	pros::delay(2300);
-	RopoDevice::Chassis.AutoDirectMove(-1.50,1.51,1);
-	pros::delay(500);
+	pros::delay(2330);
+	// RopoDevice::Chassis.AutoDirectMove(-1.60,1.78,1);
+	// pros::delay(500);
 	
 	RopoDevice::Chassis.AutoRotateAbs(-40);
 	pros::delay(700);
-	RopoDevice::Chassis.MoveVelocity(-0.5,0.0);
-	pros::delay(30);
-	RopoDevice::Chassis.MoveVelocity(-0.5,0.8);
+	RopoDevice::Chassis.MoveVelocity(-0.5,1.0);
 	pros::delay(750);
+	
 	RopoDevice::Chassis.MoveVelocity(-0.55,0.3);
-	pros::delay(800);
+	pros::delay(300);
+	
 	//弧线推球
 	ControllerModule::WingUnpush();
-	RopoDevice::Chassis.MoveVelocity(-0.6,0.8);
+	RopoDevice::Chassis.MoveVelocity(-0.50,0.9);
 	pros::delay(750);
-
+	
 	RopoDevice::Chassis.AutoRotateAbs(43);
 	pros::delay(750);
 
@@ -484,8 +485,9 @@ void autonomous_C1b(){
 	RopoDevice::Chassis.MoveVelocity(-1.6,0.0);
 	pros::delay(500);
 	//再推
-	RopoDevice::Chassis.MoveVelocity(1.3,0);
-	pros::delay(300);
+	
+	RopoDevice::Chassis.MoveVelocity(1.0,0);
+	pros::delay(500);
 	RopoDevice::Chassis.AutoRotateAbs(45);
 	pros::delay(350);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
@@ -495,7 +497,7 @@ void autonomous_C1b(){
 
 	//退出网
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(50);
+	pros::delay(250);
 	RopoDevice::Chassis.AutoRotateAbs(130);
 	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(-1.0,0);
@@ -513,8 +515,8 @@ void autonomous_C1b(){
 	RopoDevice::Chassis.AutoRotateAbs(105);
 	pros::delay(700);
 
-	RopoDevice::Chassis.MoveVelocity(-0.8,-2.0);
-	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(-0.9,-1.7);
+	pros::delay(800);
 
 	RopoDevice::Chassis.AutoRotateAbs(-45);
 	pros::delay(700);
