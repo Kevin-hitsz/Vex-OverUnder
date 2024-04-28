@@ -22,7 +22,7 @@ namespace RopoChassis{
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
 			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.0045;  //加速过程每SampleTime的增加的速度	0.0025
-			static constexpr float AccelerationVelocityLimits = 1.5;		// 方案一 1.5 方案二\三 1.0
+			static constexpr float AccelerationVelocityLimits = 1.2;		// 方案一 1.5 方案二\三 1.0
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00010 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
