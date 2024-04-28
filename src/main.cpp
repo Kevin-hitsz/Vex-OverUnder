@@ -42,9 +42,9 @@ namespace ControllerModule {
 	bool underExternFlag = false;
 	void UnderExternSwitch(){
 		underExternFlag ^= 1; 
-		// if (timeFlag == 0){
-		// 	underExternFlag = false;
-		// }
+		if (timeFlag == 1){
+			underExternFlag = false;
+		}
 		RopoDevice::ThreeWire::UnderExternPneumatic.set_value(underExternFlag);
 	}
 
@@ -223,7 +223,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::WideExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
@@ -251,8 +251,9 @@ void opcontrol()
 		pros::delay(4);
 	}
 
-	if (pros::millis() - nowTime < 55000) {
+	if (pros::millis() - nowTime > 55000) {
 		ControllerModule::timeFlag = 1;
+		ControllerModule::UnderExternSwitch();
 	}
 }
 
