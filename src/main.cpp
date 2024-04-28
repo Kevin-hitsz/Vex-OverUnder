@@ -292,7 +292,7 @@ void autonomous_1(){
 	pros::delay(800);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::WideExternSwitch();
-	pros::delay(1700);
+	pros::delay(2000);
 	ControllerModule::UnderExternSwitch();
 	// RopoDevice::Position_Motor::MyPosition.Set_XY(1.11, -0.70);
 	// 前移防止后杆收不回来
