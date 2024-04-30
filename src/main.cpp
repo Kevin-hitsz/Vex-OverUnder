@@ -230,7 +230,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::WideExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  ControllerModule::GpsUpdate);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
@@ -308,7 +308,7 @@ void autonomous_2(){
 	ControllerModule::LeftExternSwitch();
 	RopoDevice::Chassis.MoveVelocity(0.35,-0.8);
 	pros::delay(1000);
-	RopoDevice::Chassis.MoveVelocity(0.6,0);
+	RopoDevice::Chassis.MoveVelocity(0.45,0);		//0.6
 	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(100);
@@ -319,8 +319,11 @@ void autonomous_2(){
 	pros::delay(100);
 	RopoDevice::Chassis.AutoRotateAbs(120);
 	delay();
-	RopoDevice::Chassis.MoveVelocity(-0.8,-0.3);
-	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(0.5,0.0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	RopoDevice::Chassis.MoveVelocity(-1.4,-0.5);
+	pros::delay(1000);
 	//ControllerModule::RightExternSwitch();
 
 	//---回到导入位置，通过转动导入球
@@ -419,7 +422,7 @@ void autonomous_2(){
 		RopoDevice::Chassis.AutoRotateAbs(-90);
 		pros::delay(400);
 		RopoDevice::Chassis.MoveVelocity(-0.6,0);
-		pros::delay(300);
+		pros::delay(400);
 		RopoDevice::Chassis.MoveVelocity(1.4,0);
 		pros::delay(600);
 	}
@@ -435,7 +438,6 @@ void autonomous_2(){
 	RopoDevice::Chassis.AutoRotateAbs(179);
 	delay();
 	ControllerModule::LeftExternSwitch();
-	RopoDevice::ChassisHold();
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(-1.0,0);
 	pros::delay(1000);
