@@ -38,7 +38,7 @@ namespace RopoDevice{
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 8;
+		const int InertialPort = 9;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 19;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
@@ -56,13 +56,13 @@ namespace RopoDevice{
 	namespace Motors{	
 
 		const int LeftChassisMotor1Port  	= 2;
-		const int LeftChassisMotor2Port  	= 6;
-		const int LeftChassisMotor3Port  	= 5;
-        const int LeftChassisMotor4Port  	= 4;
-		const int RightChassisMotor1Port	= 13;
-		const int RightChassisMotor2Port	= 14;
-		const int RightChassisMotor3Port	= 15;
-		const int RightChassisMotor4Port	= 20;
+		const int LeftChassisMotor2Port  	= 3;
+		const int LeftChassisMotor3Port  	= 6;
+        const int LeftChassisMotor4Port  	= 8;
+		const int RightChassisMotor1Port	= 12;
+		const int RightChassisMotor2Port	= 13;
+		const int RightChassisMotor3Port	= 16;
+		const int RightChassisMotor4Port	= 18;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
@@ -127,11 +127,11 @@ namespace RopoDevice{
 			RightWheelMove1(RV);
 		}
 
-		const int RightLiftMotorPort		= 18;
+		const int RightLiftMotorPort		= 20;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false);
 
-		const int IntakeMotorPort		= 9;
+		const int IntakeMotorPort		= 10;
 		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
 		pros::Motor   IntakeMotor ( IntakeMotorPort  , 	IntakeGearset, true );
 		
