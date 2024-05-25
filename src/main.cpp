@@ -126,15 +126,19 @@ namespace ControllerModule {
 
 	  
 	void Intake(){
-		RopoDevice::Motors::IntakeMotor.move_velocity(-500);
+		RopoDevice::Motors::LeftIntakeMotor.move_velocity(-500);
+		RopoDevice::Motors::RightIntakeMotor.move_velocity(-500);
 	}
 	void Outtake(){
-		RopoDevice::Motors::IntakeMotor.move_velocity(400);
+		RopoDevice::Motors::LeftIntakeMotor.move_velocity(400);
+		RopoDevice::Motors::RightIntakeMotor.move_velocity(400);
 		pros::delay(400);
-		RopoDevice::Motors::IntakeMotor.move_voltage(2000);
+		RopoDevice::Motors::LeftIntakeMotor.move_voltage(2000);
+		RopoDevice::Motors::RightIntakeMotor.move_voltage(2000);
 	}
 	void IntakerStop(){
-		RopoDevice::Motors::IntakeMotor.move_voltage(0);
+		RopoDevice::Motors::LeftIntakeMotor.move_voltage(0);
+		RopoDevice::Motors::RightIntakeMotor.move_voltage(0);
 	}
 
 	bool intaker_status = false;  
