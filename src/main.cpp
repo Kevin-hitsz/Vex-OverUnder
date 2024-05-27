@@ -93,15 +93,15 @@ namespace RopoFunction{
 		else return true;
 	}
 	void ReLoad(){
-		RopoDevice::Motors::LShooterMotor.move_voltage(-12000);
-		RopoDevice::Motors::RShooterMotor.move_voltage(12000);
+		RopoDevice::Motors::LShooterMotor.move_voltage(-11000);
+		RopoDevice::Motors::RShooterMotor.move_voltage(11000);
 		pros::delay(500);
 		while (RopoDevice::Motors::RShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
 	}
 	void Shoot(){
-		RopoDevice::Motors::LShooterMotor.move_voltage(12000);
-		RopoDevice::Motors::RShooterMotor.move_voltage(-12000);
+		RopoDevice::Motors::LShooterMotor.move_voltage(10000);
+		RopoDevice::Motors::RShooterMotor.move_voltage(-10000);
 		pros::delay(500);
 		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
@@ -489,7 +489,7 @@ void disabled() {}
 
 void competition_initialize() {}
 
-void skill() {
+void skill() {    // 世锦赛
 	using namespace RopoFunction;
 	InitialTime = pros::millis(); 
 	TimeFlag = false;
@@ -554,6 +554,42 @@ void skill() {
 	RopoDevice::Chassis.Operator();
 }
 
+void skill_new(){   // 机创赛版本
+
+	using namespace RopoFunction;
+
+	/* step_1 导入22球（导球点即为起始点） */
+		/* 重复一次抛投初始化动作 */  
+	ReLoad();
+	ShooterPneumatic();
+	pros::delay(800);
+	//Shoot();
+		// 测试：是否需要在此处加入delay
+	//ReLoad();
+		/* 正式导球部分 */
+	for(int i = 1; i <= 24; i++){
+		if(i % 8 == 0)closemove(0,0,0,500); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
+		Shoot();
+		ReLoad();
+		pros::delay(800);
+	} 	// 测试:连续二十五次抛投动作是否引起过热？
+	  	// 使用单向阀导球更适合还是将球放在抛投框上更适合？
+	ShooterPneumatic();
+	pros::delay(200);
+	Shoot();
+	/* step_1 end */
+
+	/* step_2 将接触的联队球与放置在球门的联队球推入球门 */
+	/* step_2 end*/
+
+	/* step_3 前往另一个导球点并完成导球 */
+	/* step_3 end */
+
+	/* step_4 爬杆 */
+	/* step_4 end */
+
+}
+
 
 void autonomous(){
 	//autonomous_Wisco();
@@ -592,7 +628,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, autonomous);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, skill_new);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
