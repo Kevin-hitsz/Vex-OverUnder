@@ -93,8 +93,8 @@ namespace RopoFunction{
 		else return true;
 	}
 	void ReLoad(){
-		RopoDevice::Motors::LShooterMotor.move_voltage(-11000);
-		RopoDevice::Motors::RShooterMotor.move_voltage(11000);
+		RopoDevice::Motors::LShooterMotor.move_voltage(-12000);
+		RopoDevice::Motors::RShooterMotor.move_voltage(12000);
 		pros::delay(500);
 		while (RopoDevice::Motors::RShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
