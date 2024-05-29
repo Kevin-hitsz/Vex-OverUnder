@@ -6,6 +6,7 @@
 #include "RopoMath/Misc.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include "pros/motors.h"
 #include "pros/rtos.hpp"
 #include <cmath>
 
@@ -35,6 +36,8 @@ namespace RopoFunction{
 		else if(ControllerModule::ShooterPneumaticFlag == true){
 			RopoDevice::ThreeWire::ShooterPneumatic.set_value(false);
 			ControllerModule::ShooterPneumaticFlag = false;
+			if(RopoDevice::Motors::LShooterMotor.get_brake_mode() != 0)RopoDevice::Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        	if(RopoDevice::Motors::RShooterMotor.get_brake_mode() != 0)RopoDevice::Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		}
 	}
 
@@ -93,6 +96,8 @@ namespace RopoFunction{
 		else return true;
 	}
 	void ReLoad(){
+		if(RopoDevice::Motors::LShooterMotor.get_brake_mode() != 2)RopoDevice::Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        if(RopoDevice::Motors::RShooterMotor.get_brake_mode() != 2)RopoDevice::Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		RopoDevice::Motors::LShooterMotor.move_voltage(-12000);
 		RopoDevice::Motors::RShooterMotor.move_voltage(12000);
 		pros::delay(500);
@@ -100,8 +105,11 @@ namespace RopoFunction{
 		ShooterStopInit();
 	}
 	void Shoot(){
-		RopoDevice::Motors::LShooterMotor.move_voltage(10000);
-		RopoDevice::Motors::RShooterMotor.move_voltage(-10000);
+
+		double voltage = 12000 * 0.95;  // 发射力度调节
+
+		RopoDevice::Motors::LShooterMotor.move_voltage((int)voltage);
+		RopoDevice::Motors::RShooterMotor.move_voltage((int)-voltage);
 		pros::delay(500);
 		while (RopoDevice::Motors::LShooterMotor.get_actual_velocity() > 1) pros::delay(5);
 		ShooterStopInit();
@@ -192,7 +200,7 @@ namespace RopoFunction{
 	}*/
 
 	void Test(){
-		RopoDevice::Chassis.AutoSetPosition(0,0,0,2000);
+		closemove(1.82,-2.13,61.916,800);
 	}
 	//bool ControlMode = false;
 	
@@ -200,9 +208,7 @@ namespace RopoFunction{
 		//ControlMode = !ControlMode;
 		RopoDevice::Chassis.ChangeControlMode();
 	}
-	void Import(){
-
-	}
+	//void PositionInit(){closemove(0,0,0,2000);}
 
 
 	void autonomous_1(){
@@ -362,39 +368,6 @@ namespace RopoFunction{
 		RopoDevice::Chassis.ChangeControlMode();
 	}
 }
-
-
-
-
-/*void autonomous_A1(){
-	float x,y,theta;
-	RopoFunction::ReLoad();
-	//RopoFunction::HitterReset();
-
-	pros::delay(1000);
-
-
-	RopoFunction::Intake();
- 	RopoDevice::Chassis.AutoSetPosition(0,5,0,100);
-	RopoFunction::StopIn();
-	RopoFunction::ExternRight();
-	RopoDevice::Chassis.AutoSetPosition(0,-40,0,100);
-	RopoDevice::Chassis.AutoSetPosition(0,-40,45,100);
-	RopoFunction::ExternLeft();
-	RopoDevice::Chassis.AutoSetPosition(5,-45,45,100);
-	RopoDevice::Chassis.AutoSetPosition(5,-45,90,100);
-	RopoDevice::Chassis.AutoSetAimStatus(0, -20, 0);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 10, 0);
-	RopoDevice::Chassis.AutoSetAimStatus(0, -20, 0);
-	RopoDevice::Chassis.AutoSetAimStatus(0, 10, 0);
-
-	x = RopoDevice::Chassis.GetX();
-	y = RopoDevice::Chassis.GetY();
-	RopoDevice::Chassis.AutoSetPosition(x,y,-90,100);
-	
-	RopoDevice::Chassis.AutoSetAimStatus(0, 20, 0);
-}*/
-
 
 
 void autonomous_Wisco(){
@@ -559,16 +532,14 @@ void skill_new(){   // 机创赛版本
 	using namespace RopoFunction;
 
 	/* step_1 导入22球（导球点即为起始点） */
-		/* 重复一次抛投初始化动作 */  
 	ReLoad();
 	ShooterPneumatic();
 	pros::delay(800);
 	//Shoot();
-		// 测试：是否需要在此处加入delay
 	//ReLoad();
 		/* 正式导球部分 */
 	for(int i = 1; i <= 24; i++){
-		if(i % 8 == 0)closemove(0,0,0,500); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
+		if(i % 7 == 0)closemove(0,0,0,500); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
 		Shoot();
 		ReLoad();
 		pros::delay(800);
@@ -576,18 +547,51 @@ void skill_new(){   // 机创赛版本
 	  	// 使用单向阀导球更适合还是将球放在抛投框上更适合？
 	ShooterPneumatic();
 	pros::delay(200);
-	Shoot();
+	Shoot();	
 	/* step_1 end */
 
 	/* step_2 将接触的联队球与放置在球门的联队球推入球门 */
+
+	//openmove(0,1,0.3,1500);  
+	//openmove(0,0,0,100);
+
+	closemove(0.18, -0.60, 35,1500);
+	openmove(-0.3,-1,0,500);
+	openmove(1.58,0,0,500);
+	openmove(0,0,0,200);
 	/* step_2 end*/
 
 	/* step_3 前往另一个导球点并完成导球 */
+	closemove(0.98,-0.18,-33.33,800);
+	closemove(1.79,-1.26,77.239,2000);
+	closemove(1.70,-1.96,67.45,800);
+	closemove(1.72,-2.13,61.916,2000);
+
+	ReLoad();
+	ShooterPneumatic();
+	pros::delay(800);
+		/* 正式导球部分 */
+	for(int i = 1; i <= 10; i++){
+		if(i % 4 == 0)closemove(1.72,-2.13,61.916,800); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
+		Shoot();
+		ReLoad();
+		pros::delay(800);
+	} 	// 测试:是否引起过热？
+	  	// 使用单向阀导球更适合还是将球放在抛投框上更适合？
+	ShooterPneumatic();
+	pros::delay(200);
+	Shoot();	
 	/* step_3 end */
 
 	/* step_4 爬杆 */
+	openmove( 1.0, 0.0, 0.0, 500);
+	closemove(2.01, -2.07, 34.091, 2000);
+	Climber();
+	closemove(2.94, -1.29, 35.916, 2000);
+	Climber();
 	/* step_4 end */
 
+	RopoDevice::Chassis.Operator();
 }
 
 
@@ -629,6 +633,8 @@ void opcontrol() {
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, skill_new);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::MoveToZero);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::Test);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();

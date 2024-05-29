@@ -87,8 +87,8 @@ namespace RopoDevice{
         //while(Sensors::Inertial.is_calibrating())pros::delay(20);
         pros::delay(1400);
         Sensors::Encoder.SetZero();
-        Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        //Motors::LShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        //Motors::RShooterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
         //Motors::HitterMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
