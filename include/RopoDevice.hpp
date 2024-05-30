@@ -22,28 +22,36 @@ namespace RopoDevice{
 	//创建三线接口
 	namespace ThreeWire{
 
-		const char ExternPneumaticPort = 'B';
+		const char ExternPneumaticPort = 'A';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char WingPneumaticPort  = 'F';
-		pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
+		const char LeftWingPneumaticPort  = 'C';
+		pros::ADIDigitalOut LeftWingPneumatic(LeftWingPneumaticPort,false);
 
-		const char IntakerPneumaticPort = 'A';
-		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
+		const char RightWingPneumaticPort  = 'B';
+		pros::ADIDigitalOut RightWingPneumatic(RightWingPneumaticPort,false);
 
-		const char SpadePneumaticPort = 'H';
-		pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
+		const char IntakerPneumaticPort1 = 'F';
+		pros::ADIDigitalOut IntakerPneumatic1(IntakerPneumaticPort1,false);
+		
+		const char IntakerPneumaticPort2 = 'G';
+		pros::ADIDigitalOut IntakerPneumatic2(IntakerPneumaticPort2,false);
+		
+		const char BarPneumaticPort = 'H';
+		pros::ADIDigitalOut BarPneumatic(BarPneumaticPort,false);
+		
+		const char HangPneumaticPort = 'D';
+		pros::ADIDigitalOut HangPneumatic(HangPneumaticPort,false);
+
 
 	}
 
 //创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 11;
+		const int InertialPort = 8;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 19;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
-		const int DistancePort = 11;
-		pros::Distance distance(DistancePort);
 		
 
 	// 	const int EncodingDiskReceivePort = 15;
@@ -56,14 +64,14 @@ namespace RopoDevice{
 	namespace Motors{	
 
 		const int LeftChassisMotor1Port  	= 9;
-		const int LeftChassisMotor2Port  	= 6;
+		const int LeftChassisMotor2Port  	= 3;
 		const int LeftChassisMotor3Port  	= 5;
-        const int LeftChassisMotor4Port  	= 3;
-		const int LeftChassisMotor5Port 	= 2;
-		const int RightChassisMotor1Port	= 17;
-		const int RightChassisMotor2Port	= 15;
+        const int LeftChassisMotor4Port  	= 2;
+		const int LeftChassisMotor5Port 	= 1;
+		const int RightChassisMotor1Port	= 15;
+		const int RightChassisMotor2Port	= 16;
 		const int RightChassisMotor3Port	= 14;
-		const int RightChassisMotor4Port	= 16;
+		const int RightChassisMotor4Port	= 13;
 		const int RightChassisMotor5Port	= 12;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -84,7 +92,7 @@ namespace RopoDevice{
 
 		const FloatType ChassisRatio = 47.0 / 43.0;
 		bool ChassisControllerMode = false;
-		void LeftWheelMove	(FloatType Velocity){
+		inline void LeftWheelMove	(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(Velocity );
 			LeftChassisMotor2.move_velocity(Velocity );
 			LeftChassisMotor3.move_velocity(Velocity );
@@ -92,7 +100,7 @@ namespace RopoDevice{
 			LeftChassisMotor5.move_velocity(Velocity );
 		}
 
-		void RightWheelMove (FloatType Velocity){
+		inline void RightWheelMove (FloatType Velocity){
 
 			RightChassisMotor1.move_velocity(Velocity );
 			RightChassisMotor2.move_velocity(Velocity );
@@ -102,8 +110,7 @@ namespace RopoDevice{
 			
 		}
 
-		void LeftWheelMove1	(FloatType Velocity){
-
+		inline void LeftWheelMove1	(FloatType Velocity){
 			LeftChassisMotor1.move_voltage(Velocity * 20);
 			LeftChassisMotor2.move_voltage(Velocity * 20);
 			LeftChassisMotor3.move_voltage(Velocity * 20);
@@ -111,8 +118,7 @@ namespace RopoDevice{
 			LeftChassisMotor5.move_voltage(Velocity * 20);
 		}
 
-		void RightWheelMove1 (FloatType Velocity){
-			
+		inline void RightWheelMove1 (FloatType Velocity){
 			RightChassisMotor1.move_voltage(Velocity * 20);
 			RightChassisMotor2.move_voltage(Velocity * 20);
 			RightChassisMotor3.move_voltage(Velocity * 20);
@@ -121,13 +127,13 @@ namespace RopoDevice{
 		}
 
 		FloatType LV,RV,Kv;//Kv为速度大于600时的缩小比例
-		void MoveOpControll(FloatType CM, FloatType DM){
+		inline void MoveOpControll(FloatType CM, FloatType DM){
 			CM = CM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
 			DM = DM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
 			LV = CM - DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
 			RV = CM + DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
 			if(fabs(LV) > RopoParameter::CHASSIS_SPPED_MAX || fabs(RV) > RopoParameter::CHASSIS_SPPED_MAX) {
-				Kv = RopoParameter::CHASSIS_SPPED_MAX / fmax(fabs(LV),fabs(RV));
+				Kv = RopoParameter::CHASSIS_SPPED_MAX / fmax(fabs(LV), fabs(RV));
 				LV *= Kv;
 				RV *= Kv;
 			}
@@ -135,9 +141,6 @@ namespace RopoDevice{
 			RightWheelMove1(RV);
 		}
 
-		const int RightLiftMotorPort		= 18;
-		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
-		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false);
 
 		const int LeftIntakeMotorPort		= 10;
 		const int RightIntakeMotorPort		= 20;
@@ -154,13 +157,12 @@ namespace RopoDevice{
 
 	// 创建定位模块
 	namespace Position_Motor{
-		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 ,
-            Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
+		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 , Motors::LeftChassisMotor5 ,
+            Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Motors:: RightChassisMotor5 ,Sensors::Inertial);
 	}
 
 
 // 创建运球模块
-	RopoLifter::LifterModule LiftMotors(Motors::RightLiftMotor);
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.011; 
 	}
@@ -210,7 +212,6 @@ namespace RopoDevice{
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		Motors::RightChassisMotor5.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 
-		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::LeftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::RightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	}

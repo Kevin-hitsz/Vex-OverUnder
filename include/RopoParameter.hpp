@@ -14,7 +14,7 @@ namespace RopoParameter {
 	static constexpr double FIELD_HEADING_INITIAL = 0.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
 	static constexpr double ROPO_HEADING_INITIAL  = 90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
-	static constexpr int GPS_PORT = 10;
+	static constexpr int GPS_PORT = 9;
 	static constexpr double GPSX_INITIAL_0 = -0.91;
 	static constexpr double GPSY_INITIAL_0 = -1.28;
 	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
@@ -44,9 +44,9 @@ namespace RopoParameter {
 	// static constexpr double GPSY_OFFSET = 0.0931;
 
 	//Chassis
-	static constexpr double CHASSIS_PARAMETER = 0.3006 ; 				//车体宽度
-	static constexpr double WHEEL_RAD = 0.034925;						//轮子半径
-	static constexpr double CHASSIS_RATIO = 25.0 / 20.0;	      		//减速比
+	static constexpr double CHASSIS_PARAMETER = 0.314 ; 				//车体宽度
+	static constexpr double WHEEL_RAD = 0.03394;						//轮子半径
+	static constexpr double CHASSIS_RATIO = 47.0 / 43.0;	      		//减速比
 	static constexpr double CHASSIS_SPPED_MAX= 600;					//底盘电机最高转速
 	static constexpr double RAD_TO_RPM = CHASSIS_SPPED_MAX / 62.83;		//角速度转化为rpm
 

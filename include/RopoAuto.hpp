@@ -97,7 +97,8 @@ namespace RopoAuto{
         RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
         RopoDevice::Motors::LeftIntakeMotor.move_velocity(-500);
         RopoDevice::Motors::RightIntakeMotor.move_velocity(-500);
-		RopoDevice::ThreeWire::IntakerPneumatic.set_value(false);
+		RopoDevice::ThreeWire::IntakerPneumatic1.set_value(false);
+		RopoDevice::ThreeWire::IntakerPneumatic2.set_value(false);
         int See_Flag = 0;
         double Distance = 0;
         double Degree = 0;
