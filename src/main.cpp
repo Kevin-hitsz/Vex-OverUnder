@@ -594,7 +594,7 @@ void skill_new1(){   // 机创赛版本1 上方导球22->推入联队球->下方
 	RopoDevice::Chassis.Operator();
 }
 
-void skill_new2(){      //机创赛版本2 上方导球22->推入联队球->爬杆
+void skill_new2(){      //机创赛版本2 上方导球22->推入联队球->爬杆  用时约55s
 
 	using namespace RopoFunction;
 
