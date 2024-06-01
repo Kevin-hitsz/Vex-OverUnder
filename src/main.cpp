@@ -106,7 +106,7 @@ namespace RopoFunction{
 	}
 	void Shoot(){
 
-		double voltage = 12000 * 0.95;  // 发射力度调节
+		double voltage = 12000 * 1;  // 发射力度调节
 
 		RopoDevice::Motors::LShooterMotor.move_voltage((int)voltage);
 		RopoDevice::Motors::RShooterMotor.move_voltage((int)-voltage);
@@ -527,8 +527,8 @@ void skill() {    // 世锦赛
 	RopoDevice::Chassis.Operator();
 }
 
-void skill_new(){   // 机创赛版本
-
+void skill_new1(){   // 机创赛版本1 上方导球22->推入联队球->下方导球10->爬杆  约1m20s
+					 // 超时严重
 	using namespace RopoFunction;
 
 	/* step_1 导入22球（导球点即为起始点） */
@@ -541,10 +541,10 @@ void skill_new(){   // 机创赛版本
 	for(int i = 1; i <= 24; i++){
 		if(i % 7 == 0)closemove(0,0,0,500); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
 		Shoot();
-		ReLoad();
 		pros::delay(800);
-	} 	// 测试:连续二十五次抛投动作是否引起过热？
-	  	// 使用单向阀导球更适合还是将球放在抛投框上更适合？
+		ReLoad();
+	} 	// 测试:连续二十四次抛投动作是否引起过热？
+
 	ShooterPneumatic();
 	pros::delay(200);
 	Shoot();	
@@ -565,19 +565,19 @@ void skill_new(){   // 机创赛版本
 	closemove(0.98,-0.18,-33.33,800);
 	closemove(1.79,-1.26,77.239,2000);
 	closemove(1.70,-1.96,67.45,800);
-	closemove(1.72,-2.13,61.916,2000);
+	closemove(1.78,-2.13,61.916,2000);
 
 	ReLoad();
 	ShooterPneumatic();
 	pros::delay(800);
 		/* 正式导球部分 */
 	for(int i = 1; i <= 10; i++){
-		if(i % 4 == 0)closemove(1.72,-2.13,61.916,800); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
+		if(i % 4 == 0)closemove(1.78,-2.13,61.916,800); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
 		Shoot();
-		ReLoad();
 		pros::delay(800);
+		ReLoad();
 	} 	// 测试:是否引起过热？
-	  	// 使用单向阀导球更适合还是将球放在抛投框上更适合？
+
 	ShooterPneumatic();
 	pros::delay(200);
 	Shoot();	
@@ -592,6 +592,45 @@ void skill_new(){   // 机创赛版本
 	/* step_4 end */
 
 	RopoDevice::Chassis.Operator();
+}
+
+void skill_new2(){      //机创赛版本2 上方导球22->推入联队球->爬杆
+
+	using namespace RopoFunction;
+
+	/* step_1 导入22球（导球点即为起始点） */
+	ReLoad();
+	ShooterPneumatic();
+	pros::delay(800);
+	//Shoot();
+	//ReLoad();
+		/* 正式导球部分 */
+	for(int i = 1; i <= 24; i++){
+		if(i % 7 == 0)closemove(0,0,0,500); // 车在抛球的时候会慢慢往前移动，不校正位置可能会导致抛球机构打到三角区横杆
+		Shoot();
+		pros::delay(800);
+		ReLoad();
+	} 	// 测试:连续二十四次抛投动作是否引起过热？
+
+	ShooterPneumatic();
+	pros::delay(200);
+	Shoot();	
+	/* step_1 end */
+
+	/* step_2 将接触的联队球与放置在球门的联队球推入球门 */
+	closemove(0.18, -0.60, 35,1500);
+	openmove(-0.3,-1,0,500);
+	openmove(1.58,0,0,300);
+	openmove(0,0,0,200);
+	/* step_2 end */
+
+	/* step_3 爬杆 */
+	closemove(0.20, 0.34, 37.413,1500);
+	Climber();
+	closemove(1.09, 0.97, 34.233,2000);
+	Climber();
+	/* step_3 end */
+
 }
 
 
@@ -632,7 +671,7 @@ void opcontrol() {
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, skill_new);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, skill_new2);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::MoveToZero);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::Test);
 
