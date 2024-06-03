@@ -9,10 +9,7 @@
 #include "pros/rtos.hpp"
 #include <cmath>
 void test();
-void skill();
-void autonomous_1();
 void autonomous_C1b();
-void autonomous_C2();
 
 namespace ControllerModule {
 	void BoolSwitch(void * Parameter){
@@ -355,11 +352,11 @@ void opcontrol()
 void test(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 	RopoDevice::ChassisBrake();
-	RopoDevice::Chassis.AutoRotateAbs(90);
-	while(!RopoDevice::Chassis.IfDegArrived() )pros::delay(20);
-	RopoDevice::Chassis.AutoRotateAbs(-90);
-	while(!RopoDevice::Chassis.IfDegArrived() )pros::delay(20);
-	/*
+	// RopoDevice::Chassis.AutoRotateAbs(90);
+	// while(!RopoDevice::Chassis.IfDegArrived() )pros::delay(20);
+	// RopoDevice::Chassis.AutoRotateAbs(-90);
+	// while(!RopoDevice::Chassis.IfDegArrived() )pros::delay(20);
+	
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(10);//开启gps
@@ -385,7 +382,7 @@ void test(){
 	//RopoDevice::Chassis.AutoRotateAbs(00);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	//ControllerModule::ChangeIntakerPneumatic();
-	*/
+	
 
 }
 
@@ -655,9 +652,4 @@ void autonomous_C1b(){
 	//结束
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);
-}
-
-void skill(){
-	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	// --------- begin ------------
 }
