@@ -12,6 +12,7 @@ void test();
 void skill();
 void autonomous_c3();
 void autonomous_C2();
+void autonomous_KnockoutMatch();
 namespace ControllerModule {
 	void BoolSwitch(void * Parameter){
 		bool *p = static_cast<bool *>(Parameter);
@@ -45,7 +46,7 @@ namespace ControllerModule {
 		}
 		MasterController1.rumble("-.-.-.-");
 	}
-	int catch_1 = 0;
+	/*int catch_1 = 0;
 	void Hold(){
 		RopoDevice::LiftMotors.Hold();
 		catch_1 = 1;
@@ -67,7 +68,7 @@ namespace ControllerModule {
 		} else {
 			Hold();
 		}
-	}
+	}*/
 
 	bool leftwing_status = false;
 	bool rightwing_status = false;
@@ -221,6 +222,8 @@ void opcontrol()
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  	autonomous_KnockoutMatch);
+
 	ButtonDetectLine.Enable();
 
 	while (true) {
@@ -245,8 +248,17 @@ void opcontrol()
 }
 
 void test(){
+	ControllerModule::BarExtend();
+	// RopoDevice::Chassis.StartChassisAutoControll();
+	// RopoDevice::Chassis.AutoPositionMove(0.5,0,0);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(1000);
+	// RopoDevice::Chassis.AutoPositionMoveBack(-0.5,0,0);
+	// ControllerModule::GpsUpdate();
+	//RopoDevice::Chassis.MoveVelocity(0,0);
+	//pros::delay(1000);
+	//RopoDevice::Chassis.AutoPositionMoveBack(0,0,0);
 	
-
 }
 
 void delay(){		//代替pros::delay()进行时间控制
@@ -257,17 +269,27 @@ void delay(){		//代替pros::delay()进行时间控制
 }
 
 void autonomous_c3(){
-	
-
-
-
 }
 
 void autonomous_C2(){
-	
 }
 
 void skill(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 	// --------- begin ------------
+}
+
+void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
+
+	RopoDevice::Chassis.StartChassisAutoControll();
+	ControllerModule::BarExtend();
+	RopoDevice::Chassis.AutoPositionMove(1.05,0,0);
+	RopoDevice::Chassis.MoveVelocity(0,-2.5);
+	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+
+
+
+
+
 }

@@ -25,6 +25,7 @@ namespace RopoChassis{
 			static constexpr float AccelerationVelocityLimits = 1.3;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.3};
+			//inline static RopoControl::PIDRegulator DistanceRegulator{0.005 ,0.0001  ,0.00006 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000008,0.0000030,0.0060 ,-0.0060 ,2.0   ,0.3};
 			//0.000060,0.000008,0.0000025,0.0030 ,-0.0030 ,3   ,0.2
