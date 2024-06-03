@@ -80,14 +80,14 @@ namespace RopoDevice{
 
 		const FloatType ChassisRatio = 23.0 / 22.0;
 		bool ChassisControllerMode = false;
-		void LeftWheelMove	(FloatType Velocity){
+		inline void LeftWheelMove	(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(Velocity );
 			LeftChassisMotor2.move_velocity(Velocity );
 			LeftChassisMotor3.move_velocity(Velocity );
 			LeftChassisMotor4.move_velocity(Velocity );
 		}
 
-		void RightWheelMove (FloatType Velocity){
+		inline void RightWheelMove (FloatType Velocity){
 
 			RightChassisMotor1.move_velocity(Velocity );
 			RightChassisMotor2.move_velocity(Velocity );
@@ -96,7 +96,7 @@ namespace RopoDevice{
 			
 		}
 
-		void LeftWheelMove1	(FloatType Velocity){
+		inline void LeftWheelMove1	(FloatType Velocity){
 
 			LeftChassisMotor1.move_voltage(Velocity * 20);
 			LeftChassisMotor2.move_voltage(Velocity * 20);
@@ -104,7 +104,7 @@ namespace RopoDevice{
 			LeftChassisMotor4.move_voltage(Velocity * 20);
 		}
 
-		void RightWheelMove1 (FloatType Velocity){
+		inline void RightWheelMove1 (FloatType Velocity){
 			
 			RightChassisMotor1.move_voltage(Velocity * 20);
 			RightChassisMotor2.move_voltage(Velocity * 20);
@@ -113,7 +113,7 @@ namespace RopoDevice{
 		}
 
 		FloatType LV,RV,Kv;//Kv为速度大于600时的缩小比例
-		void MoveOpControll(FloatType CM, FloatType DM){
+		inline void MoveOpControll(FloatType CM, FloatType DM){
 			CM = CM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
 			DM = DM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
 			LV = CM - DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
