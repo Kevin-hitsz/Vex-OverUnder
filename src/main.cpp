@@ -297,7 +297,7 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	ControllerModule::BarExtend();	// 打开导入杆
 	RopoDevice::Chassis.AutoPositionMove(1.10,0);  // 移动到扫球位置
 	delay();
-	RopoDevice::Chassis.AutoRotateAbs(-120.0);	// 扫球
+	RopoDevice::Chassis.AutoRotateAbs(-100.0);	// 扫球
 	delay();
 	ControllerModule::BarRecover();
 
@@ -314,7 +314,7 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::ChangeIntakerPneumatic();
 	ControllerModule::BarRecover();
-	ControllerModule::IntakerStop();
+	
 
 	RopoDevice::Chassis.MoveVelocity(0.5,0);
 	pros::delay(300);
@@ -323,7 +323,11 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	delay();
 
 	ControllerModule::ChangeLeftWingPush();
-	RopoDevice::Chassis.AutoPositionMoveBack(0.19,-0.72);
+	RopoDevice::Chassis.MoveVelocity(-1.1,0);
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+
+	//RopoDevice::Chassis.AutoPositionMoveBack(0.19,-0.72);
 
 
 
