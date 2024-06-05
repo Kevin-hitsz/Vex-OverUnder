@@ -255,7 +255,10 @@ void opcontrol()
 void test(){
 
 	RopoDevice::Chassis.StartChassisAutoControll();
-	ControllerModule::BarExtend();
+	RopoDevice::ChassisBrake();
+	RopoDevice::Chassis.AutoRotateAbs(180.0);
+	// RopoDevice::Chassis.AutoPositionMove(1.5,0);
+	//ControllerModule::BarExtend();
 	// RopoDevice::Chassis.StartChassisAutoControll();
 	// RopoDevice::Chassis.AutoPositionMove(0.5,0,0);
 	// RopoDevice::Chassis.MoveVelocity(0,0);
@@ -292,28 +295,56 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	RopoDevice::ChassisBrake();						  // 自动赛时需要设置刹车状态为brake
 
 	ControllerModule::BarExtend();	// 打开导入杆
-
 	RopoDevice::Chassis.AutoPositionMove(1.10,0);  // 移动到扫球位置
 	delay();
-
 	RopoDevice::Chassis.AutoRotateAbs(-120.0);	// 扫球
 	delay();
-
 	ControllerModule::BarRecover();
-	RopoDevice::Chassis.AutoPositionMove(0.90,-0.27,-46.78);  // 准备吃场地中央球
+
+	RopoDevice::Chassis.AutoPositionMove(0.92,-0.32);
+	
+	RopoDevice::Chassis.AutoRotateAbs(-45.0);
 	delay();
 	ControllerModule::Intake();
 	ControllerModule::ChangeIntakerPneumatic();
-	pros::delay(300);
-	RopoDevice::Chassis.AutoPositionMove(1.09,-0.48);
 	ControllerModule::BarExtend();
-	pros::delay(300);
+	RopoDevice::Chassis.AutoPositionMove(1.10,-0.48);
 	RopoDevice::Chassis.MoveVelocity(0,-4);
 	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	ControllerModule::IntakerStop();
-	ControllerModule::BarRecover();
 	ControllerModule::ChangeIntakerPneumatic();
+	ControllerModule::BarRecover();
+	ControllerModule::IntakerStop();
+
+	RopoDevice::Chassis.MoveVelocity(0.5,0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	RopoDevice::Chassis.AutoRotateAbs(5);
+	delay();
+
+	ControllerModule::ChangeLeftWingPush();
+	RopoDevice::Chassis.AutoPositionMoveBack(0.19,-0.72);
+
+
+
+
+
+
+
+	// RopoDevice::Chassis.AutoPositionMove(0.90,-0.27,-46.78);  // 准备吃场地中央球
+	// delay();
+	// ControllerModule::Intake();
+	// ControllerModule::ChangeIntakerPneumatic();
+	// pros::delay(300);
+	// RopoDevice::Chassis.AutoPositionMove(1.09,-0.48);
+	// ControllerModule::BarExtend();
+	// pros::delay(300);
+	// RopoDevice::Chassis.MoveVelocity(0,-4);
+	// pros::delay(400);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// ControllerModule::IntakerStop();
+	// ControllerModule::BarRecover();
+	// ControllerModule::ChangeIntakerPneumatic();
 	
 
 

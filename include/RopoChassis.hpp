@@ -21,13 +21,13 @@ namespace RopoChassis{
 			static constexpr float WheelRad = RopoParameter::WHEEL_RAD;						//轮子半径
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
-			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.004;  //加速过程每SampleTime的增加的速度
-			static constexpr float AccelerationVelocityLimits = 1.3;
+			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.02;  //加速过程每SampleTime的增加的速度
+			static constexpr float AccelerationVelocityLimits = 2;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0035 ,0.0001  ,0.004 ,0.002,-0.002,0.02,0.3};
 			//inline static RopoControl::PIDRegulator DistanceRegulator{0.005 ,0.0001  ,0.00006 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000008,0.0000030,0.0060 ,-0.0060 ,2.0   ,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000001,0.000060,0.0075 ,-0.0075 ,2.0   ,0.1};
 			//0.000060,0.000008,0.0000025,0.0030 ,-0.0030 ,3   ,0.2
 			RopoControl::TankChassisCore Core;		
 			
@@ -120,6 +120,10 @@ namespace RopoChassis{
 							AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],11,1000.0 / This->SampleTime);//10
 							AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],11,1000.0 / This->SampleTime);//10
 							
+							// 不进行平滑
+							// AimPosition[1] = This->AimPosition[1];
+							// AimPosition[2] = This->AimPosition[2];
+							// AimPosition[3] = This->AimPosition[3];
 							
 							aimDistance=RopoMath::Distance(AimPosition[1]-IniPosition[1],AimPosition[2]-IniPosition[2]);		
 							
