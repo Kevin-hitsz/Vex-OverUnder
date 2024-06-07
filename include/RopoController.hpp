@@ -94,6 +94,7 @@ namespace RopoController{
 					Flag = true;
 				}
 				Callback = (void *)_Callback;
+				
 			}
 			~ButtonTaskCore(){delete BackgroundTask;}
 			pros::controller_digital_e_t Button(){
@@ -169,7 +170,7 @@ namespace RopoController{
 						bool ButtonStatus = This->MyController.get_digital(ButtonTask.Button());
 						ButtonTask.Update(ButtonStatus);
 					}
-					pros::delay(20);
+					pros::delay(10);
 				}
 			}
 		public:

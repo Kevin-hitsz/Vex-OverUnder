@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "niko_pro",
+    "project_name": "gameRed",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -309,8 +309,8 @@
       }
     },
     "upload_options": {
-      "slot": 8,
-      "icon": "ufo"
+      "slot": 2,
+      "icon": "pros"
     }
   }
 }

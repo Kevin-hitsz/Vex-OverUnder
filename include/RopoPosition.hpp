@@ -13,8 +13,8 @@
 namespace RopoPosition{
     class Position{
         private:
-            static constexpr double WheelRad = 0.034925;        // 轮半径
-            static constexpr double ChassisRatio = 56.0 / 44.0;   // 传动比
+            static constexpr double WheelRad = 0.0508;        // 轮半径
+            static constexpr double ChassisRatio = 9.0 / 4.0;   // 传动比
             static constexpr double Pi = 3.1415926;
             pros::Motor &LeftMotor1;
             pros::Motor &LeftMotor2;
@@ -74,7 +74,8 @@ namespace RopoPosition{
                 This->RightMotor3.tare_position(); 
                 This->RightMotor4.tare_position();
                 while(1){
-                    This -> Angle   = - This -> MyInterial . get_yaw();
+                    This -> Angle   = - This -> MyInterial .get_rotation()*1.017;
+                    This -> Angle = (int((This -> Angle + 180.0 + 14400) * 100.0) % 36000) / 100.0 - 180.0;
                     This -> Delta_Distance = This -> Get_Delta_MotorsPosition() / 180*Pi * WheelRad/ChassisRatio;
                     if(This->Angle <= 180.0 && This->Angle >= -180.0)
                     {

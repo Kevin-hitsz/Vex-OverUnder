@@ -8,7 +8,7 @@
 namespace RopoLifter{
 
     // Params
-    const double HoldingPosition = 105.0;
+    const double HoldingPosition = 470.0;   // 510
     const double WaitingPosition = 98.0;
     const double HiddenPosition = 0.0;
     const double LifterRatio = 1.0;  
@@ -27,14 +27,13 @@ namespace RopoLifter{
             double LifterPosition;
             State LifterState;
             pros::Motor &LeftMotor;
-            pros::Motor &RightMotor;
              
             bool ifReady;
             bool breaktag;
 
         public:
             static void LifterBackGroundFunction(void *Parameter);
-            LifterModule(pros::Motor&,pros::Motor&);                 // 构造函数
+            LifterModule(pros::Motor&);                 // 构造函数
             void Hold();
             void Hide();
             void Wait();
@@ -43,7 +42,7 @@ namespace RopoLifter{
             double GetLifterPosition();
     };
 
-    LifterModule::LifterModule(pros::Motor& ml,pros::Motor& mr):LeftMotor(ml),RightMotor(mr)
+    LifterModule::LifterModule(pros::Motor& ml):LeftMotor(ml)
      {
         LifterState = HIDDEN;
         LifterPosition = 0;
@@ -57,26 +56,20 @@ namespace RopoLifter{
         LifterModule *This = static_cast<LifterModule *>(Parameter);
         
         This->LeftMotor.move_velocity(0);
-        This->RightMotor.move_velocity(0);
         
         This -> LeftMotor.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-        This -> RightMotor.set_encoder_units(pros::E_MOTOR_ENCODER_DEGREES);
-
         
         This ->LeftMotor. tare_position();
-        This -> RightMotor. tare_position();
 
-
-        Vector PositionVector(RopoMath::ColumnVector,2) ;
+        Vector PositionVector(RopoMath::ColumnVector,1) ;
 
         This -> ifReady = true;
         This -> breaktag = false;
         while(true) {
         	
             PositionVector[1] = This -> LeftMotor.get_position() ;
-            PositionVector[2] = This -> RightMotor.get_position() ;
             
-            This -> LifterPosition = (PositionVector[1] + PositionVector[2])/ 2.0 * LifterRatio;
+            This -> LifterPosition = PositionVector[1] * LifterRatio;
             
             if (!This->ifReady)
             {
@@ -85,36 +78,29 @@ namespace RopoLifter{
                     case HIDDEN:
                         pros::lcd::print(1,"hid");
                         This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-                        This -> RightMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-
 
                         
                         This -> LeftMotor.move_absolute(HiddenPosition,0.7*(HiddenPosition-This->LifterPosition));
-                        This -> RightMotor.move_absolute(HiddenPosition,0.7*(HiddenPosition-This->LifterPosition));
                         
                         while (fabs(This->LifterPosition-HiddenPosition) > 2.0)
                         {
                             if (This -> breaktag) break;
                             
                             PositionVector[1] = This -> LeftMotor.get_position() ;
-                            PositionVector[2] = This -> RightMotor.get_position() ;
-                            This -> LifterPosition = (PositionVector[1] + PositionVector[2])/ 2.0 * LifterRatio;
+                            This -> LifterPosition = PositionVector[1] * LifterRatio;
                             pros::delay(20);
                         }
                         if (!This -> breaktag)
                         {
                             
                             This -> LeftMotor.brake();
-                            This -> RightMotor.brake();
                             This->ifReady = true;
                         }
                         break;    
                     case HOLDING:
                         pros::lcd::print(1,"hold");
-                        This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-                        This -> RightMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);                        
-                        This -> LeftMotor.move_absolute(HoldingPosition,65);
-                        This -> RightMotor.move_absolute(HoldingPosition,65);
+                        This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);              
+                        This -> LeftMotor.move_absolute(HoldingPosition,200);
                         while (fabs(This->LifterPosition-HoldingPosition) > 3.0)
                         {
                             if (This -> breaktag) break;
@@ -122,45 +108,39 @@ namespace RopoLifter{
                             {
                                 
                                 This -> LeftMotor.move_absolute(HoldingPosition,30);
-                                This -> RightMotor.move_absolute(HoldingPosition,30);
                             }
                             PositionVector[1] = This -> LeftMotor.get_position() ;
-                            PositionVector[2] = This -> RightMotor.get_position() ;
-                            This -> LifterPosition = (PositionVector[1] + PositionVector[2])/ 2.0 * LifterRatio;
+                            This -> LifterPosition = PositionVector[1] * LifterRatio;
                             pros::delay(20);
                         }
                         if (!This -> breaktag)
                         {
                             This -> LeftMotor.brake();
-                            This -> RightMotor.brake();
                             This->ifReady = true;
                         }
                         break;
                     case WAITING:
                     pros::lcd::print(1,"wait");
                         This -> LeftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
-                        This -> RightMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE); 
                         This -> LeftMotor.move_absolute(WaitingPosition,30);
-                        This -> RightMotor.move_absolute(WaitingPosition,30); 
                         while (fabs(This->LifterPosition-WaitingPosition) > 3.0)
                         {
                             if (This -> breaktag) break;    
                             PositionVector[1] = This -> LeftMotor.get_position() ;
-                            PositionVector[2] = This -> RightMotor.get_position() ;
-                            This -> LifterPosition = (PositionVector[1] + PositionVector[2])/ 2.0 * LifterRatio;
+                            This -> LifterPosition = PositionVector[1]  * LifterRatio;
                             pros::delay(20);
                         }
                         if (!This -> breaktag)
                         {
                             This -> LeftMotor.brake();
-                            This -> RightMotor.brake();
+
                             This->ifReady = true;
                         }
                         break;
                 }
             }
             pros::delay(Deltatime);
-            // pros::lcd::print(2,"%f,%f",PositionVector[1],PositionVector[2]);
+            pros::lcd::print(2,"%f,%f",PositionVector[1],PositionVector[2]);
         }
     }
     void   LifterModule::Hold()    { LifterState = HOLDING; ifReady = false; breaktag = true;}

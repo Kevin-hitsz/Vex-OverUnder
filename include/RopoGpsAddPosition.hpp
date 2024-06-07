@@ -1,14 +1,13 @@
 #ifndef ROPO_GPS_ADD_POSITION
 #define ROPO_GPS_ADD_POSITION
-
+#include "RopoParameter.hpp"
 #include "RopoApi.hpp"
 #include "RopoMath/Header.hpp"
 #include "pros/motors.hpp"
 #include "pros/misc.hpp"
 #include "pros/gps.hpp"
+#include "api.h"
 #include "pros/rtos.hpp"
-#include "RopoParameter.hpp"
-
 namespace RopoGpsAddPosition {
     class GpsAddPositionModule {
         private:
@@ -17,6 +16,7 @@ namespace RopoGpsAddPosition {
             FloatType gpsRelativeX, gpsRelativeY;
             FloatType gpsRelativeX0, gpsRelativeY0;
             FloatType originalX0, originalY0;
+            FloatType originalX, originalY;
             int sampleTime;
             int updateFlag;
             int cnt_update;
@@ -50,7 +50,7 @@ namespace RopoGpsAddPosition {
                     pros::delay(This -> sampleTime);
                     if(This -> updateFlag != 0) {
                         This -> cnt_update++;
-                        if(This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.02){
+                        if((This -> gps1.get_status().x != PROS_ERR_F) && This -> cnt_update >= This -> updateFlag && This -> gps1.get_error() < 0.02){
                             This -> GpsUpdate();
                             This -> cnt_update = 0;
                         }
@@ -59,19 +59,22 @@ namespace RopoGpsAddPosition {
             }	
 
             void GpsTransformUpdate() {
-                double X = gps1.get_status().x - RopoParameter::GPSX_INITIAL;
-                double Y = gps1.get_status().y - RopoParameter::GPSY_INITIAL;
-                double theta = RopoParameter::ROPO_HEADING_INITIAL;
-                gpsRelativeX =  X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta);
-                gpsRelativeY = -X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta);
+                if(gps1.get_status().x != PROS_ERR_F){
+                    double X = gps1.get_status().x - RopoParameter::GPSX_INITIAL;
+                    double Y = gps1.get_status().y - RopoParameter::GPSY_INITIAL;
+                    double theta = RopoParameter::ROPO_HEADING_INITIAL;
+                    gpsRelativeX = ( X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta)) * 0.7 + gpsRelativeX * 0.3;
+                    gpsRelativeY = (-X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta)) * 0.7 + gpsRelativeY * 0.3;
+                    originalX = originalPosition[1];
+                    originalY = originalPosition[2];
+                }
             }
 
             void GpsUpdate() {
-                    
-                    originalX0 = originalPosition[1];
-                    originalY0 = originalPosition[2];
-                    gpsRelativeX0 = gpsRelativeX;
-                    gpsRelativeY0 = gpsRelativeY;
+                originalX0 = originalX;
+                originalY0 = originalY;
+                gpsRelativeX0 = gpsRelativeX;
+                gpsRelativeY0 = gpsRelativeY;
             }
 
             FloatType GetGpsTransformRelativePositionX() {return gpsRelativeX;}
