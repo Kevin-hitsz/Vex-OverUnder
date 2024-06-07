@@ -1,7 +1,9 @@
+#include "pros/llemu.hpp"
 #include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "RopoMath/Misc.hpp"
 #include "pros/rtos.hpp"
+#include "RopoApi.hpp"
 #ifndef _ROPOLIFTER_HPP_
 #define _ROPOLIFTER_HPP_
 
