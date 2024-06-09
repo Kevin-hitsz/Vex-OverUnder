@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "gameRed",
+    "project_name": "MiNiko",
     "target": "v5",
     "templates": {
       "kernel": {

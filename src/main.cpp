@@ -162,7 +162,7 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 1.6;//1.4
+	FloatType VelocityMax = 1.6;
 	FloatType RopoWcLimit = 6;
 	bool ChassisMove = false;
 	
@@ -191,24 +191,12 @@ void opcontrol()
 	RopoDevice::Motors::IntakeMotor.move_velocity(0);
 
 	while (true) {
-
-		FloatType XInput =  XVelocityInput.GetAxisValue();
-		FloatType WInput = -WVelocityInput.GetAxisValue();
-		FloatType RopoWc = RopoWcLimit-fabs(XInput) * 0.0;			
-		FloatType RopoVx = VelocityMax-fabs(WInput) * 0.7;	
-
-		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.03) {
-			if(ChassisMove == true){
-				RopoDevice::Motors::MoveOpControll(0.0, 0.0);
-				ChassisMove = false;
-			}
-		} 
-		else {
-			RopoDevice::Chassis.StartChassisOpControll();//底盘MoveType设置为OpMove
-			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
-			ChassisMove = true;
-		}
-		pros::delay(4);
+		FloatType XInput = 590 * XVelocityInput.GetAxisValue();
+		FloatType WInput = 300 * WVelocityInput.GetAxisValue();
+		RopoDevice::Chassis.StartChassisOpControll();
+		RopoDevice::Motors::LeftWheelMove(XInput + WInput);
+		RopoDevice::Motors::RightWheelMove(-XInput + WInput);
+		pros::delay(10);
 	}
 }
 

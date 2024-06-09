@@ -112,89 +112,89 @@ namespace RopoAuto{
         }
     }
 
-    void Auto_Find()
-    {
+    // void Auto_Find()
+    // {
 
-        int See_Flag = 0;
-        double Distance = 0;
-        double Degree = 0;
-        double Aim_Position[2] = {0};
-        int Go_Flag = 0;
-        See_Flag = RopoDevice::Sensors::Opmv.If_See();
+    //     int See_Flag = 0;
+    //     double Distance = 0;
+    //     double Degree = 0;
+    //     double Aim_Position[2] = {0};
+    //     int Go_Flag = 0;
+    //     See_Flag = RopoDevice::Sensors::Opmv.If_See();
 
       
-        while(!See_Flag||
-            (RopoDevice::Sensors::Opmv.GetBall_Count()>0?
-            (Auto_Find_DQ( RopoDevice::Sensors::Opmv.Get_Ball_Dis(), RopoDevice::Sensors::Opmv.Get_Ball_Deg())):1)) 
-            {
-            RopoDevice::Chassis.MoveVelocity(0,0.4);
-            pros::delay(100);
-            See_Flag = RopoDevice::Sensors::Opmv.If_See();
+    //     while(!See_Flag||
+    //         (RopoDevice::Sensors::Opmv.GetBall_Count()>0?
+    //         (Auto_Find_DQ( RopoDevice::Sensors::Opmv.Get_Ball_Dis(), RopoDevice::Sensors::Opmv.Get_Ball_Deg())):1)) 
+    //         {
+    //         RopoDevice::Chassis.MoveVelocity(0,0.4);
+    //         pros::delay(100);
+    //         See_Flag = RopoDevice::Sensors::Opmv.If_See();
 
-            if(RopoDevice::Sensors::Opmv.IsReading())
-                pros::lcd::print(2,"hello,  %.2f,%.1f",Distance,Degree);
-            else
-                pros::lcd::print(2,"not,hello,  %.2f,%.1f",Distance,Degree);
+    //         if(RopoDevice::Sensors::Opmv.IsReading())
+    //             pros::lcd::print(2,"hello,  %.2f,%.1f",Distance,Degree);
+    //         else
+    //             pros::lcd::print(2,"not,hello,  %.2f,%.1f",Distance,Degree);
 
-        }
+    //     }
         
-        Distance = RopoDevice::Sensors::Opmv.Get_Ball_Dis();
-        Degree = RopoDevice::Sensors::Opmv.Get_Ball_Deg();
+    //     Distance = RopoDevice::Sensors::Opmv.Get_Ball_Dis();
+    //     Degree = RopoDevice::Sensors::Opmv.Get_Ball_Deg();
 
 
-        if(Distance<0.4)
-        {
-            if(!Auto_Find_DQ(Distance,Degree*2.5)){
-                Go_Flag = 1;
-            }
+    //     if(Distance<0.4)
+    //     {
+    //         if(!Auto_Find_DQ(Distance,Degree*2.5)){
+    //             Go_Flag = 1;
+    //         }
             
-            if(Go_Flag){
-                RopoDevice::Chassis.AutoRotateAbs(Angle);
-                while(RopoDevice::Chassis.IfArrived());
-                pros::delay(100);
-                Go_Flag = 0;
-            }
+    //         if(Go_Flag){
+    //             RopoDevice::Chassis.AutoRotateAbs(Angle);
+    //             while(RopoDevice::Chassis.IfArrived());
+    //             pros::delay(100);
+    //             Go_Flag = 0;
+    //         }
 
-            Distance = RopoDevice::Sensors::Opmv.Get_Ball_Dis();
-            Degree = RopoDevice::Sensors::Opmv.Get_Ball_Deg();
+    //         Distance = RopoDevice::Sensors::Opmv.Get_Ball_Dis();
+    //         Degree = RopoDevice::Sensors::Opmv.Get_Ball_Deg();
 
-            if(!Auto_Find_DQ(Distance,Degree)){
-                Go_Flag = 1;
-            }
+    //         if(!Auto_Find_DQ(Distance,Degree)){
+    //             Go_Flag = 1;
+    //         }
             
-            if(Go_Flag){
-                RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
-                pros::delay(100);
-                Go_Flag = 0;
-            }
+    //         if(Go_Flag){
+    //             RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
+    //             pros::delay(100);
+    //             Go_Flag = 0;
+    //         }
 
-        }
-        else
-        {
-            if(!Auto_Find_DQ(0.5*Distance,Degree)){
-                Go_Flag = 1;
-            }
+    //     }
+    //     else
+    //     {
+    //         if(!Auto_Find_DQ(0.5*Distance,Degree)){
+    //             Go_Flag = 1;
+    //         }
             
-            if(Go_Flag){
-                RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
-                pros::delay(100);
-                Go_Flag = 0;
-            }
+    //         if(Go_Flag){
+    //             RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
+    //             pros::delay(100);
+    //             Go_Flag = 0;
+    //         }
 
-            Distance = RopoDevice::Sensors::Opmv.Get_Ball_Dis();
-            Degree = RopoDevice::Sensors::Opmv.Get_Ball_Deg();
+    //         Distance = RopoDevice::Sensors::Opmv.Get_Ball_Dis();
+    //         Degree = RopoDevice::Sensors::Opmv.Get_Ball_Deg();
 
-            if(!Auto_Find_DQ(Distance,Degree)){
-                Go_Flag = 1;
-            }
+    //         if(!Auto_Find_DQ(Distance,Degree)){
+    //             Go_Flag = 1;
+    //         }
             
 
-            if(Go_Flag){
-                RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
-                pros::delay(100);
-                Go_Flag = 0;
-            }
-        }
+    //         if(Go_Flag){
+    //             RopoDevice::Chassis.AutoPositionMove(Ball_x,Ball_y,Angle);
+    //             pros::delay(100);
+    //             Go_Flag = 0;
+    //         }
+    //     }
         
-    }
+    // }
 }

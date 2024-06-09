@@ -79,21 +79,6 @@ namespace RopoDevice{
 			
 		}
 
-		FloatType LV,RV,Kv;//Kv为速度大于600时的缩小比例
-		void MoveOpControll(FloatType CM, FloatType DM){
-			CM = CM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
-			DM = DM * RopoParameter::CHASSIS_RATIO * RopoParameter::RAD_TO_RPM / RopoParameter::WHEEL_RAD;
-			LV = CM - DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
-			RV = CM + DM * RopoParameter::CHASSIS_PARAMETER / 2.0;
-			if(fabs(LV) > RopoParameter::CHASSIS_SPPED_MAX || fabs(RV) > RopoParameter::CHASSIS_SPPED_MAX) {
-				Kv = RopoParameter::CHASSIS_SPPED_MAX / fmax(fabs(LV),fabs(RV));
-				LV *= Kv;
-				RV *= Kv;
-			}
-			LeftWheelMove(LV);
-			RightWheelMove(RV);
-		}
-
 		const int LeftLiftMotorPort		= 4;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_GREEN;
 		pros::Motor   LeftLiftMotor ( LeftLiftMotorPort  , 	LiftGearset, false );
