@@ -42,13 +42,13 @@ namespace RopoDevice{
 	// 创建电机
 	namespace Motors{
 
-		const int LeftChassisMotor1Port  	= 10;
-		const int LeftChassisMotor2Port  	= 9;
+		const int LeftChassisMotor1Port  	= 4;
+		const int LeftChassisMotor2Port  	= 3;
 		const int LeftChassisMotor3Port  	= 5;
         const int LeftChassisMotor4Port  	= 1;
-		const int RightChassisMotor1Port	= 20;
-		const int RightChassisMotor2Port	= 19;
-		const int RightChassisMotor3Port	= 15;
+		const int RightChassisMotor1Port	= 13;
+		const int RightChassisMotor2Port	= 12;
+		const int RightChassisMotor3Port	= 14;
 		const int RightChassisMotor4Port	= 11;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
@@ -60,9 +60,9 @@ namespace RopoDevice{
         
 
 		pros::Motor      RightChassisMotor1(RightChassisMotor1Port ,	ChassisGearset, false);
-		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, true);
+		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, false);
 		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, true);
-        pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
+        pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, true);
 		
 		void LeftWheelMove(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(-Velocity );
