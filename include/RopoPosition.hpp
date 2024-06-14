@@ -25,7 +25,7 @@ namespace RopoPosition{
             pros::Motor &RightMotor2;
             pros::Motor &RightMotor3;
             pros::Motor &RightMotor4;
- 
+
             pros::IMU &MyInterial;
             pros::Task *BackgroundTask;
             FloatType Delta_Distance,S_Last_Encoder,S_Encoder,X,Y,LeftMotorEncoder,RightMotorEncoder;

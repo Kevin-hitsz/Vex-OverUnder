@@ -25,18 +25,18 @@ namespace RopoDevice{
 		const char ExternPneumaticPort = 'B';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
 		
-		const char WingPneumaticPort  = 'F';
+		const char WingPneumaticPort  = 'H';
 		pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
 
 		const char IntakerPneumaticPort = 'A';
 		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
 
-		const char SpadePneumaticPort = 'H';
+		const char SpadePneumaticPort = 'E';
 		pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
 
 	}
 
-//创建惯性传感器
+	//创建惯性传感器
 	namespace Sensors{
 		const int InertialPort = 9;
 		pros::IMU Inertial(InertialPort);
@@ -44,12 +44,6 @@ namespace RopoDevice{
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 		const int DistancePort = 11;
 		pros::Distance distance(DistancePort);
-		
-
-	// 	const int EncodingDiskReceivePort = 15;
-	// 	const int EncodingDiskSendPort = 16;
-	// 	const int EncodingDiskBaudrate = 115200;
-	// 	RopoSensor::EncodingDisk EncodingDisk(EncodingDiskSendPort,EncodingDiskBaudrate,EncodingDiskReceivePort,EncodingDiskBaudrate);
 	}			
 	
 	// 创建电机
@@ -80,13 +74,16 @@ namespace RopoDevice{
 
 		const FloatType ChassisRatio = 23.0 / 22.0;
 		bool ChassisControllerMode = false;
+		/// @brief 按电机速度控制
+		/// @param Velocity 
 		void LeftWheelMove	(FloatType Velocity){
 			LeftChassisMotor1.move_velocity(Velocity );
 			LeftChassisMotor2.move_velocity(Velocity );
 			LeftChassisMotor3.move_velocity(Velocity );
 			LeftChassisMotor4.move_velocity(Velocity );
 		}
-
+		/// @brief 按电机速度控制
+		/// @param Velocity 
 		void RightWheelMove (FloatType Velocity){
 
 			RightChassisMotor1.move_velocity(Velocity );
@@ -95,7 +92,8 @@ namespace RopoDevice{
 			RightChassisMotor4.move_velocity(Velocity );
 			
 		}
-
+		/// @brief 按电机电压控制
+		/// @param Velocity 
 		void LeftWheelMove1	(FloatType Velocity){
 
 			LeftChassisMotor1.move_voltage(Velocity * 20);
@@ -103,7 +101,8 @@ namespace RopoDevice{
 			LeftChassisMotor3.move_voltage(Velocity * 20);
 			LeftChassisMotor4.move_voltage(Velocity * 20);
 		}
-
+		/// @brief 按电机电压控制
+		/// @param Velocity 
 		void RightWheelMove1 (FloatType Velocity){
 			
 			RightChassisMotor1.move_voltage(Velocity * 20);
@@ -136,7 +135,7 @@ namespace RopoDevice{
 		pros::Motor   IntakeMotor ( IntakeMotorPort  , 	IntakeGearset, true );
 		
 	}
-
+	//gps定位
 	namespace Gpss{
 		static pros::Gps vexGps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
 						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
@@ -149,13 +148,13 @@ namespace RopoDevice{
 	}
 
 
-// 创建运球模块
+	// 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::RightLiftMotor);
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.011; 
 	}
 
-// 坐标获取函数
+	// 坐标获取函数
 	RopoMath::Vector<FloatType> GetPosition(){
 		RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
 		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
@@ -177,7 +176,7 @@ namespace RopoDevice{
 
 
 
-//初始化
+	//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
         Sensors::Inertial.reset(true);
