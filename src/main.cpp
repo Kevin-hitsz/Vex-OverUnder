@@ -35,15 +35,6 @@ void autonomous(){
 
 void opcontrol()
 {
-	ControllerModule::WingPush();
-
-	while(true)
-	{
-		pros::delay(100);
-	}
-
-	//autonomous();
-	//pros::Task *RumbleTask = new pros::Task(ControllerModule::RumbleMe);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	RopoDevice::ChassisBrake();
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
@@ -68,13 +59,7 @@ void opcontrol()
 	//*单点触发
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising , ControllerModule::ChangeWingStatus);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising , ControllerModule::ChangeTogetherWingStatus);
-	//*/
-	/*按住触发
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising , ControllerModule::WingPush);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Falling, ControllerModule::WingUnpush);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising , ControllerModule::TogetherPush);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Falling, ControllerModule::TogetherUnpush);
-	//*/
+	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::AutoLift);	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising , ControllerModule::Switch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising , RopoDevice::ChassisHold);
