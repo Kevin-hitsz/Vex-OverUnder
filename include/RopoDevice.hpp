@@ -4,6 +4,7 @@
 
 #include "pros/imu.hpp"
 #include "pros/adi.hpp"
+#include "pros/motors.h"
 #include "pros/motors.hpp"
 #include "RopoMath/Vector.hpp"
 #include "RopoSensor/EncodingDisk.hpp"
@@ -41,21 +42,21 @@ namespace RopoDevice{
 	namespace Sensors{
 		const int InertialPort = 16;
 		pros::IMU Inertial(InertialPort);
-		const int OpenmvPort = 14;
+		const int OpenmvPort = 19;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
 	// 创建电机
 	namespace Motors{
 
-		const int LeftChassisMotor1Port  	= 1;
-		const int LeftChassisMotor2Port  	= 2;
-		const int LeftChassisMotor3Port  	= 12;
-        const int LeftChassisMotor4Port  	= 11;
-		const int RightChassisMotor1Port	= 10;
-		const int RightChassisMotor2Port	= 9;
-		const int RightChassisMotor3Port	= 19;
-		const int RightChassisMotor4Port	= 20;
+		const int LeftChassisMotor1Port  	= 4;
+		const int LeftChassisMotor2Port  	= 3;
+		const int LeftChassisMotor3Port  	= 5;
+        const int LeftChassisMotor4Port  	= 1;
+		const int RightChassisMotor1Port	= 14;
+		const int RightChassisMotor2Port	= 13;
+		const int RightChassisMotor3Port	= 12;
+		const int RightChassisMotor4Port	= 11;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
@@ -86,6 +87,7 @@ namespace RopoDevice{
 
 		void LeftWheelMoveVoltage(FloatType Velocity){
 			static constexpr float VecToVolRatio = RopoParameter::CHASSIS_SPPED_MAX_VOLTAGE / RopoParameter::CHASSIS_SPPED_MAX;
+			//FloatType _Velocity = Velocity > RopoParameter::CHASSIS_SPPED_MAX ? RopoParameter::CHASSIS_SPPED_MAX : Velocity;
 			LeftChassisMotor1.move_voltage(-Velocity * VecToVolRatio);
 			LeftChassisMotor2.move_voltage(-Velocity * VecToVolRatio);
 			LeftChassisMotor3.move_voltage(-Velocity * VecToVolRatio);
@@ -94,6 +96,7 @@ namespace RopoDevice{
 
 		void RightWheelMoveVoltage(FloatType Velocity){
 			static constexpr float VecToVolRatio = RopoParameter::CHASSIS_SPPED_MAX_VOLTAGE / RopoParameter::CHASSIS_SPPED_MAX;
+			//FloatType _Velocity = Velocity > RopoParameter::CHASSIS_SPPED_MAX ? RopoParameter::CHASSIS_SPPED_MAX : Velocity;
 			RightChassisMotor1.move_voltage(Velocity * VecToVolRatio);
 			RightChassisMotor2.move_voltage(Velocity * VecToVolRatio);
 			RightChassisMotor3.move_voltage(Velocity * VecToVolRatio);
@@ -115,16 +118,24 @@ namespace RopoDevice{
 			RightWheelMoveVoltage(RV);
 		}
 
-		const int LeftLiftMotorPort		= 15;
-		const int RightLiftMotorPort		= 13;
+		const int LeftLiftMotorPort		= 10;
+		const int RightLiftMotorPort		= 8;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		
 		pros::Motor   LeftLiftMotor  ( LeftLiftMotorPort  , 	LiftGearset, true );
 		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false );
 
-		const int IntakeMotorPort		= 3;
-		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_BLUE;
-		pros::Motor   IntakeMotor ( IntakeMotorPort  , 	IntakeGearset, true );
+		const int LeftIntakeMotorPort		= 9;
+		const int RightIntakeMotorPort		= 20;
+		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_GREEN;
+		pros::Motor   LeftIntakeMotor ( LeftIntakeMotorPort  , 	IntakeGearset, true );
+		pros::Motor   RightIntakeMotor( RightIntakeMotorPort , 	IntakeGearset, false );
+
+		void IntakerMoveVoltage(FloatType Velocity){
+			static constexpr float VecToVolRatio = RopoParameter::INTAKER_SPEED_MAX_VOLTAGE / RopoParameter::INTAKER_SPEED_MAX;
+			LeftIntakeMotor.move_voltage(Velocity * VecToVolRatio);
+			RightIntakeMotor.move_voltage(Velocity * VecToVolRatio);
+		}
 		
 	}
 
@@ -188,7 +199,8 @@ namespace RopoDevice{
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
 		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+		Motors::LeftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+		Motors::RightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	}
 
 	void ChassisBrake(){
