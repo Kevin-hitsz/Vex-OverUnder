@@ -104,37 +104,37 @@ namespace ControllerModule {
 		}
 	}
 
-	bool intaker_forward = false;
-	bool intaker_backward = false;
-	void RollIntaker(){
-		if (intaker_forward && !intaker_backward) {
-			RopoDevice::Motors::IntakerMoveVoltage(150);
-		}
-		else if (!intaker_forward && intaker_backward) {
-			RopoDevice::Motors::IntakerMoveVoltage(-150);
-		}
-		else {
-			RopoDevice::Motors::IntakerMoveVoltage(0);
-		}
-	}
+	int intaker_flag = 1; // 0: stop 1: for 2: back
 
 	void SwitchIntakerFor(){
-		intaker_forward ^= 1;
-		intaker_backward = false;
-		RollIntaker();
+		intaker_flag = 1;
+		RopoDevice::Motors::IntakerMoveVoltage(-6000);
 	}
 
 	void SwitchIntakerBack(){
-		intaker_backward ^= 1;
-		intaker_forward = false;
-		RollIntaker();
+		intaker_flag = 2;
+		RopoDevice::Motors::IntakerMoveVoltage(6000);
 	}
 
-	void SwitchIntakerForToBack(){
-		intaker_forward ^= 1;
-		intaker_backward ^= 1;
-		pros::delay(50);
-		RollIntaker();
+	void SwitchIntakerStop(){
+		intaker_flag = 0;
+		RopoDevice::Motors::IntakerMoveVoltage(0);
+	}
+
+	void SwitchIntakerSwitch(){
+		if(intaker_flag == 1 || intaker_flag == 2) {
+			SwitchIntakerStop();
+		}else if(intaker_flag == 0) {
+			SwitchIntakerFor();
+		}
+	}
+
+	void SwitchIntakerChange(){
+		if(intaker_flag == 2) {
+			SwitchIntakerFor();
+		}else if(intaker_flag == 1) {
+			SwitchIntakerBack();
+		}
 	}
 
 	void TurnAround(){
@@ -221,8 +221,8 @@ void opcontrol()
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1   , RopoController::Rising, ControllerModule::BothExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Rising,ControllerModule::PushExternSwitch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::DoubleEdge, ControllerModule::SwitchIntakerForToBack);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerFor);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising, ControllerModule::SwitchIntakerChange);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, ControllerModule::LeftExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising, ControllerModule::RightExternSwitch);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::UnderExternSwitch);
@@ -234,9 +234,7 @@ void opcontrol()
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
-	ControllerModule::intaker_backward = false;
-	ControllerModule::intaker_forward = true;
-	ControllerModule::RollIntaker();
+	ControllerModule::SwitchIntakerFor();
 
 	while (true) {
 

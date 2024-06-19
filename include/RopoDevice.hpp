@@ -131,10 +131,9 @@ namespace RopoDevice{
 		pros::Motor   LeftIntakeMotor ( LeftIntakeMotorPort  , 	IntakeGearset, true );
 		pros::Motor   RightIntakeMotor( RightIntakeMotorPort , 	IntakeGearset, false );
 
-		void IntakerMoveVoltage(FloatType Velocity){
-			static constexpr float VecToVolRatio = RopoParameter::INTAKER_SPEED_MAX_VOLTAGE / RopoParameter::INTAKER_SPEED_MAX;
-			LeftIntakeMotor.move_voltage(Velocity * VecToVolRatio);
-			RightIntakeMotor.move_voltage(Velocity * VecToVolRatio);
+		void IntakerMoveVoltage(FloatType voltage){
+			LeftIntakeMotor.move_voltage(voltage);
+			RightIntakeMotor.move_voltage(voltage);
 		}
 		
 	}
