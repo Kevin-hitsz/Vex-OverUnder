@@ -108,12 +108,12 @@ namespace ControllerModule {
 
 	void SwitchIntakerFor(){
 		intaker_flag = 1;
-		RopoDevice::Motors::IntakerMoveVoltage(-6000);
+		RopoDevice::Motors::IntakerMoveVoltage(-10000);
 	}
 
 	void SwitchIntakerBack(){
 		intaker_flag = 2;
-		RopoDevice::Motors::IntakerMoveVoltage(6000);
+		RopoDevice::Motors::IntakerMoveVoltage(10000);
 	}
 
 	void SwitchIntakerStop(){
@@ -221,8 +221,10 @@ void opcontrol()
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1   , RopoController::Rising, ControllerModule::BothExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Rising,ControllerModule::PushExternSwitch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising, ControllerModule::SwitchIntakerChange);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerSwitch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerStop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising, ControllerModule::SwitchIntakerBack);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Falling, ControllerModule::SwitchIntakerFor);
+
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, ControllerModule::LeftExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising, ControllerModule::RightExternSwitch);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::UnderExternSwitch);
