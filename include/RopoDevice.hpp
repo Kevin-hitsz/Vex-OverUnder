@@ -21,16 +21,16 @@ namespace RopoDevice{
 
 	//创建三线接口
 	namespace ThreeWire{
-
-		const char ExternPneumaticPort = 'B';
+		//爬杆钩子
+		const char ExternPneumaticPort = 'F';
 		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
-		
+		//翅膀
 		const char WingPneumaticPort  = 'H';
 		pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
-
+		//intaker
 		const char IntakerPneumaticPort = 'A';
 		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
-
+		//铲子
 		const char SpadePneumaticPort = 'E';
 		pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
 
