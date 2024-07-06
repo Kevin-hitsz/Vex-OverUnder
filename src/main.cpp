@@ -382,7 +382,7 @@ void autonomous_C1b(){
 	pros::delay(10);
 	ControllerModule::ChangeIntakerPneumatic0();
 	pros::delay(700);
-	for(int i = 0; i < 1; i++){
+	for(int i = 0; i < 15; i++){
 		RopoDevice::Chassis.MoveVelocity(0.0,3.6);
 		pros::delay(430);
 		ControllerModule::ChangeLift();
