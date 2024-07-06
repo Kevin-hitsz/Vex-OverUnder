@@ -35,11 +35,10 @@ namespace RopoPosition{
                 S_Last_Encoder = S_Encoder;
 
                 // 对通信正常的电机的编码器进行求平均值
-                FloatType L1=LeftMotor1.get_position();     //临时变量
+                FloatType L1=LeftMotor1.get_position();    
                 FloatType L2=LeftMotor2.get_position();
                 FloatType L3=LeftMotor3.get_position();
                 FloatType L4=LeftMotor4.get_position();
-                
                 FloatType R1=RightMotor1.get_position();
                 FloatType R2=RightMotor2.get_position();
                 FloatType R3=RightMotor3.get_position();
@@ -49,8 +48,6 @@ namespace RopoPosition{
                                     ((std::isinf(L1)?0:1.0)+(std::isinf(L2)?0:1.0)+(std::isinf(L3)?0:1.0)+(std::isinf(L4)?0:1.0));
                 RightMotorEncoder=((std::isinf(R1)?0:R1)+(std::isinf(R2)?0:R2)+(std::isinf(R3)?0:R3)+(std::isinf(R4)?0:R4))/
                                  ((std::isinf(R1)?0:1.0)+(std::isinf(R2)?0:1.0)+(std::isinf(R3)?0:1.0)+(std::isinf(R4)?0:1.0));
-                
-                
                 // 总平均值
                 S_Encoder = (LeftMotorEncoder + RightMotorEncoder) / 2.0;  
                 return S_Encoder - S_Last_Encoder;        // 返回差值
