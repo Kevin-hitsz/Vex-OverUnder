@@ -160,9 +160,9 @@ namespace ControllerModule {
 			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 			MasterController.print(0,1,"degree: %.1lf",RopoDevice::GetPosition()[3]);
 			pros::delay(50); 
-			MasterController.print(2,1,"X: %.2lf Y:%.2lf",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
+			MasterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::gpsAddPosition.GetGpsTransformRelativePositionX(),RopoDevice::gpsAddPosition.GetGpsTransformRelativePositionY());
 			pros::delay(50); 
-			MasterController.print(1,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_rotation()*1.017);
+			MasterController.print(2,1,"X: %.2lf Y:%.2lf",RopoDevice::GetPosition()[1],RopoDevice::GetPosition()[2]);
 			pros::delay(50); 
 			// MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
 			// pros::delay(50);

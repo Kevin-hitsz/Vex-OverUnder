@@ -173,7 +173,7 @@ namespace RopoDevice{
 		return gpsAddPosition.GetTransformedPosition();
 	}
     
-	// Chassis
+	//Chassis
 	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetTransformedPosition , 1 );
 
 	// Initial
