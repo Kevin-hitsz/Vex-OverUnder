@@ -16,10 +16,11 @@
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
 #include "RopoLifter.hpp"
+#include "RopoIntaker.hpp"
 
 namespace RopoDevice{
 
-	//创建三线接口
+	// ADI
 	namespace ThreeWire{
 		const char WideExternPneumaticPort = 'F';
 		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
@@ -38,7 +39,7 @@ namespace RopoDevice{
 
 	}
 
-//创建惯性传感器
+	// Sensors
 	namespace Sensors{
 		const int InertialPort = 16;
 		pros::IMU Inertial(InertialPort);
@@ -46,7 +47,7 @@ namespace RopoDevice{
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
-	// 创建电机
+	// Motors
 	namespace Motors{
 
 		const int LeftChassisMotor1Port  	= 4;
@@ -119,7 +120,7 @@ namespace RopoDevice{
 		}
 
 		const int LeftLiftMotorPort		= 10;
-		const int RightLiftMotorPort		= 8;
+		const int RightLiftMotorPort	= 8;
 		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		
 		pros::Motor   LeftLiftMotor  ( LeftLiftMotorPort  , 	LiftGearset, true );
@@ -134,8 +135,7 @@ namespace RopoDevice{
 		void IntakerMoveVoltage(FloatType voltage){
 			LeftIntakeMotor.move_voltage(voltage);
 			RightIntakeMotor.move_voltage(voltage);
-		}
-		
+		}	
 	}
 
 	namespace Gpss{
@@ -143,10 +143,14 @@ namespace RopoDevice{
 						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
 	}
 
+	// Intaker
+	std::vector<pros::Motor*> intakermotors = {&Motors::LeftIntakeMotor,&Motors::RightIntakeMotor};
+	RopoIntaker::Intaker intaker(intakermotors);
+
 	// 创建定位模块
 	namespace Position_Motor{
 		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 ,
-            Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
+        Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
 	}
 
 
@@ -196,7 +200,6 @@ namespace RopoDevice{
 		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-
 		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 		Motors::LeftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);

@@ -104,37 +104,24 @@ namespace ControllerModule {
 		}
 	}
 
-	int intaker_flag = 1; // 0: stop 1: for 2: back
-
 	void SwitchIntakerFor(){
-		intaker_flag = 1;
-		RopoDevice::Motors::IntakerMoveVoltage(-10000);
+		RopoDevice::intaker.SwitchIntakerFor();
 	}
 
 	void SwitchIntakerBack(){
-		intaker_flag = 2;
-		RopoDevice::Motors::IntakerMoveVoltage(10000);
+		RopoDevice::intaker.SwitchIntakerBack();
 	}
 
 	void SwitchIntakerStop(){
-		intaker_flag = 0;
-		RopoDevice::Motors::IntakerMoveVoltage(0);
+		RopoDevice::intaker.SwitchIntakerStop();
 	}
 
 	void SwitchIntakerSwitch(){
-		if(intaker_flag == 1 || intaker_flag == 2) {
-			SwitchIntakerStop();
-		}else if(intaker_flag == 0) {
-			SwitchIntakerFor();
-		}
+		RopoDevice::intaker.SwitchIntakerSwitch();
 	}
 
 	void SwitchIntakerChange(){
-		if(intaker_flag == 2) {
-			SwitchIntakerFor();
-		}else if(intaker_flag == 1) {
-			SwitchIntakerBack();
-		}
+		RopoDevice::intaker.SwitchIntakerChange();
 	}
 
 	void TurnAround(){
@@ -236,7 +223,7 @@ void opcontrol()
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
-	ControllerModule::SwitchIntakerFor();
+	RopoDevice::intaker.SwitchIntakerFor();
 
 	while (true) {
 
