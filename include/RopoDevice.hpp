@@ -154,14 +154,13 @@ namespace RopoDevice{
 	}
 
 
-// 创建运球模块
+	// 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor, Motors::RightLiftMotor);
-
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 	// 修正每圈6度的误差
 	}
 
-// 坐标获取函数
+	// 坐标获取函数
 	RopoMath::Vector<FloatType> GetPosition(){
 		RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
 		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
@@ -180,7 +179,7 @@ namespace RopoDevice{
 	//	创建底盘
 	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetTransformedPosition , 1 );
 
-//初始化
+	//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
         Sensors::Inertial.reset(true);
