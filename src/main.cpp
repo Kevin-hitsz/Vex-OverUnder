@@ -192,8 +192,8 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 2.0;	// 1.7 m/s
-	FloatType WcMax = 10;	// 7 
+	FloatType VelocityMax = 1.60;	// 1.7 m/s
+	FloatType WcMax = 20;	// 7 
 	FloatType VelocityRestrainRatio = 0.4; // 0 ~ 1
 	FloatType WcRestrainRatio = 0.4; // 0 ~ 1
 	bool ChassisMove = false;
