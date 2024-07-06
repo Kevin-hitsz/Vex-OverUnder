@@ -138,29 +138,19 @@ namespace RopoDevice{
 		}	
 	}
 
-	namespace Gpss{
-		static pros::Gps vexGps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
-						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
-	}
-
+	
 	// Intaker
 	std::vector<pros::Motor*> intakermotors = {&Motors::LeftIntakeMotor,&Motors::RightIntakeMotor};
 	RopoIntaker::Intaker intaker(intakermotors);
 
-	// 创建定位模块
+	// Position
 	namespace Position_Motor{
 		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 ,
         Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
 	}
-
-
-	// 创建运球模块
-	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor, Motors::RightLiftMotor);
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 	// 修正每圈6度的误差
 	}
-
-	// 坐标获取函数
 	RopoMath::Vector<FloatType> GetPosition(){
 		RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
 		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
@@ -170,16 +160,23 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
+	// Lifter
+	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor, Motors::RightLiftMotor);
+	
+	// GPS
+	namespace Gpss{
+		static pros::Gps vexGps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
+						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
+	}
 	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,0 );
-
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
 	}
     
-	//	创建底盘
+	// Chassis
 	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetTransformedPosition , 1 );
 
-	//初始化
+	// Initial
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
         Sensors::Inertial.reset(true);

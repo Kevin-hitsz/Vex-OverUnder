@@ -13,8 +13,8 @@
 namespace RopoPosition{
     class Position{
         private:
-            static constexpr double WheelRad = 0.0508;        // 轮半径
-            static constexpr double ChassisRatio = 9.0 / 4.0;   // 传动比
+            static constexpr double WheelRad = 0.06985;         // 轮半径
+            static constexpr double ChassisRatio = 1.95;        // 传动比
             static constexpr double Pi = 3.1415926;
             pros::Motor &LeftMotor1;
             pros::Motor &LeftMotor2;
