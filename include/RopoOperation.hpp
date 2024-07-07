@@ -23,9 +23,7 @@
 
 
 /// @brief 手柄操作定义
-namespace ControllerModule {
-	
-
+namespace ControllerModule {	
 	void RumbleMe(){
 		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
 		MasterController1.rumble("-.-.-");
@@ -44,32 +42,6 @@ namespace ControllerModule {
 		}
 		MasterController1.rumble("-.-.-.-");
 	}
-
-	void StartGps(){
-		RopoDevice::gpsAddPosition.SetUpdateFlag(3);//开gps
-	}
-
-	void StopGps(){
-		RopoDevice::gpsAddPosition.SetUpdateFlag(0);//开gps
-	}
-
-	bool intaker_status = false;  
-	void Intake(){
-		RopoDevice::Motors::IntakeMotor.move_velocity(-500);
-		if(intaker_status == true){
-			intaker_status ^= 1;
-			RopoDevice::ThreeWire::IntakerPneumatic.set_value(intaker_status);
-		}
-	}
-	void Outtake(){
-		RopoDevice::Motors::IntakeMotor.move_velocity(400);
-		pros::delay(400);
-		RopoDevice::Motors::IntakeMotor.move_voltage(2000);
-	}
-	void IntakerStop(){
-		RopoDevice::Motors::IntakeMotor.move_voltage(0);
-	}
-
 	void TurnAround(){
 		RopoDevice::Chassis.AutoRotateRelative(180);
 	}
@@ -77,8 +49,6 @@ namespace ControllerModule {
 	void GpsUpdate(){
 		RopoDevice::gpsAddPosition.GpsUpdate();
 	}
-
-	
 	void ControllerPrint()
     {
 		while(true) 
@@ -98,9 +68,6 @@ namespace ControllerModule {
 
 /// @brief 定义自动程序
 namespace AutoOperation{
-
-
-
 
 void skill(){
 }}

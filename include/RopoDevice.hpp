@@ -20,21 +20,21 @@
 
 namespace RopoDevice{
 
-	//创建三线接口
-	namespace ThreeWire{
-		//爬杆钩子
-		const char ExternPneumaticPort = 'U';
-		pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
-		//翅膀
-		const char WingPneumaticPort  = 'U';
-		pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
-		//intaker
-		const char IntakerPneumaticPort = 'U';
-		pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
-		//铲子
-		const char SpadePneumaticPort = 'U';
-		pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
-	}
+	// //创建三线接口
+	// namespace ThreeWire{
+	// 	//爬杆钩子
+	// 	const char ExternPneumaticPort = 'U';
+	// 	pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
+	// 	//翅膀
+	// 	const char WingPneumaticPort  = 'U';
+	// 	pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
+	// 	//intaker
+	// 	const char IntakerPneumaticPort = 'U';
+	// 	pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
+	// 	//铲子
+	// 	const char SpadePneumaticPort = 'U';
+	// 	pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
+	// }
 
 	//创建惯性传感器
 	namespace Sensors{
