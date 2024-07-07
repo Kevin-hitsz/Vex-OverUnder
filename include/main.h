@@ -46,12 +46,11 @@
 #include "RopoSensor/Header.hpp"
 #include "RopoControl/Header.hpp"
 #include "RopoApi.hpp"
-#include "RopoController.hpp"
+#include "RoPoPros/RopoController.hpp"
 #include "RopoDevice.hpp"
 #include "RopoTask.hpp"
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
-#include "RopoAuto.hpp"
 #include"api.h"
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

@@ -15,26 +15,20 @@
 #include "RopoApi.hpp"
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
-#include "RopoLifter.hpp"
-#include "RopoInertial.hpp"
+#include "RoPoPros/RopoInertial.hpp"
 
 namespace RopoDevice{
 
-	// //创建三线接口
-	// namespace ThreeWire{
-	// 	//爬杆钩子
-	// 	const char ExternPneumaticPort = 'U';
-	// 	pros::ADIDigitalOut ExternPneumatic(ExternPneumaticPort,false);
-	// 	//翅膀
-	// 	const char WingPneumaticPort  = 'U';
-	// 	pros::ADIDigitalOut WingPneumatic(WingPneumaticPort,false);
-	// 	//intaker
-	// 	const char IntakerPneumaticPort = 'U';
-	// 	pros::ADIDigitalOut IntakerPneumatic(IntakerPneumaticPort,false);
-	// 	//铲子
-	// 	const char SpadePneumaticPort = 'U';
-	// 	pros::ADIDigitalOut SpadePneumatic(SpadePneumaticPort,false);
-	// }
+	//创建三线接口
+	namespace ThreeWire{
+		//爬杆
+		const char climb_pneumatic_port = 'U';
+		pros::ADIDigitalOut climb_Pneumatic(climb_pneumatic_port,false);
+		//翅膀
+		const char wing_pneumatic_port  = 'U';
+		pros::ADIDigitalOut wing_pneumatic(wing_pneumatic_port,false);
+		
+	}
 
 	//创建惯性传感器
 	namespace Sensors{
@@ -45,14 +39,17 @@ namespace RopoDevice{
 	// 创建电机
 	namespace Motors{	
 
-		const int LeftChassisMotor1Port  	= 0;
-		const int LeftChassisMotor2Port  	= 0;
-		const int LeftChassisMotor3Port  	= 0;
-        const int LeftChassisMotor4Port  	= 0;
-		const int RightChassisMotor1Port	= 0;
-		const int RightChassisMotor2Port	= 0;
-		const int RightChassisMotor3Port	= 0;
-		const int RightChassisMotor4Port	= 0;
+		const int LeftChassisMotor1Port  	= 4;
+		const int LeftChassisMotor2Port  	= 5;
+		const int LeftChassisMotor3Port  	= 7;
+        const int LeftChassisMotor4Port  	= 8;
+		const int LeftChassisMotor5Port  	= 10;
+		
+		const int RightChassisMotor1Port	= 13;
+		const int RightChassisMotor2Port	= 17;
+		const int RightChassisMotor3Port	= 18;
+		const int RightChassisMotor4Port	= 19;
+		const int RightChassisMotor5Port	= 20;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
@@ -60,13 +57,13 @@ namespace RopoDevice{
 		pros::Motor      LeftChassisMotor2 (LeftChassisMotor2Port  , 	ChassisGearset, true);
 		pros::Motor      LeftChassisMotor3 (LeftChassisMotor3Port  , 	ChassisGearset, true);
         pros::Motor      LeftChassisMotor4 (LeftChassisMotor4Port  , 	ChassisGearset, true);
-        pros::Motor      LeftChassisMotor5 (LeftChassisMotor4Port  , 	ChassisGearset, true);
+        pros::Motor      LeftChassisMotor5 (LeftChassisMotor5Port  , 	ChassisGearset, true);
 
 		pros::Motor      RightChassisMotor1(RightChassisMotor1Port ,	ChassisGearset, false);
 		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, false);
 		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, false);
         pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
-        pros::Motor      RightChassisMotor5(RightChassisMotor4Port ,	ChassisGearset, false);
+        pros::Motor      RightChassisMotor5(RightChassisMotor5Port ,	ChassisGearset, false);
 
 		RopoMotorGroup::MotorGroup LeftMotorGroup({&LeftChassisMotor1,&LeftChassisMotor2,&LeftChassisMotor3,&LeftChassisMotor4,
 		&LeftChassisMotor5});
@@ -110,13 +107,14 @@ namespace RopoDevice{
 	}
 
 	RopoMath::Vector<FloatType> GetPosition()
-            {
-		        RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
-		        PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
-		        PositionVector[2] =  RopoDevice::Position_Motor::MyPosition.Get_Y();
-		        PositionVector[3] =  RopoDevice::Position_Motor::MyPosition.Get_Angle();
-		        return PositionVector;
-	        }
+    {
+	    RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
+	    PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
+	    PositionVector[2] =  RopoDevice::Position_Motor::MyPosition.Get_Y();
+	    PositionVector[3] =  RopoDevice::Position_Motor::MyPosition.Get_Angle();
+	    return PositionVector;
+	}
+
 	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20);
 
 	Vector GetTransformedPosition(){
@@ -129,8 +127,8 @@ namespace RopoDevice{
 	//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
-        Sensors::imu.reset(true);
-		while(Sensors::imu.is_calibrating())pros::delay(200);
+        //Sensors::imu.reset(true);
+		//while(Sensors::imu.is_calibrating())pros::delay(200);
 		pros::delay(200);
 		Position_Motor::MyPosition.initial();
 		Gpss::vexGps.set_data_rate(5);

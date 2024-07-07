@@ -10,8 +10,8 @@
 #include "RopoMath/Misc.hpp"
 #include <iostream>
 #include "RopoParameter.hpp"
-#include "RopoMotorGroup.hpp"
-#include "RopoInertial.hpp"
+#include "RoPoPros/RopoMotorGroup.hpp"
+#include "RoPoPros/RopoInertial.hpp"
 namespace RopoPosition{
     class Position{
         private:

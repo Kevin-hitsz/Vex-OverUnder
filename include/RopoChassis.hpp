@@ -36,7 +36,7 @@ namespace RopoChassis{
 			const int SampleTime;			//采样间隔
 
 			enum AutoStatus{
-				DetectMove = -1,				//直接控制状态
+				DirectMove = -1,			//直接控制状态
 				MovePosAbs = 0,				//坐标运行状态
 				MoveForward = 1,			//直行
 				Rotate = 2,					//旋转
@@ -56,7 +56,6 @@ namespace RopoChassis{
 			pros::Task* BackgroundTask;
 			bool moveReverse=false;
 			bool flag;
-
 			
 			void OpenLoopMove(const Vector& Velocity) {
 				const FloatType ChassisRatio = RopoParameter::CHASSIS_RATIO;	
@@ -71,10 +70,7 @@ namespace RopoChassis{
 			}
 
 			
-
 		public:
-
-
 			static void ChassisMoveBackgroundFunction(void *Parameter){
 				if(Parameter == nullptr)return;
 				TankChassis *This = static_cast<TankChassis *>(Parameter);
@@ -95,13 +91,13 @@ namespace RopoChassis{
 				while(true)
 				{
 					if(This->MoveType == AutoMove){
-						if(This->AutoMoveType != DetectMove && This->flag)
+						if(This->AutoMoveType != DirectMove && This->flag)
 						{
 							AimPosition = This->GetCurPosition();
 							IniPosition = This->GetCurPosition();
 						}
 
-						if(This->AutoMoveType == DetectMove)
+						if(This->AutoMoveType == DirectMove)
 						{
 							This->OpenLoopMove(This->ChassisVelocity);
 						}
@@ -231,7 +227,7 @@ namespace RopoChassis{
 						pros::delay(This->SampleTime);
 					}	
 					else if(This->MoveType == OpMove){		
-						pros::delay(This->SampleTime);
+						pros::delay(200);
 					}
 				}
 			}
@@ -244,7 +240,7 @@ namespace RopoChassis{
 				RightMotorGroup(RMG),
 				LeftMotorGroup(LMG),
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
-				AutoMoveType(DetectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
+				AutoMoveType(DirectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
 				DisArrived(false),DegArrived(false),AccelerationProcessSpeed(0),
 				BackgroundTask(nullptr),moveReverse(false),flag(true){
 				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
@@ -286,7 +282,7 @@ namespace RopoChassis{
 			void MoveVelocity(const Vector& Velocity) 
 			{
 				ChassisVelocity = Velocity;
-				AutoMoveType = DetectMove;
+				AutoMoveType = DirectMove;
 			}
 
 			/// @brief 赋予车速度
@@ -296,7 +292,7 @@ namespace RopoChassis{
 			{
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
-				AutoMoveType = DetectMove;
+				AutoMoveType = DirectMove;
 			}
 
 			void MoveVelocityRotateLock(FloatType X,FloatType AimDegree)
@@ -458,7 +454,11 @@ namespace RopoChassis{
 				pros::delay(20);
 				while(!flag) pros::delay(100);
 			}
-
+			/// @brief 
+			/// @param AimX 
+			/// @param AimY 
+			/// @param Theta 
+			/// @param _Time 
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
 			{
 				FloatType nowTime = pros::millis();
@@ -482,7 +482,10 @@ namespace RopoChassis{
 				}
 				flag = true;
 			}
-
+			
+			/// @brief 设置底盘电机的刹车模式
+			/// @param mode mode
+			/// @return 成功返回1，失败返回PROS_ERR
 			int32_t set_brake_mode(pros::motor_brake_mode_e mode)
 			{
 				int32_t ret=1;
