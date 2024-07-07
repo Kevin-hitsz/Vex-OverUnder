@@ -20,7 +20,7 @@ void initialize() {
 	RopoDevice::ThreeWire::IntakerPneumatic.set_value(false);
 	RopoDevice::ThreeWire::WingPneumatic.set_value(false);
 	RopoDevice::ThreeWire::SpadePneumatic.set_value(true);
-	ControllerModule::catch_1 = 0;
+	
 }
 
 void disabled() {}
@@ -28,15 +28,14 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	RopoDevice::ChassisBrake();
-	AutoOperation::autonomous_C1b();
+	
 	//skill();
 }
 
 void opcontrol()
 {
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	RopoDevice::ChassisBrake();
+	RopoDevice::Chassis.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
@@ -54,18 +53,12 @@ void opcontrol()
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Rising , ControllerModule::Intake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1, RopoController::Falling, ControllerModule::IntakerStop);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, ControllerModule::ChangeIntakerPneumatic);
-
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2, RopoController::Rising , ControllerModule::ChangeLift1);
+	
 	//*单点触发
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising , ControllerModule::ChangeWingStatus);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising , ControllerModule::ChangeTogetherWingStatus);
+
 	
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::AutoLift);	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising , ControllerModule::Switch);
-
-
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising , RopoDevice::ChassisHold);
+	
 	
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
 	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  AutoOperation::test);
@@ -83,7 +76,7 @@ void opcontrol()
 		if(opTime - pros::millis() > 55000) {
 			VelocityMax = 1.77;
 			RopoWcLimit = 8.5;
-			RopoDevice::ChassisBrake();
+			RopoDevice::Chassis.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		}
 		if (fabs(XInput) <= 0.06 && fabs(WInput) <= 0.06) {
 			if(ChassisMove == true){

@@ -25,21 +25,16 @@ namespace RopoChassis{
 			static constexpr float AccelerationVelocityLimits = 1.2;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0002  ,0.00006 ,0.0014,-0.0014,0.02,0.25};
-			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000068,0.0000012,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3};
-			//0.000055,0.000008,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3
-			RopoControl::TankChassisCore Core;		
+			RopoControl::TankChassisCore Core;											
+			RopoMotorGroup::MotorGroup &LeftMotorGroup;
+			RopoMotorGroup::MotorGroup &RightMotorGroup;
 			
-									
-			void (*MotorMove[2])(FloatType);
 			Vector ChassisVelocity;
 			Vector MotorVelocity;
 			FloatType AccelerationProcessSpeed;
-
 			const int SampleTime;			//采样间隔
-			
-			
-			
+
 			enum AutoStatus{
 				DetectMove = -1,				//直接控制状态
 				MovePosAbs = 0,				//坐标运行状态
@@ -71,8 +66,8 @@ namespace RopoChassis{
 				_Velocity[1] = _Velocity[1] * ChassisRatio * radTorpm;
 				_Velocity[2] = _Velocity[2] * ChassisRatio * radTorpm;
 				MotorVelocity = Core.Move(_Velocity);
-				MotorMove[0](MotorVelocity[1]);
-				MotorMove[1](MotorVelocity[2]);
+				RightMotorGroup.move_velocity(MotorVelocity[1]);
+				LeftMotorGroup.move_velocity(MotorVelocity[2]);
 			}
 
 			
@@ -241,12 +236,13 @@ namespace RopoChassis{
 				}
 			}
 
-			TankChassis(	void (*RightMotorMove)(FloatType),
-							void (*LeftMotorMove )(FloatType),
+			TankChassis(	RopoMotorGroup::MotorGroup &RMG,
+							RopoMotorGroup::MotorGroup &LMG,
 							Vector (*GetPosition_)(),
 							int _SampleTime = 5):
 				Core( WheelRad, ChassisParameter, DefaultVelocityLimits),
-				MotorMove{  RightMotorMove,LeftMotorMove},
+				RightMotorGroup(RMG),
+				LeftMotorGroup(LMG),
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
 				AutoMoveType(DetectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
 				DisArrived(false),DegArrived(false),AccelerationProcessSpeed(0),
@@ -485,6 +481,14 @@ namespace RopoChassis{
 					while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
 				}
 				flag = true;
+			}
+
+			int32_t set_brake_mode(pros::motor_brake_mode_e mode)
+			{
+				int32_t ret=1;
+				if(LeftMotorGroup.set_brake_mode(mode)!=1||RightMotorGroup.set_brake_mode(mode)!=1)
+				ret=PROS_ERR;
+				return ret;
 			}
 	};
 }
