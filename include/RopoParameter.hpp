@@ -30,7 +30,7 @@ namespace RopoParameter {
 
 	//Chassis
 	static constexpr double CHASSIS_PARAMETER = 0.296; 				//车体宽度
-	static constexpr double WHEEL_RAD = 0.06985;						//轮子半径
+	static constexpr double WHEEL_RAD = 0.06985 / 2.0;						//轮子半径
 	static constexpr double CHASSIS_RATIO = 5.0 / 4.0;	      		//减速比
 	static constexpr double CHASSIS_SPPED_MAX= 600;					//底盘电机最高转速
 	static constexpr double CHASSIS_SPPED_MAX_VOLTAGE= 12000;					//底盘电机最高转速

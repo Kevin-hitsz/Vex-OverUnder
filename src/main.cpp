@@ -137,6 +137,12 @@ namespace ControllerModule {
 		RollIntaker();
 	}
 
+	bool pusher_tag = false;
+	void IntakerPusherSwitch(){
+		pusher_tag ^= 1;
+		RopoDevice::ThreeWire::PusherPneumatic.set_value(pusher_tag);
+	}
+
 	void TurnAround(){
 		RopoDevice::Chassis.AutoRotateRelative(180);
 	}
@@ -205,8 +211,8 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 2.0;	// 1.7 m/s
-	FloatType WcMax = 10;	// 7 
+	FloatType VelocityMax = 1.7;	// 1.7 m/s
+	FloatType WcMax = 7;	// 7 
 	FloatType VelocityRestrainRatio = 0.4; // 0 ~ 1
 	FloatType WcRestrainRatio = 0.4; // 0 ~ 1
 	bool ChassisMove = false;
@@ -225,7 +231,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerFor);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, ControllerModule::LeftExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising, ControllerModule::RightExternSwitch);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::UnderExternSwitch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::IntakerPusherSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B    , RopoController::Rising, ControllerModule::ChangeCatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::WideExternSwitch);

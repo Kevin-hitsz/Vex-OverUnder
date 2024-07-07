@@ -27,15 +27,20 @@ namespace RopoDevice{
 		const char UnderExternPneumaticPort = 'B';
 		pros::ADIDigitalOut UnderExternPneumatic(UnderExternPneumaticPort,false);
 
-		const char LeftExternPneumaticPort = 'D';
+		const char LeftExternPneumaticPort = 'A';
 		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
 
-		const char RightExternPneumaticPort = 'E';
+		const char RightExternPneumaticPort = 'G';
 		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
 
 		const char CatchPneumaticPort  = 'C';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
+		const char PusherPneumaticPort  = 'H';
+		pros::ADIDigitalOut PusherPneumatic(PusherPneumaticPort,false);
+
+		// const char HitPneumaticPort  = '';
+		// pros::ADIDigitalOut HitPneumatic(HitPneumaticPort,false);
 	}
 
 //创建惯性传感器
