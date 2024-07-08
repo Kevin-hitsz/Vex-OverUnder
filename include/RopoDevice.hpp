@@ -164,7 +164,7 @@ namespace RopoDevice{
 
 // 创建运球模块
 	FloatType GetHeading(){
-		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.011; 
+		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.0184; 
 	}
 
 // 坐标获取函数
