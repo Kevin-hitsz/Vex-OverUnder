@@ -124,6 +124,14 @@ namespace ControllerModule {
 		RopoDevice::intaker.SwitchIntakerChange();
 	}
 
+	void SwitchIntakerGrabFor(){
+		RopoDevice::intaker.SwitchIntakerGrabFor();
+	}
+
+	void SwitchIntakerGrabBack(){
+		RopoDevice::intaker.SwitchIntakerGrabBack();
+	}
+
 	void TurnAround(){
 		RopoDevice::Chassis.AutoRotateRelative(180);
 	}
@@ -208,9 +216,11 @@ void opcontrol()
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1   , RopoController::Rising, ControllerModule::BothExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Rising,ControllerModule::PushExternSwitch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerStop);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::DoubleClick, ControllerModule::SwitchIntakerStop);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising, ControllerModule::SwitchIntakerBack);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Falling, ControllerModule::SwitchIntakerFor);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerGrabFor);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Falling, ControllerModule::SwitchIntakerGrabBack);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, ControllerModule::LeftExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising, ControllerModule::RightExternSwitch);

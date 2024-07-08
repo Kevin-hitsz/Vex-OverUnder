@@ -37,6 +37,8 @@ namespace RopoDevice{
 		const char CatchPneumaticPort  = 'C';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
+		const char IntakerPneumaticPort  = 'H';
+		pros::ADIDigitalOut IntakePneumatic(IntakerPneumaticPort,false);
 	}
 
 	// Sensors
@@ -141,7 +143,7 @@ namespace RopoDevice{
 	
 	// Intaker
 	std::vector<pros::Motor*> intakermotors = {&Motors::LeftIntakeMotor,&Motors::RightIntakeMotor};
-	RopoIntaker::Intaker intaker(intakermotors);
+	RopoIntaker::Intaker intaker(intakermotors,ThreeWire::IntakePneumatic);
 
 	// Position
 	namespace Position_Motor{
