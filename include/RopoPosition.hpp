@@ -13,8 +13,8 @@
 namespace RopoPosition{
     class Position{
         private:
-            static constexpr double WheelRad = 0.06985 / 2;         // 轮半径
-            static constexpr double ChassisRatio = 1.25;        // 传动比
+            static constexpr double WheelRad = 0.06985 / 2;     // 轮半径   // 0.0508
+            static constexpr double ChassisRatio = 48.0 / 38.0;     // 传动比   // 9.0 / 4.0    // 1.25
             static constexpr double Pi = 3.1415926;
             pros::Motor &LeftMotor1;
             pros::Motor &LeftMotor2;
@@ -35,19 +35,25 @@ namespace RopoPosition{
                 S_Last_Encoder = S_Encoder;
 
                 // 对通信正常的电机的编码器进行求平均值
-                FloatType L1=LeftMotor1.get_position();    
+                FloatType L1=LeftMotor1.get_position();     //临时变量
                 FloatType L2=LeftMotor2.get_position();
                 FloatType L3=LeftMotor3.get_position();
                 FloatType L4=LeftMotor4.get_position();
+                
                 FloatType R1=RightMotor1.get_position();
                 FloatType R2=RightMotor2.get_position();
                 FloatType R3=RightMotor3.get_position();
                 FloatType R4=RightMotor4.get_position();
 
-                LeftMotorEncoder=-1*((std::isinf(L1)?0:L1)+(std::isinf(L2)?0:L2)+(std::isinf(L3)?0:L3)+(std::isinf(L4)?0:L4))/
+                // // ERR Solution?
+                // if(L1 == PROS_ERR_F) L1 = 0;
+
+                LeftMotorEncoder=((std::isinf(L1)?0:L1)+(std::isinf(L2)?0:L2)+(std::isinf(L3)?0:L3)+(std::isinf(L4)?0:L4))/
                                     ((std::isinf(L1)?0:1.0)+(std::isinf(L2)?0:1.0)+(std::isinf(L3)?0:1.0)+(std::isinf(L4)?0:1.0));
                 RightMotorEncoder=((std::isinf(R1)?0:R1)+(std::isinf(R2)?0:R2)+(std::isinf(R3)?0:R3)+(std::isinf(R4)?0:R4))/
                                  ((std::isinf(R1)?0:1.0)+(std::isinf(R2)?0:1.0)+(std::isinf(R3)?0:1.0)+(std::isinf(R4)?0:1.0));
+                
+                
                 // 总平均值
                 S_Encoder = (LeftMotorEncoder + RightMotorEncoder) / 2.0;  
                 return S_Encoder - S_Last_Encoder;        // 返回差值

@@ -16,48 +16,47 @@
 #include "RopoChassis.hpp"
 #include "RopoPosition.hpp"
 #include "RopoLifter.hpp"
-#include "RopoIntaker.hpp"
 
 namespace RopoDevice{
 
-	// ADI
+	//创建三线接口
 	namespace ThreeWire{
-		const char WideExternPneumaticPort = 'F';
-		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
+		const char UpperExternPneumaticPort = 'F';
+		pros::ADIDigitalOut UpperExternPneumatic(UpperExternPneumaticPort,false);
 		
-		const char UnderExternPneumaticPort = 'B';
+		const char UnderExternPneumaticPort = 'E';
 		pros::ADIDigitalOut UnderExternPneumatic(UnderExternPneumaticPort,false);
 
-		const char LeftExternPneumaticPort = 'D';
-		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
+		const char FrontExternPneumaticPort = 'B';
+		pros::ADIDigitalOut FrontExternPneumatic(FrontExternPneumaticPort,false);
 
-		const char RightExternPneumaticPort = 'E';
-		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
+		const char BackExternPneumaticPort = 'C';
+		pros::ADIDigitalOut BackExternPneumatic(BackExternPneumaticPort,false);
 
-		const char CatchPneumaticPort  = 'C';
-		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
+		const char IntakePusherPneumaticPort  = 'D';
+		pros::ADIDigitalOut IntakePusherPneumatic(IntakePusherPneumaticPort,false);
 
 	}
 
-	// Sensors
+	//创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 18;
+		const int InertialPort = 3;
 		pros::IMU Inertial(InertialPort);
 		const int OpenmvPort = 19;
 		RopoSensor::OpenMv My_openMV(OpenmvPort,115200);
 	}			
 	
-	// Motors
+	// 创建电机
 	namespace Motors{
 
-		const int LeftChassisMotor1Port  	= 4;
-		const int LeftChassisMotor2Port  	= 3;
-		const int LeftChassisMotor3Port  	= 5;
-        const int LeftChassisMotor4Port  	= 1;
-		const int RightChassisMotor1Port	= 14;
-		const int RightChassisMotor2Port	= 13;
-		const int RightChassisMotor3Port	= 12;
-		const int RightChassisMotor4Port	= 11;
+		const int LeftChassisMotor1Port  	= 1;
+		const int LeftChassisMotor2Port  	= 2;
+		const int LeftChassisMotor3Port  	= 12;
+        const int LeftChassisMotor4Port  	= 13;
+		const int RightChassisMotor1Port	= 9;
+		const int RightChassisMotor2Port	= 10;
+		const int RightChassisMotor3Port	= 18;
+		const int RightChassisMotor4Port	= 20;
 		
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
 
@@ -69,14 +68,14 @@ namespace RopoDevice{
 
 		pros::Motor      RightChassisMotor1(RightChassisMotor1Port ,	ChassisGearset, false);
 		pros::Motor      RightChassisMotor2(RightChassisMotor2Port ,	ChassisGearset, true);
-		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, true);
-        pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, false);
+		pros::Motor      RightChassisMotor3(RightChassisMotor3Port ,	ChassisGearset, false);
+        pros::Motor      RightChassisMotor4(RightChassisMotor4Port ,	ChassisGearset, true);
 		
 		void LeftWheelMove(FloatType Velocity){
-			LeftChassisMotor1.move_velocity(-Velocity);
-			LeftChassisMotor2.move_velocity(-Velocity);
-			LeftChassisMotor3.move_velocity(-Velocity);
-			LeftChassisMotor4.move_velocity(-Velocity);
+			LeftChassisMotor1.move_velocity(Velocity);
+			LeftChassisMotor2.move_velocity(Velocity);
+			LeftChassisMotor3.move_velocity(Velocity);
+			LeftChassisMotor4.move_velocity(Velocity);
 		}
 		
 		void RightWheelMove(FloatType Velocity){
@@ -89,10 +88,10 @@ namespace RopoDevice{
 		void LeftWheelMoveVoltage(FloatType Velocity){
 			static constexpr float VecToVolRatio = RopoParameter::CHASSIS_SPPED_MAX_VOLTAGE / RopoParameter::CHASSIS_SPPED_MAX;
 			//FloatType _Velocity = Velocity > RopoParameter::CHASSIS_SPPED_MAX ? RopoParameter::CHASSIS_SPPED_MAX : Velocity;
-			LeftChassisMotor1.move_voltage(-Velocity * VecToVolRatio);
-			LeftChassisMotor2.move_voltage(-Velocity * VecToVolRatio);
-			LeftChassisMotor3.move_voltage(-Velocity * VecToVolRatio);
-			LeftChassisMotor4.move_voltage(-Velocity * VecToVolRatio);
+			LeftChassisMotor2.move_voltage(Velocity * VecToVolRatio);
+			LeftChassisMotor1.move_voltage(Velocity * VecToVolRatio);
+			LeftChassisMotor3.move_voltage(Velocity * VecToVolRatio);
+			LeftChassisMotor4.move_voltage(Velocity * VecToVolRatio);
 		}
 
 		void RightWheelMoveVoltage(FloatType Velocity){
@@ -119,38 +118,37 @@ namespace RopoDevice{
 			RightWheelMoveVoltage(RV);
 		}
 
-		const int LeftLiftMotorPort		= 10;
-		const int RightLiftMotorPort	= 8;
-		const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
+		// const int LeftLiftMotorPort		= 10;
+		// const int RightLiftMotorPort		= 8;
+		// const pros::motor_gearset_e_t LiftGearset = pros::E_MOTOR_GEAR_RED;
 		
-		pros::Motor   LeftLiftMotor  ( LeftLiftMotorPort  , 	LiftGearset, true );
-		pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false );
+		// pros::Motor   LeftLiftMotor  ( LeftLiftMotorPort  , 	LiftGearset, true );
+		// pros::Motor   RightLiftMotor ( RightLiftMotorPort  , 	LiftGearset, false );
 
-		const int LeftIntakeMotorPort		= 9;
-		const int RightIntakeMotorPort		= 20;
+		const int LeftIntakeMotorPort		= 5;
+		const int RightIntakeMotorPort		= 6;
 		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_GREEN;
-		pros::Motor   LeftIntakeMotor ( LeftIntakeMotorPort  , 	IntakeGearset, true );
-		pros::Motor   RightIntakeMotor( RightIntakeMotorPort , 	IntakeGearset, false );
+		pros::Motor   LeftIntakeMotor ( LeftIntakeMotorPort  , 	IntakeGearset, false );
+		pros::Motor   RightIntakeMotor( RightIntakeMotorPort , 	IntakeGearset, true );
 
 		void IntakerMoveVoltage(FloatType voltage){
 			LeftIntakeMotor.move_voltage(voltage);
 			RightIntakeMotor.move_voltage(voltage);
-		}	
+		}
+		
 	}
 
-	
-	// Intaker
-	std::vector<pros::Motor*> intakermotors = {&Motors::LeftIntakeMotor,&Motors::RightIntakeMotor};
-	RopoIntaker::Intaker intaker(intakermotors);
-
-	// Position
+	// 创建定位模块
 	namespace Position_Motor{
 		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 ,
-        Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
+            Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Sensors::Inertial);
 	}
+
 	FloatType GetHeading(){
 		return -RopoDevice::Sensors::Inertial.get_rotation()*1.017; 	// 修正每圈6度的误差
 	}
+
+	// 坐标获取函数
 	RopoMath::Vector<FloatType> GetPosition(){
 		RopoMath::Vector<FloatType> PositionVector(RopoMath::ColumnVector,3);
 		PositionVector[1] =  RopoDevice::Position_Motor::MyPosition.Get_X();
@@ -159,24 +157,23 @@ namespace RopoDevice{
 		PositionVector[3] = (int((PositionVector[3] + 180.0 +14400) * 100.0) % 36000) / 100.0 - 180.0;
 		return PositionVector;
 	}
-
-	// Lifter
-	RopoLifter::LifterModule LiftMotors(Motors::LeftLiftMotor, Motors::RightLiftMotor);
 	
 	// GPS
 	namespace Gpss{
 		static pros::Gps vexGps(RopoParameter::GPS_PORT           , RopoParameter::GPSX_INITIAL, RopoParameter::GPSY_INITIAL,
 						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
 	}
+    
 	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,0 );
+
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
 	}
-    
-	//Chassis
+
+	//	创建底盘
 	RopoChassis::TankChassis Chassis( Motors::RightWheelMove , Motors::LeftWheelMove , GetTransformedPosition , 1 );
 
-	// Initial
+	//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
         Sensors::Inertial.reset(true);
@@ -196,7 +193,7 @@ namespace RopoDevice{
 		Motors::RightChassisMotor2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-		Motors::RightLiftMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
 		Motors::LeftIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightIntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	}
