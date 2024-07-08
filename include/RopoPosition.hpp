@@ -14,7 +14,7 @@ namespace RopoPosition{
     class Position{
         private:
             static constexpr double WheelRad = 0.06985 / 2;         // 轮半径
-            static constexpr double ChassisRatio = 1.25;        // 传动比
+            static constexpr double ChassisRatio = 1.25;            // 传动比
             static constexpr double Pi = 3.1415926;
             pros::Motor &LeftMotor1;
             pros::Motor &LeftMotor2;
@@ -79,7 +79,7 @@ namespace RopoPosition{
                         This -> X  += cos(This->Angle/180*Pi) * This->Delta_Distance;
                         This -> Y  += sin(This->Angle/180*Pi) * This->Delta_Distance;
                     }
-                    pros::lcd::print(1,"X:%.4f,Y:%.4f,theta:%f",This->X,This->Y,This -> Angle);
+                    // pros::lcd::print(1,"Encoder: X:%.4f,Y:%.4f,theta:%f",This->X,This->Y,This -> Angle);
                     pros::delay(SampleTime);
                 }
 			}
@@ -114,7 +114,6 @@ namespace RopoPosition{
 
                 BackgroundTask = new pros::Task(BackgroundTaskFunction,this);    
             };
-
 
             FloatType Get_X() const{return X;}
             FloatType Get_Y() const{return Y;}
