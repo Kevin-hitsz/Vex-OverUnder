@@ -227,12 +227,12 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising , ControllerModule::Hang);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising , ControllerModule::BarExtend);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Falling , ControllerModule::BarRecover);
-	
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  autonomous);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  test);
+
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
 
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  autonomous_KnockoutMatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  autonomous_qualify);//autonomous_KnockoutMatch
+	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising,  	PositionInit);
 
 	ButtonDetectLine.Enable();
@@ -486,9 +486,6 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	ControllerModule::ChangeLeftWingPush();
 	ControllerModule::IntakerStop();
 
-
-
-
 	//RopoDevice::Chassis.AutoPositionMove(0.11,0.49,-135.0);
 	// RopoDevice::Chassis.AutoPositionMove(-0.12,0.25);
 	// ControllerModule::GpsUpdate();
@@ -500,21 +497,21 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	// ControllerModule::IntakerStop();
 	/* 方案一 end */
 
-	// /* 方案二.后方推球并抵达导球点 */
-	// // RopoDevice::Chassis.AutoRotateAbs(-90);
-	// // delay();
-	// // ControllerModule::GpsUpdate();
-	// // RopoDevice::Chassis.MoveVelocity(0,0);
-	// // ControllerModule::IntakerStop();
-	// // ControllerModule::ChangeRightWingPush();
-	// // RopoDevice::Chassis.AutoPositionMoveBack(0.16,0.46,35);
-	// // RopoDevice::Chassis.AutoPositionMoveBack(-0.14,0.20,86.0);
-	// // RopoDevice::Chassis.MoveVelocity(-0.8,0.8);
-	// // pros::delay(1000);
-	// // RopoDevice::Chassis.MoveVelocity(0,0);
-	// /* 方案二 end */
+	/* 方案二.后方推球并抵达导球点 */
+	/*RopoDevice::Chassis.AutoRotateAbs(-90);
+	delay();
+	ControllerModule::GpsUpdate();
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	ControllerModule::IntakerStop();
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoPositionMoveBack(0.16,0.46,35);
+	RopoDevice::Chassis.AutoPositionMoveBack(-0.14,0.20,86.0);
+	RopoDevice::Chassis.MoveVelocity(-0.8,0.8);
+	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,0);*/
+	/* 方案二 end */
 
-
+	/*
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.04,0.36,163);
 	ControllerModule::BarExtend();
 	pros::delay(400);
@@ -543,7 +540,6 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
 	pros::delay(1200);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	// ControllerModule::GpsUpdate();
 	RopoDevice::Chassis.MoveVelocity(-0.5,0.7);
 	pros::delay(1000);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
@@ -563,7 +559,7 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	RopoDevice::Chassis.MoveVelocity(2.0,0);
 	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-
+	*/
 }
 
 void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
