@@ -110,7 +110,7 @@ namespace ControllerModule {
 
 	bool intaker_status = false;  
 	void Intake(){
-		RopoDevice::Motors::IntakeMotor.move_velocity(-500);
+		RopoDevice::Motors::IntakeMotor.move_velocity(-600);
 		if(intaker_status == true){
 			intaker_status ^= 1;
 			RopoDevice::ThreeWire::IntakerPneumatic.set_value(intaker_status);
