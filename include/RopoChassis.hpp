@@ -21,10 +21,9 @@ namespace RopoChassis{
 			static constexpr float WheelRad = RopoParameter::WHEEL_RAD;						//轮子半径
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
-			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.004;  //加速过程每SampleTime的增加的速度
-			static constexpr float AccelerationVelocityLimits = 1.2;
+			
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.0026 ,0.0002  ,0.00006 ,0.0014,-0.0014,0.02,0.25};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.001 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.25};
 			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000068,0.0000012,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3};
 			RopoControl::TankChassisCore Core;											
 			RopoMotorGroup::MotorGroup &LeftMotorGroup;
@@ -32,7 +31,6 @@ namespace RopoChassis{
 			
 			Vector ChassisVelocity;
 			Vector MotorVelocity;
-			FloatType AccelerationProcessSpeed;
 			const int SampleTime;			//采样间隔
 
 			enum AutoStatus{
@@ -121,8 +119,7 @@ namespace RopoChassis{
 							while(Delta[3] < -180.0) Delta[3] += 360.0;
 							//自动直行状态
 							if(This->AutoMoveType == MoveForward)
-							{
-								
+							{								
 								//已走距离
 								RunDistance = RopoMath::Distance(CurrentPosition[1]-IniPosition[1],CurrentPosition[2]-IniPosition[2]);		
 								//距离误差
@@ -134,15 +131,9 @@ namespace RopoChassis{
 								{
 									
 									//pid计算直行控制量
-									DisRes = DistanceRegulator.Update(DeltaDis);
-									if( (This->AccelerationProcessSpeed < DisRes / ( This->SampleTime / 1000.0)) && DeltaDis/aimDistance>0.2){
-										TempChassisVelocity[1] = (This->moveReverse?-1:1)*This->AccelerationProcessSpeed;
-										This->AccelerationProcessSpeed += This->DeltaVelocity_in_AccelerationProcess;
-										if(This->AccelerationProcessSpeed > This->AccelerationVelocityLimits)This->AccelerationProcessSpeed = This->AccelerationVelocityLimits;
-									}
-									else{
-										TempChassisVelocity[1] = (This->moveReverse?-1:1)*(DisRes / ( This->SampleTime / 1000.0) );
-									}
+									DisRes = DistanceRegulator.Update(DeltaDis);	
+									TempChassisVelocity[1] = (This->moveReverse?-1:1)*(DisRes / ( This->SampleTime / 1000.0) );
+									
 									//前90%路程车体方向锁定指向末位置，后20%路程车体方向锁定为初始方向，防止末位置方向抖动
 
 									if(!This->moveReverse)
@@ -150,8 +141,8 @@ namespace RopoChassis{
 										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
 											DeltaRotation -= CurrentPosition[3];
 										else
-											//DeltaRotation=IniPosition[3]-CurrentPosition[3];
-											DeltaRotation = 0;
+											DeltaRotation=IniPosition[3]-CurrentPosition[3];
+											
 
 										while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
 										while(DeltaRotation < -180.0) DeltaRotation += 360.0;
@@ -165,9 +156,8 @@ namespace RopoChassis{
 										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
 											DeltaRotation -= CurrentPosition[3];
 										else
-											//DeltaRotation=IniPosition[3]-CurrentPosition[3];
-											DeltaRotation = 0;
-
+											DeltaRotation=IniPosition[3]-CurrentPosition[3];
+											
 										while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
 										while(DeltaRotation < -180.0) DeltaRotation += 360.0;
 									}
@@ -241,7 +231,7 @@ namespace RopoChassis{
 				LeftMotorGroup(LMG),
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
 				AutoMoveType(DirectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
-				DisArrived(false),DegArrived(false),AccelerationProcessSpeed(0),
+				DisArrived(false),DegArrived(false),
 				BackgroundTask(nullptr),moveReverse(false),flag(true){
 				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
 			}
@@ -343,7 +333,7 @@ namespace RopoChassis{
 			/// @param move 是否倒车，必须与目标坐标匹配
 			void AutoDirectMove(FloatType AimX, FloatType AimY,bool move)
 			{
-				AccelerationProcessSpeed = 0;
+				
 				DistanceRegulator.Reset();
 				moveReverse=move;
 				flag=false;

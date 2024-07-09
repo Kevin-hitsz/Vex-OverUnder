@@ -32,8 +32,8 @@ namespace RopoDevice{
 
 	//创建惯性传感器
 	namespace Sensors{
-		const int InertialPort = 0;
-		RopoInertial imu(InertialPort);
+		const int InertialPort = 16;
+		RopoInertial imu(InertialPort,RopoParameter::IMU_K);
 	}			
 	
 	// 创建电机
@@ -127,8 +127,8 @@ namespace RopoDevice{
 	//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
-        //Sensors::imu.reset(true);
-		//while(Sensors::imu.is_calibrating())pros::delay(200);
+        Sensors::imu.reset(true);
+		while(Sensors::imu.is_calibrating())pros::delay(200);
 		pros::delay(200);
 		Position_Motor::MyPosition.initial();
 		Gpss::vexGps.set_data_rate(5);
@@ -139,7 +139,7 @@ namespace RopoDevice{
 		Motors::IntakeMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	}
 	
-	
 }
+	
 
 #endif

@@ -51,6 +51,7 @@ void opcontrol()
 	FloatType RopoWc=0;			
 	FloatType RopoVx=0;	
 		
+	RopoDevice::Chassis.StartChassisOpControll();//底盘MoveType设置为OpMove
 	while (true) {	
 		//主线程断点
 		while(main_process==false)
@@ -68,7 +69,6 @@ void opcontrol()
 		} 
 		else 
 		{
-			RopoDevice::Chassis.StartChassisOpControll();//底盘MoveType设置为OpMove
 			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
 		}
 		pros::delay(10);

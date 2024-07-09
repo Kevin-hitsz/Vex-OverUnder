@@ -20,10 +20,12 @@
 #include "RopoOperation.hpp"
 #include <cmath>
 
-
+void reset_main();
+void block_main();
 
 /// @brief 手柄操作定义
 namespace ControllerModule {	
+
 	void RumbleMe(){
 		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
 		MasterController1.rumble("-.-.-");
@@ -49,19 +51,18 @@ namespace ControllerModule {
 	}
 	void ControllerPrint()
     {
+		pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 		while(true) 
         {
-			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
-			MasterController.print(0,1,"X: %.2lf Y:%.2lf   ",(RopoDevice::GetTransformedPosition())[1],(RopoDevice::GetTransformedPosition())[2]);
-			pros::delay(200); 
-			MasterController.print(1,1,"degree: %.3lf    ",RopoDevice::GetPosition()[3]);
+			MasterController.print(0,0,"%.2f,%.2f,%.1f ",RopoDevice::Position_Motor::MyPosition.Get_X()
+			,RopoDevice::Position_Motor::MyPosition.Get_Y(),RopoDevice::Position_Motor::MyPosition.Get_Angle());
 			pros::delay(200); 	
 		}
 	}
 	//中断测试任务
-	void Task()
+	void Test_Task()
 	{
-
+		RopoDevice::Chassis.AutoRotateAbs(90);
 	}
 
 	//中断main函数并执行Task
@@ -69,11 +70,14 @@ namespace ControllerModule {
 	{
 		//中断
 		block_main();
+		RopoDevice::Chassis.StartChassisAutoControll();
 		pros::delay(500);
 		//执行任务
-		Task();
+		Test_Task();
 		//恢复main
 		pros::delay(500);
+
+		RopoDevice::Chassis.StartChassisOpControll();
 		reset_main();
 	}
 }
