@@ -544,7 +544,6 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.14,-0.14);
 	ControllerModule::ChangeRightWingPush();
-
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.15,-0.75,90.0);
 	ControllerModule::ChangeRightWingPush();
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
@@ -565,17 +564,19 @@ void autonomous_KnockoutMatch(){	// 机创赛_淘汰赛版本
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::ChangeLeftWingPush();
 	RopoDevice::Chassis.MoveVelocity(2.0,0);
-	pros::delay(300);
+	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	delay();
+	ControllerModule::Outtake();
 	ControllerModule::GpsUpdate();
 	RopoDevice::Chassis.AutoPositionMoveBack(0.14,-2.26);
 	RopoDevice::Chassis.AutoPositionMove(0.57,-2.41);
 	ControllerModule::GpsUpdate();
 	RopoDevice::Chassis.AutoPositionMoveBack(0.14,-2.26);
-	RopoDevice::Chassis.AutoPositionMove(0.57,-2.41);
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoPositionMove(0.64,-2.32);
 
 	/*
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.08,0.13);
@@ -643,7 +644,6 @@ void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
 
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.14,-0.14);
 	ControllerModule::ChangeRightWingPush();
-
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.15,-0.75,90.0);
 	ControllerModule::ChangeRightWingPush();
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
@@ -654,7 +654,7 @@ void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
-	pros::delay(600);
+	pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.AutoRotateAbs(174);
 	delay();
@@ -664,18 +664,20 @@ void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::ChangeLeftWingPush();
 	RopoDevice::Chassis.MoveVelocity(2.0,0);
-	pros::delay(300);
+	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	delay();
+	ControllerModule::Outtake();
 	ControllerModule::GpsUpdate();
 	RopoDevice::Chassis.AutoPositionMoveBack(0.14,-2.26);
-	RopoDevice::Chassis.AutoPositionMoveBack(0.57,-2.41);
+	RopoDevice::Chassis.AutoPositionMove(0.57,-2.41);
 	ControllerModule::GpsUpdate();
 	RopoDevice::Chassis.AutoPositionMoveBack(0.14,-2.26);
-
-
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoPositionMove(0.64,-2.32);
+	
 	/*RopoDevice::Chassis.MoveVelocity(-2.0,0);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
@@ -691,7 +693,6 @@ void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
 	RopoDevice::Chassis.MoveVelocity(0,0);
 
 	RopoDevice::Chassis.MoveVelocity(0,0);*/
-
 }
 
 void PositionInit(){
