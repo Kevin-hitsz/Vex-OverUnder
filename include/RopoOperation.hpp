@@ -62,7 +62,9 @@ namespace ControllerModule {
 	//中断测试任务
 	void Test_Task()
 	{
-		RopoDevice::Chassis.AutoRotateAbs(90);
+
+		RopoDevice::Chassis.AutoPositionMove(0.5,0,0);
+		
 	}
 
 	//中断main函数并执行Task

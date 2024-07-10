@@ -44,6 +44,8 @@ void opcontrol()
 
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::InterruptMain_doTask);	
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , RopoDevice::intake);	
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Falling , RopoDevice::stop_take);
 	ButtonDetectLine.Enable();
 
 	FloatType XInput=0;
@@ -52,6 +54,7 @@ void opcontrol()
 	FloatType RopoVx=0;	
 		
 	RopoDevice::Chassis.StartChassisOpControll();//底盘MoveType设置为OpMove
+	
 	while (true) {	
 		//主线程断点
 		while(main_process==false)

@@ -124,6 +124,19 @@ namespace RopoDevice{
 	//	创建底盘
 	RopoChassis::TankChassis Chassis( Motors::RightMotorGroup , Motors::LeftMotorGroup , GetTransformedPosition , 1 );
 
+	//创建intaker
+	const int intaker_port=9;
+	const pros::motor_gearset_e intake_gearing=pros::E_MOTOR_GEAR_BLUE;
+	pros::Motor intaker(intaker_port,intake_gearing,false);
+	void intake()
+	{
+		intaker.move_velocity(400);
+	}
+	void stop_take()
+	{
+		intaker.move_velocity(0);
+	}
+	
 	//初始化
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);

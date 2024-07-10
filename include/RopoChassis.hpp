@@ -24,7 +24,7 @@ namespace RopoChassis{
 			
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.001 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.25};
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000068,0.0000012,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00010,0.000005,0.000001,0.0030,-0.0030,1,0.3};
 			RopoControl::TankChassisCore Core;											
 			RopoMotorGroup::MotorGroup &LeftMotorGroup;
 			RopoMotorGroup::MotorGroup &RightMotorGroup;
@@ -292,7 +292,7 @@ namespace RopoChassis{
 				AimPosition[3] = AimDegree;
 			}
 
-			/// @brief 旋转至目标角
+			/// @brief 旋转至目标角,非阻塞需要延时等待
 			/// @param AimDegree 目标角
 			void AutoRotateAbs(FloatType AimDegree)
 			{
@@ -303,7 +303,7 @@ namespace RopoChassis{
 				DegArrived = false; 
 			}
 
-			/// @brief 相对旋转一定角度
+			/// @brief 相对旋转一定角度,非阻塞需要延时等待
 			/// @param RelativeDegree 相对角
 			void AutoRotateRelative(FloatType RelativeDegree)
 			{
@@ -324,10 +324,11 @@ namespace RopoChassis{
 				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
 				//等待到达
 				pros::delay(20);
+				while(!flag) pros::delay(100);
 
 			}
 			
-			/// @brief 直行到目标点
+			/// @brief 直行到目标点,非阻塞需要延时等待
 			/// @param AimX 目标X
 			/// @param AimY 目标Y
 			/// @param move 是否倒车，必须与目标坐标匹配
