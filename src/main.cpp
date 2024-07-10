@@ -462,13 +462,13 @@ void autonomous_C1b(){
 	
 	//推进网
 	RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
-	pros::delay(300);
+	pros::delay(300);                               //to be 改
 	
 	//再推
 	// RopoDevice::Chassis.MoveVelocity(0.0,0);
 	// pros::delay(20);
 	RopoDevice::Chassis.MoveVelocity(0.65,0);
-	pros::delay(550);
+	pros::delay(550);                               //to be 改
 	
 	RopoDevice::Chassis.AutoRotateAbs(47);   //
 	pros::delay(500);
