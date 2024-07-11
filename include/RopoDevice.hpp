@@ -21,26 +21,26 @@ namespace RopoDevice{
 
 	//创建三线接口
 	namespace ThreeWire{
-		const char WideExternPneumaticPort = 'F';
+		const char WideExternPneumaticPort = 'F';	//
 		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
 		
-		const char UnderExternPneumaticPort = 'B';
+		const char UnderExternPneumaticPort = 'B';	//
 		pros::ADIDigitalOut UnderExternPneumatic(UnderExternPneumaticPort,false);
 
-		const char LeftExternPneumaticPort = 'A';
+		const char LeftExternPneumaticPort = 'A';	//
 		pros::ADIDigitalOut LeftExternPneumatic(LeftExternPneumaticPort,false);
 
 		const char RightExternPneumaticPort = 'G';
 		pros::ADIDigitalOut RightExternPneumatic(RightExternPneumaticPort,false);
 
-		const char CatchPneumaticPort  = 'C';
+		const char CatchPneumaticPort  = 'D';
 		pros::ADIDigitalOut CatchPneumatic(CatchPneumaticPort,false);
 
 		const char PusherPneumaticPort  = 'H';
 		pros::ADIDigitalOut PusherPneumatic(PusherPneumaticPort,false);
 
-		// const char HitPneumaticPort  = '';
-		// pros::ADIDigitalOut HitPneumatic(HitPneumaticPort,false);
+		const char HitPneumaticPort  = 'E';
+		pros::ADIDigitalOut HitPneumatic(HitPneumaticPort,false);
 	}
 
 //创建惯性传感器
@@ -133,8 +133,8 @@ namespace RopoDevice{
 		const int LeftIntakeMotorPort		= 9;
 		const int RightIntakeMotorPort		= 20;
 		const pros::motor_gearset_e_t IntakeGearset = pros::E_MOTOR_GEAR_GREEN;
-		pros::Motor   LeftIntakeMotor ( LeftIntakeMotorPort  , 	IntakeGearset, true );
-		pros::Motor   RightIntakeMotor( RightIntakeMotorPort , 	IntakeGearset, false );
+		pros::Motor   LeftIntakeMotor ( LeftIntakeMotorPort  , 	IntakeGearset, false );
+		pros::Motor   RightIntakeMotor( RightIntakeMotorPort , 	IntakeGearset, true );
 
 		void IntakerMoveVoltage(FloatType Velocity){
 			static constexpr float VecToVolRatio = RopoParameter::INTAKER_SPEED_MAX_VOLTAGE / RopoParameter::INTAKER_SPEED_MAX;

@@ -62,6 +62,17 @@ namespace ControllerModule {
 		RopoDevice::ChassisHold();
 	}
 
+	bool hittag = false;
+	// void HitBall(){
+	// 	RopoDevice::ThreeWire::HitPneumatic.set_value(true);
+	// 	pros::delay(500);
+	// 	RopoDevice::ThreeWire::HitPneumatic.set_value(false);
+	// }
+	void HitBall(){
+		hittag ^= 1;
+		RopoDevice::ThreeWire::HitPneumatic.set_value(hittag);
+	}
+
 	void RumbleMe(){
 		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
 		MasterController1.rumble("-.-.-");
@@ -212,9 +223,9 @@ void opcontrol()
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType VelocityMax = 1.7;	// 1.7 m/s
-	FloatType WcMax = 7;	// 7 
+	FloatType WcMax = 8;	// 7 
 	FloatType VelocityRestrainRatio = 0.4; // 0 ~ 1
-	FloatType WcRestrainRatio = 0.4; // 0 ~ 1
+	FloatType WcRestrainRatio = 0.45; // 0 ~ 1
 	bool ChassisMove = false;
 	const FloatType nowTime = pros::millis();
 	RopoDevice::ChassisCoast();
@@ -234,7 +245,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::IntakerPusherSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B    , RopoController::Rising, ControllerModule::ChangeCatch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::WideExternSwitch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::HitBall);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  ControllerModule::GpsUpdate);
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
 
