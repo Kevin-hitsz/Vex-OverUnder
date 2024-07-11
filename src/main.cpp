@@ -191,6 +191,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
+	autonomous_KnockoutMatch();
 	//RopoDevice::ChassisBrake();
 	//autonomous_c3();
 	//skill();
@@ -544,7 +545,11 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	RopoDevice::Chassis.AutoPositionMoveBack(0.14,-2.26);
 	ControllerModule::ChangeRightWingPush();
 	RopoDevice::Chassis.AutoPositionMove(0.64,-2.32);
-
+	ControllerModule::IntakerStop();
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.MoveVelocity(-2.0,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 }
 
 void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
