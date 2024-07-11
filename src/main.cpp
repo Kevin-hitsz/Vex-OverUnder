@@ -236,9 +236,6 @@ void opcontrol()
 	RopoDevice::ChassisCoast();
 	RopoDevice::intaker.SwitchIntakerFor();
 
-	
-	RopoDevice::rotX.reset_position();
-
 	while (true) {
 
 		FloatType XInput =  XVelocityInput.GetAxisValue();
@@ -256,7 +253,6 @@ void opcontrol()
 			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
 			ChassisMove = true;
 		}
-		pros::lcd::print(2, "%d %d", RopoDevice::rotX.get_position(), RopoDevice::rotX.get_angle());
 		pros::delay(4);
 	}
 

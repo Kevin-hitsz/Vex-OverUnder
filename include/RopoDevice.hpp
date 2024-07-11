@@ -183,9 +183,9 @@ namespace RopoDevice{
 	void DeviceInit(){
 		RopoDevice::Chassis.SetVelocityLimits(600);
         Sensors::Inertial.reset(true);
-        // if(Sensors::Inertial.get_yaw() != PROS_ERR_F){
-		// 	while(Sensors::Inertial.is_calibrating())pros::delay(20);
-		// }
+        if(Sensors::Inertial.get_yaw() != PROS_ERR_F){
+			while(Sensors::Inertial.is_calibrating())pros::delay(20);
+		}
 		pros::delay(200);
 		Position_Motor::MyPosition.initial();
 	}
@@ -236,10 +236,6 @@ namespace RopoDevice{
 		Motors::RightChassisMotor3.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 		Motors::RightChassisMotor4.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 	}
-
-	//Encoder
-	pros::Rotation rotX(3);
-	
 }
 
 #endif
