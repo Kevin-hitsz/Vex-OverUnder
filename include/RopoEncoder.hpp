@@ -17,7 +17,7 @@ namespace RopoEncoder{
             Matrix RotationMatrix;              // 旋转矩阵
             Matrix EncoderAbsolutePosition;     // 编码器位置矩阵
             Matrix AbsolutePosition;            // 位置矩阵
-            Matrix BiasMatrix;                  // 偏置矩阵(车体中心指向编码器中心)
+            Matrix BiasMatrix;                  // 偏置矩阵(车体中心指向编码器中心,若编码器XY分置则需要分别测量)
             const int sampleTime = 10;          // 采样时间(ms)
             const FloatType WheelRad = 0.0273;  // 定位轮半径
             pros::Task* BackgroundTask;
