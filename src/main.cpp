@@ -339,9 +339,6 @@ void autonomous_qualify(){
 	ControllerModule::Intake();
 	RopoDevice::Chassis.MoveVelocity(0.4,0);
 	pros::delay(350);
-	//直道+曲线推球入网
-	// ControllerModule::ChangeLeftWingPush();
-	// ControllerModule::ChangeRightWingPush();
 	RopoDevice::Chassis.MoveVelocity(-1.1,0);
 	pros::delay(1350);
 	RopoDevice::Chassis.MoveVelocity(-1.0,1.3);
@@ -354,7 +351,7 @@ void autonomous_qualify(){
 	pros::delay(650);
 	ControllerModule::Outtake();
 	RopoDevice::Chassis.MoveVelocity(0.5,0);
-	pros::delay(500);
+	pros::delay(600);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::IntakerStop();
 	//吃联队粽球
@@ -378,7 +375,7 @@ void autonomous_qualify(){
 	pros::delay(500);
 	ControllerModule::ChangeIntakerPneumatic();
 	pros::delay(500);
-	RopoDevice::Chassis.AutoPositionMove(-2.20,-0.51,-90);//-2.30 -0.51
+	RopoDevice::Chassis.AutoPositionMove(-2.15,-0.51,-90);//-2.20,-0.51,-90
 	pros::delay(800);
 	RopoDevice::Chassis.MoveVelocity(0.4,0);
 	ControllerModule::Outtake();
@@ -389,19 +386,28 @@ void autonomous_qualify(){
 	ControllerModule::Intake();
 	RopoDevice::Chassis.AutoPositionMove(-1,-1.05);//-0.95 -1
 	pros::delay(1200);
-	RopoDevice::Chassis.MoveVelocity(0.1,1);
-	pros::delay(1000);
-	RopoDevice::Chassis.MoveVelocity(-0.5,0.7);
-	pros::delay(1000);
+	RopoDevice::Chassis.MoveVelocity(0,1.5);
+	pros::delay(1600);
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(-0.4,-1.3);
+	pros::delay(600);
+	ControllerModule::ChangeRightWingPush();
+	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(-0.7,0);
 	pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(0.4,0);
-	pros::delay(300);
-	RopoDevice::Chassis.AutoRotateAbs(0);
+	pros::delay(500);
+	RopoDevice::Chassis.AutoRotateAbs(180);
+	pros::delay(700);
 	ControllerModule::Outtake();
-	RopoDevice::Chassis.MoveVelocity(0.4,0);
-	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(0.5,0);
+	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::IntakerStop();
+	//碰杆
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoPositionMove(-0.97,-0.65);
 
 
 
