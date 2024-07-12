@@ -24,7 +24,7 @@ namespace RopoDevice{
 		const char UpperExternPneumaticPort = 'F';
 		pros::ADIDigitalOut UpperExternPneumatic(UpperExternPneumaticPort,false);
 		
-		const char UnderExternPneumaticPort = 'E';
+		const char UnderExternPneumaticPort = 'A';
 		pros::ADIDigitalOut UnderExternPneumatic(UnderExternPneumaticPort,false);
 
 		const char FrontExternPneumaticPort = 'B';
@@ -34,7 +34,7 @@ namespace RopoDevice{
 		pros::ADIDigitalOut BackExternPneumatic(BackExternPneumaticPort,false);
 
 		const char IntakePusherPneumaticPort  = 'D';
-		pros::ADIDigitalOut IntakePusherPneumatic(IntakePusherPneumaticPort,false);
+		pros::ADIDigitalOut IntakePusherPneumatic(IntakePusherPneumaticPort,true);
 
 	}
 
