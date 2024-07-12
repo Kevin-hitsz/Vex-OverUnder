@@ -4,7 +4,7 @@
 #include "RopoPosition.hpp"
 #include "pros/misc.h"
 #include "pros/rtos.hpp"
-void autonomous_2();
+void autonomous_1();
 namespace ControllerModule {
 
 	bool timeFlag = 0;
@@ -63,11 +63,6 @@ namespace ControllerModule {
 	}
 
 	bool hittag = false;
-	// void HitBall(){
-	// 	RopoDevice::ThreeWire::HitPneumatic.set_value(true);
-	// 	pros::delay(500);
-	// 	RopoDevice::ThreeWire::HitPneumatic.set_value(false);
-	// }
 	void HitBall(){
 		hittag ^= 1;
 		RopoDevice::ThreeWire::HitPneumatic.set_value(hittag);
@@ -213,7 +208,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	autonomous_2();
+	autonomous_1();
 }
 
 void opcontrol()
@@ -247,7 +242,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::HitBall);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  ControllerModule::GpsUpdate);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_1);
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
@@ -288,9 +283,20 @@ void delay(){ //代替pros::delay()进行时间控制
 	return;
 }
 
-void autonomous_2(){
+void autonomous_1(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
 	// --------- begin ------------
+
+	/*----- Stage 1 抢场地中心四个球 ------*/
+	ControllerModule::HitBall();		// 出杆
+	RopoDevice::Chassis.AutoDirectMove(-0.44,0,true);
+	delay();
+	ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
+	pros::delay(300);
+	RopoDevice::Chassis.AutoRotateAbs(90);	// 旋转90度，用杆将两个球扫入己方半场
+	delay();
+	ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
+	pros::delay(300);
 
 	//---推场地中间4个球
 	//RopoDevice::gpsAddPosition.SetUpdateFlag(1);
