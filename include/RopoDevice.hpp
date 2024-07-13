@@ -24,7 +24,7 @@ namespace RopoDevice{
 		const char WideExternPneumaticPort = 'F';	//
 		pros::ADIDigitalOut WideExternPneumatic(WideExternPneumaticPort,false);
 		
-		const char UnderExternPneumaticPort = 'B';	//
+		const char UnderExternPneumaticPort = 'C';	//
 		pros::ADIDigitalOut UnderExternPneumatic(UnderExternPneumaticPort,false);
 
 		const char LeftExternPneumaticPort = 'A';	//
@@ -173,7 +173,7 @@ namespace RopoDevice{
 		return PositionVector;
 	}
 
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,0 );
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,2,0 );
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
