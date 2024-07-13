@@ -106,9 +106,7 @@ namespace RopoChassis{
 
 						if(This->AutoMoveType == OpenMove)
 						{
-							ChassisVelocity[1] = RopoMath::LowPassFilter<FloatType>(This -> ChassisVelocity[1],ChassisVelocity[1],8,1000.0 / This->SampleTime);//10
-							ChassisVelocity[2] = RopoMath::LowPassFilter<FloatType>(This -> ChassisVelocity[2],ChassisVelocity[2],8,1000.0 / This->SampleTime);//10
-							This->OpenLoopMove(ChassisVelocity);
+							This->OpenLoopMove(This -> ChassisVelocity);
 							This->reachFlag = true;
 						}
 						else if(!This->reachFlag)

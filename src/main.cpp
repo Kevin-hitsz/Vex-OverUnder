@@ -1,5 +1,6 @@
 #include "main.h"
 #include "RopoController.hpp"
+#include "RopoMath/Misc.hpp"
 #include "RopoDevice.hpp"
 #include "RopoPosition.hpp"
 #include "pros/misc.h"
@@ -244,7 +245,10 @@ void opcontrol()
 			}
 		} else {
 			RopoDevice::Chassis.StartChassisOpControll(); // 底盘MoveType设置为OpMove
-			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
+			FloatType XVelocity, YVelocity;
+			XVelocity = RopoMath::LowPassFilter<FloatType>(XInput * RopoVx,XVelocity, 8,1000.0 / 4);
+			YVelocity = RopoMath::LowPassFilter<FloatType>(WInput * RopoWc,YVelocity, 8,1000.0 / 4);
+			RopoDevice::Motors::MoveOpControll(XVelocity, YVelocity);
 			ChassisMove = true;
 		}
 		pros::delay(4);
@@ -336,6 +340,7 @@ void autonomous_1(){
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::SwitchIntakerouttake();
+	pros::delay(400);
 	ControllerModule::SwitchIntakerpusherfor();
 	pros::delay(600);
 	// 第二、三个球
@@ -344,10 +349,10 @@ void autonomous_1(){
 	RopoDevice::Chassis.AutoPositionMove(0.28, 1.98, 150);
 	delay();
 	pros::delay(300);
-	ControllerModule::FrontExternChange();
 	RopoDevice::Chassis.MoveVelocity(0.2,-5);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
+	ControllerModule::FrontExternChange();
 	RopoDevice::Chassis.AutoRotateAbs(49);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(1,0);
@@ -357,10 +362,12 @@ void autonomous_1(){
 	RopoDevice::Chassis.MoveVelocity(-1,0.5);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
+	ControllerModule::SwitchIntakerStop();
 	ControllerModule::FrontExternChange();
+	// 椪杆
+	ControllerModule::SwitchIntakerpusherfor();
 	RopoDevice::Chassis.AutoPositionMove(0.82, 1.58, -87);
 	delay();
-	ControllerModule::SwitchIntakerpusherfor();
 }
 
 // 淘汰赛
