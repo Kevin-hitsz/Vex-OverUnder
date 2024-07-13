@@ -392,16 +392,12 @@ void test(){//自动吃球
 void test1(){
 	RopoDevice::ChassisBrake();
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	RopoDevice::Chassis.MoveVelocity(1.2,0);
-	pros::delay(200);
-	RopoDevice::Chassis.MoveVelocity(0.9,-2);
-	pros::delay(900);
-	RopoDevice::Chassis.MoveVelocity(1.2,0);
-	pros::delay(400);
+	RopoDevice::Chassis.AutoPositionMoveBack(0.5,0.5,180,4000);
+	RopoDevice::Chassis.AutoPositionMoveBack(0,0,0,4000);
+
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(200);
 }
-
 
 void autonomous_C1b(){
 	RopoDevice::ChassisBrake();
@@ -508,7 +504,7 @@ void autonomous_C1b(){
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	pros::delay(400);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-1.87,1.66,10000,4000);
+	RopoDevice::Chassis.AutoPositionMove(-1.89,1.66,10000,4000);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	RopoDevice::Chassis.AutoRotateAbs(89);
 	pros::delay(800);
@@ -601,34 +597,13 @@ void autonomous_C1b(){
 //虚空扫球
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-2.05,0.95,10000,3000);
-	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
-	RopoDevice::Chassis.AutoRotateAbs(0);
-	pros::delay(600);//旋转对准
-	RopoDevice::Chassis.MoveVelocity(1.0,0);
-	pros::delay(450);
-	RopoDevice::Chassis.MoveVelocity(0.5,0);
-	pros::delay(100);
-	RopoDevice::Chassis.AutoRotateAbs(-135);
-	pros::delay(800);//旋转对准
-	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(100);
-	RopoDevice::Chassis.MoveVelocity(0.8,-2);
-	pros::delay(900);
-	RopoDevice::Chassis.AutoRotateAbs(134);
-	pros::delay(400);//旋转对准
-	RopoDevice::Chassis.MoveVelocity(1.0,0);
-	pros::delay(700);
-	RopoDevice::Chassis.MoveVelocity(0.0,0);
-	pros::delay(50);
-	RopoDevice::Chassis.MoveVelocity(-0.8,3);
-	pros::delay(600);
-	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	pros::delay(400);
+	RopoDevice::Chassis.AutoPositionMove(-1.72,0.72,10000,3000);
 	RopoDevice::Chassis.AutoRotateAbs(-45);
 	pros::delay(700);//旋转对准
 	RopoDevice::Chassis.MoveVelocity(1.2,0);
 	pros::delay(1300);
+	RopoDevice::Chassis.AutoRotateAbs(-45);
+	pros::delay(900);//旋转对准
 	//结束
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);

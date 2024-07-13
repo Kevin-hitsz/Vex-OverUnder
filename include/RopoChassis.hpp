@@ -26,7 +26,7 @@ namespace RopoChassis{
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0040 ,0.0002  ,0.00006 ,0.0013,-0.0016,0.02,0.15};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000061,0.0000014,0.0000040,0.0110 ,-0.0110 ,1.5   ,0.15};			//0.000055,0.000008,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.0000592,0.0000015,0.0000045,0.0110 ,-0.0110 ,1.5   ,0.15};			//0.000055,0.000008,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3
 			RopoControl::TankChassisCore Core;		
 			
 									
