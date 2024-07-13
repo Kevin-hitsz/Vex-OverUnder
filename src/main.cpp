@@ -289,14 +289,44 @@ void autonomous_1(){
 
 	/*----- Stage 1 抢场地中心四个球 ------*/
 	ControllerModule::HitBall();		// 出杆
-	RopoDevice::Chassis.AutoDirectMove(-0.44,0,true);
+	RopoDevice::Chassis.AutoDirectMove(0.92,0,true);
 	delay();
 	ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
 	pros::delay(300);
-	RopoDevice::Chassis.AutoRotateAbs(90);	// 旋转90度，用杆将两个球扫入己方半场
+	RopoDevice::Chassis.AutoRotateAbs(-90);	// 旋转90度，用杆将两个球扫入己方半场
+	delay();
+
+	ControllerModule::HitBall();		// 收杆
+	ControllerModule::IntakerPusherSwitch();	// Intaker收回（有必要吗）
+	
+	pros::delay(300);
+	RopoDevice::Chassis.AutoDirectMove(0.92,0.5,true);	// 直行
+	RopoDevice::Chassis.AutoRotateAbs(-60);
+	ControllerModule::SwitchIntakerFor();
 	delay();
 	ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
+	ControllerModule::HitBall();		// 出杆
 	pros::delay(300);
+	RopoDevice::Chassis.AutoRotateAbs(-90);	// 旋转90度，用杆将一个球扫入己方半场
+	delay();
+	ControllerModule::HitBall();		// 收杆
+	ControllerModule::IntakerPusherSwitch();	// Intaker收回
+	ControllerModule::WideExternSwitch();	 // 后两侧翅膀打开
+	pros::delay(300);
+	RopoDevice::Chassis.AutoRotateAbs(40);
+	delay();
+	RopoDevice::Chassis.MoveVelocity(-0.6,-0.6);
+	pros::delay(500);
+	if (fabs(RopoDevice::Position_Motor::MyPosition.Get_Angle()) > 3) {
+		RopoDevice::Chassis.AutoRotateAbs(0);
+		delay();
+	}
+	RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
+	pros::delay(400);
+
+	/*----- Stage 2 回到导入区扫球 + 导三个球 ------*/
+	
+
 
 	//---推场地中间4个球
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
