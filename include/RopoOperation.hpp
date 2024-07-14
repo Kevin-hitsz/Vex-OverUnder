@@ -23,8 +23,131 @@
 void reset_main();
 void block_main();
 
+
+/// @brief 定义自动程序
+
+void Auto(){
+
+    RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
+    pros::delay(2000);
+    RopoDevice::Chassis.AutoPositionMove(1.2,-0.3);//向前走一点
+    pros::delay(2000);
+    RopoDevice::Chassis.AutoRotateAbs(180);//扫球
+    while(!RopoDevice::Chassis.IfArrived()) pros::delay(100);
+
+    while(1) pros::delay(100);
+
+}
+void skill(){
+}
+
+
+
 /// @brief 手柄操作定义
 namespace ControllerModule {	
+	
+    bool right_wing_pneumaticvalue = false;
+    bool climb_Pneumaticvalue = false;
+    bool left_wing_pneumaticvalue = false;
+    void open_right_wing()
+    {
+        RopoDevice::ThreeWire::right_wing_pneumatic.set_value(true);
+        right_wing_pneumaticvalue = true;
+    }
+
+    void close_right_wing()
+    {
+        RopoDevice::ThreeWire::right_wing_pneumatic.set_value(false);
+        right_wing_pneumaticvalue = false;
+    }
+
+    void switch_right_wing()
+    {
+        right_wing_pneumaticvalue ^= 1;
+        RopoDevice::ThreeWire::right_wing_pneumatic.set_value(right_wing_pneumaticvalue);
+    }
+
+    void open_left_wing()
+    {
+        RopoDevice::ThreeWire::left_wing_pneumatic.set_value(true);
+        left_wing_pneumaticvalue = true;
+    }
+
+    void close_left_wing()
+    {
+        RopoDevice::ThreeWire::left_wing_pneumatic.set_value(false);
+        left_wing_pneumaticvalue = false;
+    }
+
+    void switch_left_wing()
+    {
+        left_wing_pneumaticvalue ^= 1;
+        RopoDevice::ThreeWire::left_wing_pneumatic.set_value(left_wing_pneumaticvalue);
+    }
+
+    void open_both_wing()
+    {
+        RopoDevice::ThreeWire::right_wing_pneumatic.set_value(true);
+        RopoDevice::ThreeWire::left_wing_pneumatic.set_value(true);
+        right_wing_pneumaticvalue = true;
+        left_wing_pneumaticvalue = true;
+    }
+
+    void close_both_wing()
+    {
+        RopoDevice::ThreeWire::right_wing_pneumatic.set_value(false);
+        RopoDevice::ThreeWire::left_wing_pneumatic.set_value(false);
+        right_wing_pneumaticvalue = false;
+        left_wing_pneumaticvalue = false;
+    }
+
+    void switch_both_wing()
+    {
+        right_wing_pneumaticvalue ^= 1;
+        left_wing_pneumaticvalue ^= 1;
+        RopoDevice::ThreeWire::right_wing_pneumatic.set_value(right_wing_pneumaticvalue);
+        RopoDevice::ThreeWire::left_wing_pneumatic.set_value(left_wing_pneumaticvalue);
+    }
+
+    void open_climber()
+    {
+        RopoDevice::ThreeWire::climb_Pneumatic.set_value(true);
+        climb_Pneumaticvalue = true;
+    }
+
+    void close_climber()
+    {
+        RopoDevice::ThreeWire::climb_Pneumatic.set_value(false);
+        climb_Pneumaticvalue = false;
+    }
+
+    void switch_climber()
+    {
+        climb_Pneumaticvalue ^= 1;
+        RopoDevice::ThreeWire::climb_Pneumatic.set_value(climb_Pneumaticvalue);
+    }
+    
+    void intake()
+    {
+        RopoDevice::intaker.move_velocity(-200);
+    }
+
+    void outtake()
+    {
+        RopoDevice::intaker.move_velocity(200);
+        
+    }
+
+    void intaker_stop()
+    {
+        RopoDevice::intaker.move_voltage(0);
+    }
+	
+
+    void pos_reset()
+    {
+        RopoDevice::Position_Motor::MyPosition.initial();
+    }
 
 	void RumbleMe(){
 		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
@@ -63,7 +186,7 @@ namespace ControllerModule {
 	void Test_Task()
 	{
 
-		RopoDevice::Chassis.AutoPositionMove(0.5,0,0);
+		Auto();
 		
 	}
 
@@ -86,14 +209,7 @@ namespace ControllerModule {
 
 
 
-/// @brief 定义自动程序
-namespace AutoOperation{
-void Auto(){
 
-}
-void skill(){
-}
-}
 
 
 /// @brief 其他
@@ -122,5 +238,7 @@ inline void reset_main()
 {
 	main_process=true;
 }
+
+
 
 #endif

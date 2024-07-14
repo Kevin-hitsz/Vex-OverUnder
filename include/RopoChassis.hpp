@@ -14,6 +14,7 @@
 #include <algorithm>
 
 
+
 namespace RopoChassis{
 	
 	class TankChassis{
@@ -23,8 +24,8 @@ namespace RopoChassis{
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
 			
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.001 ,0.0001  ,0.00003 ,0.0014,-0.0014,0.02,0.25};
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00010,0.000005,0.000001,0.0030,-0.0030,1,0.3};
+			inline static RopoControl::PIDRegulator DistanceRegulator{distance_pid};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {rotate_pid};
 			RopoControl::TankChassisCore Core;											
 			RopoMotorGroup::MotorGroup &LeftMotorGroup;
 			RopoMotorGroup::MotorGroup &RightMotorGroup;
@@ -94,7 +95,6 @@ namespace RopoChassis{
 							AimPosition = This->GetCurPosition();
 							IniPosition = This->GetCurPosition();
 						}
-
 						if(This->AutoMoveType == DirectMove)
 						{
 							This->OpenLoopMove(This->ChassisVelocity);
@@ -136,37 +136,25 @@ namespace RopoChassis{
 									
 									//前90%路程车体方向锁定指向末位置，后20%路程车体方向锁定为初始方向，防止末位置方向抖动
 
-									if(!This->moveReverse)
+									if(This->moveReverse)
 									{
-										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
-											DeltaRotation -= CurrentPosition[3];
-										else
-											DeltaRotation=IniPosition[3]-CurrentPosition[3];
-											
-
-										while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
-										while(DeltaRotation < -180.0) DeltaRotation += 360.0;
-									}
-									else
-									{	
 										DeltaRotation += 180;
 										if(DeltaRotation>180)
 											DeltaRotation-=360;
-
-										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
-											DeltaRotation -= CurrentPosition[3];
-										else
-											DeltaRotation=IniPosition[3]-CurrentPosition[3];
-											
-										while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
-										while(DeltaRotation < -180.0) DeltaRotation += 360.0;
 									}
+									
+									if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
+										DeltaRotation -= CurrentPosition[3];
+									else
+										DeltaRotation=IniPosition[3]-CurrentPosition[3];
+											
+									while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
+									while(DeltaRotation < -180.0) DeltaRotation += 360.0;
+									
 									
 									//方向锁定
 									//TempChassisVelocity[2] = DeltaRotation * (This->moveReverse?-1:1) * 0.02 ;
-									TempChassisVelocity[2] = DeltaRotation * 0.036 ;
-									
-
+									TempChassisVelocity[2] = DeltaRotation * RopoParameter::direct_lock_rotate ;
 								}
 								else
 								{
@@ -302,6 +290,20 @@ namespace RopoChassis{
 				AutoMoveType = Rotate;
 				DegArrived = false; 
 			}
+			/// @brief 旋转至目标角,阻塞至旋转完成
+			/// @param AimDegree 目标角
+			void AutoRotateAbs_block(FloatType AimDegree)
+			{
+				SlowDegRegulator.Reset();
+				flag=false;
+				AimPosition[3] = AimDegree;
+				AutoMoveType = Rotate;
+				DegArrived = false; 
+				while (!flag)
+				{
+					pros::delay(100);
+				}
+			}
 
 			/// @brief 相对旋转一定角度,非阻塞需要延时等待
 			/// @param RelativeDegree 相对角
@@ -316,6 +318,23 @@ namespace RopoChassis{
 				AutoMoveType = Rotate;
 				DegArrived = false; 
 			}
+			/// @brief 相对旋转一定角度,阻塞至旋转完成
+			/// @param RelativeDegree 相对角
+			void AutoRotateRelative_block(FloatType RelativeDegree)
+			{
+				SlowDegRegulator.Reset();
+				flag=false;
+				RelativeDegree += (GetCurPosition())[3];
+				if(RelativeDegree > 180 ) RelativeDegree -= 180;
+				if(RelativeDegree < -180 ) RelativeDegree += 180;
+				AimPosition[3] = RelativeDegree;
+				AutoMoveType = Rotate;
+				DegArrived = false; 
+				while (!flag)
+				{
+					pros::delay(100);
+				}
+			}
 
 			void AutoRotatePos(FloatType AimX,FloatType AimY)
 			{
@@ -325,7 +344,6 @@ namespace RopoChassis{
 				//等待到达
 				pros::delay(20);
 				while(!flag) pros::delay(100);
-
 			}
 			
 			/// @brief 直行到目标点,非阻塞需要延时等待
@@ -344,6 +362,55 @@ namespace RopoChassis{
 				DisArrived = false;
 				AutoMoveType = MoveForward;
 			}
+			/// @brief 直行到目标点,非阻塞需要延时等待
+			/// @param distance 距离
+			/// @param move 是否倒车，必须与目标坐标匹配
+			void AutoDirectMove(FloatType distance,bool move)
+			{
+				
+				DistanceRegulator.Reset();
+				moveReverse=move;
+				flag=false;
+				AimPosition[3] = GetCurPosition()[3];
+				AimPosition[1] = distance*RopoMath::Cos(AimPosition[3]);
+				AimPosition[2] = distance*RopoMath::Sin(AimPosition[3]);
+				DisArrived = false;
+				AutoMoveType = MoveForward;
+			}
+
+			/// @brief 直行到目标点,阻塞至移动结束
+			/// @param AimX 目标X
+			/// @param AimY 目标Y
+			/// @param move 是否倒车，必须与目标坐标匹配
+			void AutoDirectMove_block(FloatType AimX, FloatType AimY,bool move)
+			{
+				
+				DistanceRegulator.Reset();
+				moveReverse=move;
+				flag=false;
+				AimPosition[1] = AimX;
+				AimPosition[2] = AimY;
+				AimPosition[3] = GetCurPosition()[3];
+				DisArrived = false;
+				AutoMoveType = MoveForward;
+				while(!flag) pros::delay(100);
+			}
+			/// @brief 直行到目标点,阻塞至移动结束
+			/// @param distance 距离
+			/// @param move 是否倒车，必须与目标坐标匹配
+			void AutoDirectMove_block(FloatType distance,bool move)
+			{
+				
+				DistanceRegulator.Reset();
+				moveReverse=move;
+				flag=false;
+				AimPosition[3] = GetCurPosition()[3];
+				AimPosition[1] = distance*RopoMath::Cos(AimPosition[3]);
+				AimPosition[2] = distance*RopoMath::Sin(AimPosition[3]);
+				DisArrived = false;
+				AutoMoveType = MoveForward;
+				while(!flag) pros::delay(100);
+			}
 
 			/// @brief 直接使车移动到目标点
 			/// @param AimX 目标X坐标
@@ -351,11 +418,14 @@ namespace RopoChassis{
 			void AutoPositionMove(FloatType AimX,FloatType AimY)
 			{
 				RopoMath:: Vector CurentPosition=GetCurPosition();
-				//旋转指向目标点
-				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
-				//等待到达
-				pros::delay(20);
-				while(!flag) pros::delay(200);
+				double theta=RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]);
+				if(std::abs(theta-CurentPosition[3])>1)
+				{//旋转指向目标点
+					AutoRotateAbs(theta);
+					//等待到达
+					pros::delay(20);
+					while(!flag) pros::delay(200);
+				}
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
@@ -366,12 +436,14 @@ namespace RopoChassis{
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY)
 			{
 				RopoMath:: Vector CurentPosition=GetCurPosition();
-				//旋转指向目标点
-				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
-				//等待到达
-				pros::delay(20);
-				while(!flag) pros::delay(200);
-				
+				double theta=RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180;
+				if(std::abs(theta-CurentPosition[3])>1)
+				{//旋转指向目标点
+					AutoRotateAbs(theta);
+					//等待到达
+					pros::delay(20);
+					while(!flag) pros::delay(200);
+				}
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
 				pros::delay(20);
@@ -384,13 +456,15 @@ namespace RopoChassis{
 			/// @param Theta 目标角度
 			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta)
 			{
-				
 				RopoMath:: Vector CurentPosition=GetCurPosition();
-				//旋转指向目标点
-				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
-				//等待到达
-				pros::delay(20);
-				while(!flag) pros::delay(100);
+				double theta=RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]);
+				if(std::abs(theta-CurentPosition[3])>1)
+				{//旋转指向目标点
+					AutoRotateAbs(theta);
+					//等待到达
+					pros::delay(20);
+					while(!flag) pros::delay(200);
+				}
 				
 				AutoDirectMove(AimX,AimY,false);
 				//等待到达
@@ -428,14 +502,15 @@ namespace RopoChassis{
 
 			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta)
 			{
-				
 				RopoMath:: Vector CurentPosition=GetCurPosition();
-				//旋转指向目标点
-				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
-				//等待到达
-				pros::delay(20);
-				while(!flag) pros::delay(100);
-				
+				double theta=RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180;
+				if(std::abs(theta-CurentPosition[3])>1)
+				{//旋转指向目标点
+					AutoRotateAbs(theta);
+					//等待到达
+					pros::delay(20);
+					while(!flag) pros::delay(200);
+				}
 				AutoDirectMove(AimX,AimY,true);
 				//等待到达
 				pros::delay(20);

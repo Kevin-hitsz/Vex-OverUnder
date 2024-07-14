@@ -31,7 +31,7 @@ namespace RopoPosition{
                 S_Last_Encoder = S_Encoder;
                 // 对通信正常的电机的编码器进行求平均值
                 LeftMotorEncoder=LeftMotorGroup.get_position();
-                RightMotorEncoder=LeftMotorGroup.get_position();
+                RightMotorEncoder=RightMotorGroup.get_position();
                 // 总平均值
                 S_Encoder = (LeftMotorEncoder + RightMotorEncoder) / 2.0;  
                 return S_Encoder - S_Last_Encoder;        // 返回差值

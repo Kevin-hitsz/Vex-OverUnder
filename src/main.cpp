@@ -35,7 +35,7 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 1.6;
+	FloatType VelocityMax = 2;
 	FloatType RopoWcLimit = 8;
 		
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
@@ -43,9 +43,15 @@ void opcontrol()
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 
 	MasterController.clear();
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::InterruptMain_doTask);	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , RopoDevice::intake);	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Falling , RopoDevice::stop_take);
+	
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::InterruptMain_doTask);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1 , RopoController::Rising , ControllerModule::switch_both_wing);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2 , RopoController::Rising , ControllerModule::switch_climber);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , ControllerModule::intake);    
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Falling , ControllerModule::intaker_stop);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X , RopoController::Rising , ControllerModule::pos_reset);   
+
+
 	ButtonDetectLine.Enable();
 
 	FloatType XInput=0;
@@ -72,10 +78,9 @@ void opcontrol()
 		} 
 		else 
 		{
-			RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);
+			int32_t err=RopoDevice::Motors::MoveOpControll(XInput * RopoVx, WInput * RopoWc);			
 		}
 		pros::delay(10);
 	}
 }
-
 
