@@ -8,6 +8,7 @@
 #ifndef ROPO_OPERATION_HPP
 #define ROPO_OPERATION_HPP
 
+
 #include "main.h"
 #include "RopoApi.hpp"
 #include "RoPoPros/RopoController.hpp"
@@ -17,38 +18,17 @@
 #include "RopoPosition.hpp"
 #include "pros/misc.h"
 #include "pros/rtos.hpp"
-#include "RopoOperation.hpp"
 #include <cmath>
 
 void reset_main();
 void block_main();
 
-
-/// @brief 定义自动程序
-
-void Auto(){
-
-    RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
-    pros::delay(2000);
-    RopoDevice::Chassis.AutoPositionMove(1.2,-0.3);//向前走一点
-    pros::delay(2000);
-    RopoDevice::Chassis.AutoRotateAbs(180);//扫球
-    while(!RopoDevice::Chassis.IfArrived()) pros::delay(100);
-
-    while(1) pros::delay(100);
-
-}
-void skill(){
-}
-
-
-
-/// @brief 手柄操作定义
 namespace ControllerModule {	
 	
     bool right_wing_pneumaticvalue = false;
     bool climb_Pneumaticvalue = false;
     bool left_wing_pneumaticvalue = false;
+    bool lead_ball_pneumaticvalue = false;
     void open_right_wing()
     {
         RopoDevice::ThreeWire::right_wing_pneumatic.set_value(true);
@@ -143,6 +123,34 @@ namespace ControllerModule {
         RopoDevice::intaker.move_voltage(0);
     }
 	
+    void open_lead_ball()
+    {
+        RopoDevice::ThreeWire::lead_ball_pneumatic.set_value(true);
+        lead_ball_pneumaticvalue = true;
+    }
+
+    void close_lead_ball()
+    {
+        RopoDevice::ThreeWire::lead_ball_pneumatic.set_value(false);
+        lead_ball_pneumaticvalue = false;
+    }
+
+ void switch_lead_ball()
+    {
+        lead_ball_pneumaticvalue ^= 1; 
+        RopoDevice::ThreeWire::lead_ball_pneumatic.set_value(lead_ball_pneumaticvalue);
+    }
+
+
+    void lead_ball()
+    {
+        for(int i=1;i<=3;i++)
+        {
+            pros::delay(500);
+            RopoDevice::Chassis.AutoRotateAbs_block(131.9);
+            RopoDevice::Chassis.AutoRotateAbs_block(39.5);
+        }
+    }
 
     void pos_reset()
     {
@@ -182,7 +190,44 @@ namespace ControllerModule {
 			pros::delay(200); 	
 		}
 	}
-	//中断测试任务
+	
+}
+
+
+/// @brief 定义自动程序
+
+void Auto(){
+
+    RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
+    pros::delay(1000);
+    RopoDevice::Chassis.AutoPositionMove(1.2,-0.3);//向前走一点
+    pros::delay(1000);
+    ControllerModule::open_both_wing();//开翅膀
+    pros::delay(500);
+    RopoDevice::Chassis.AutoRotateAbs_block(180);//扫球
+    pros::delay(1000);
+    RopoDevice::Chassis.MoveVelocity(2,0);//把球推到过道
+    pros::delay(500);
+    ControllerModule::close_both_wing();//关翅膀
+    RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
+    RopoDevice::Chassis.AutoPositionMove(-0.06,0.53,39.5);//到达导球点
+    ControllerModule::lead_ball();//导球
+    RopoDevice::Chassis.AutoPositionMove(-0.25,0.4);//到达推球点
+    RopoDevice::Chassis.AutoPositionMove(-0.14,-1.95);//向前推球
+    ControllerModule::open_left_wing();//开左翅膀
+    RopoDevice::Chassis.AutoPositionMove(0.36,-2.48,0);//推球至门前
+    RopoDevice::Chassis.MoveVelocity(2,0);//推球入网
+    pros::delay(750);
+
+
+
+
+
+    while(1) pros::delay(100);
+
+}
+
+//中断测试任务
 	void Test_Task()
 	{
 
@@ -205,7 +250,13 @@ namespace ControllerModule {
 		RopoDevice::Chassis.StartChassisOpControll();
 		reset_main();
 	}
+
+void skill(){
 }
+
+
+
+/// @brief 手柄操作定义
 
 
 

@@ -44,11 +44,12 @@ void opcontrol()
 
 	MasterController.clear();
 	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::InterruptMain_doTask);
-    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1 , RopoController::Rising , ControllerModule::switch_both_wing);
-    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2 , RopoController::Rising , ControllerModule::switch_climber);
-    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , ControllerModule::intake);    
-    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Falling , ControllerModule::intaker_stop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , InterruptMain_doTask);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , ControllerModule::switch_both_wing);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2 , RopoController::Rising , ControllerModule::switch_climber);
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1 , RopoController::Rising , ControllerModule::intake);    
+    ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1 , RopoController::Falling , ControllerModule::intaker_stop);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2 , RopoController::Rising , ControllerModule::switch_lead_ball);
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X , RopoController::Rising , ControllerModule::pos_reset);   
 
 
