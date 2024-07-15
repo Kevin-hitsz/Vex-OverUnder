@@ -404,9 +404,10 @@ namespace RopoChassis{
 				DistanceRegulator.Reset();
 				moveReverse=move;
 				flag=false;
-				AimPosition[3] = GetCurPosition()[3];
-				AimPosition[1] = distance*RopoMath::Cos(AimPosition[3]);
-				AimPosition[2] = distance*RopoMath::Sin(AimPosition[3]);
+				Vector tmp=GetCurPosition();
+				AimPosition[3] = tmp[3];
+				AimPosition[1] = tmp[1]+distance*RopoMath::Cos(AimPosition[3]);
+				AimPosition[2] = tmp[2]+distance*RopoMath::Sin(AimPosition[3]);
 				DisArrived = false;
 				AutoMoveType = MoveForward;
 				while(!flag) pros::delay(100);
