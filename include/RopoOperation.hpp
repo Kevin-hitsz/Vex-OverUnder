@@ -199,31 +199,46 @@ namespace ControllerModule {
 void Auto(){
 
     RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
-    pros::delay(1000);
-    RopoDevice::Chassis.AutoPositionMove(1.2,-0.3);//向前走一点
-    pros::delay(1000);
+    RopoDevice::Chassis.AutoPositionMove(1.2,-0.35);//向前走一点
     ControllerModule::open_both_wing();//开翅膀
     pros::delay(500);
     RopoDevice::Chassis.AutoRotateAbs_block(180);//扫球
     pros::delay(1000);
-    RopoDevice::Chassis.MoveVelocity(2,0);//把球推到过道
-    pros::delay(500);
+    RopoDevice::Chassis.MoveVelocity(1,0);//把球推到过道//推不过去
+    pros::delay(450);
     ControllerModule::close_both_wing();//关翅膀
-    RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
-    RopoDevice::Chassis.AutoPositionMove(-0.06,0.53,39.5);//到达导球点
+
+    //后面加斜坡 用斜坡撞球
+    RopoDevice::Chassis.AutoRotateAbs(0);
+    pros::delay(800);
+    RopoDevice::Chassis.MoveVelocity(-1,0.9);
+    pros::delay(300);
+    RopoDevice::Chassis.MoveVelocity(1,-0.9);
+    pros::delay(300);
+
+    //RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
+    RopoDevice::Chassis.MoveVelocity(1,0);
+    pros::delay(300);
+
+
+    RopoDevice::Chassis.AutoPositionMove(-0.10,0.40,39.5);//到达导球点//-0.06 0.53//不够靠近导入区//-0.06 0.44
+
     ControllerModule::lead_ball();//导球
     RopoDevice::Chassis.AutoPositionMove(-0.25,0.4);//到达推球点
-    RopoDevice::Chassis.AutoPositionMove(-0.14,-1.95);//向前推球
+    RopoDevice::Chassis.AutoPositionMove(-0.24,-1.85);//向前推球
     ControllerModule::open_left_wing();//开左翅膀
-    RopoDevice::Chassis.AutoPositionMove(0.36,-2.48,0);//推球至门前
+    RopoDevice::Chassis.AutoPositionMove(0.22,-2.26,0);//推球至门前
     RopoDevice::Chassis.MoveVelocity(2,0);//推球入网
-    pros::delay(750);
+    pros::delay(100);
+    RopoDevice::Chassis.MoveVelocity(-0.8,0);
+    pros::delay(200);
+    RopoDevice::Chassis.AutoPositionMove(-0.24,-1.85);
+    RopoDevice::Chassis.AutoRotateAbs(90);
+    pros::delay(800);
 
-
-
-
-
-    while(1) pros::delay(100);
+    RopoDevice::Chassis.MoveVelocity(1.5,0);
+    pros::delay(250);//300
+    ControllerModule::switch_climber();//碰杆
 
 }
 
