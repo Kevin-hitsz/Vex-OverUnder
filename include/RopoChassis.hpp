@@ -27,7 +27,7 @@ namespace RopoChassis{
 			inline static RopoControl::PIDRegulator DistanceRegulator{0.0035 ,0.0001  ,0.004 ,0.002,-0.002,0.02,0.01};
 			//inline static RopoControl::PIDRegulator DistanceRegulator{0.005 ,0.0001  ,0.00006 ,0.0014,-0.0014,0.02,0.3};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000001,0.000060,0.0075 ,-0.0075 ,3.0,0.05};
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000001,0.000060,0.0075 ,-0.0075 ,3,0.05};
 			//0.000060,0.000008,0.0000025,0.0030 ,-0.0030 ,3   ,0.2
 			RopoControl::TankChassisCore Core;		
 			
