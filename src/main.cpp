@@ -477,7 +477,7 @@ void autonomous_qualify(){
 	ControllerModule::GpsUpdate();
 	ControllerModule::ChangeIntakerPneumatic();
 	ControllerModule::Intake();
-	RopoDevice::Chassis.AutoPositionMove(-1,-1.); //-1 -1.44
+	RopoDevice::Chassis.AutoPositionMove(-1,-1.48); //-1 -1.44
 	delay();
 	pros::delay(500);
 	ControllerModule::ChangeIntakerPneumatic();
