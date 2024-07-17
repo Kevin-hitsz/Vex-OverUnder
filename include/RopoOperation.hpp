@@ -197,6 +197,8 @@ namespace ControllerModule {
 /// @brief 定义自动程序
 
 void Auto(){
+	//初始化
+	RopoDevice::Chassis.StartChassisAutoControll();
 
     RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
     RopoDevice::Chassis.AutoPositionMove(1.2,-0.35);//向前走一点
