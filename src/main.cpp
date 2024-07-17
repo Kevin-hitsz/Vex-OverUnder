@@ -35,7 +35,7 @@ void opcontrol()
 	pros::Task *PrintTask = new pros::Task(ControllerModule::ControllerPrint);
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
-	FloatType VelocityMax = 2;
+	FloatType VelocityMax = 1.8;
 	FloatType RopoWcLimit = 8;
 		
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
@@ -44,7 +44,7 @@ void opcontrol()
 
 	MasterController.clear();
 	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , InterruptMain_doTask);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , autonomous);
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , ControllerModule::switch_both_wing);
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2 , RopoController::Rising , ControllerModule::switch_climber);
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1 , RopoController::Rising , ControllerModule::intake);    
