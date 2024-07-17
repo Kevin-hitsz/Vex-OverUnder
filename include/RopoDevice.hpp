@@ -135,6 +135,14 @@ namespace RopoDevice{
 			LeftIntakeMotor.move_voltage(voltage);
 			RightIntakeMotor.move_voltage(voltage);
 		}
+
+		const int HitMotorPort	=	17;
+		const pros::motor_gearset_e_t HitGearset = pros::E_MOTOR_GEAR_RED;
+		pros::Motor   HitMotor ( HitMotorPort , HitGearset, false );
+
+		void HitMoveVoltage(FloatType voltage){
+			HitMotor.move_voltage(voltage);
+		}
 		
 	}
 
