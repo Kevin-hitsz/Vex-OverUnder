@@ -585,7 +585,7 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	pros::delay(50);
 
 
-	RopoDevice::Chassis.AutoPositionMove(0.31,0.54,-135);	// 移动到三角区前
+	RopoDevice::Chassis.AutoPositionMove(0.26,0.56,-135);	// 移动到三角区前
 	ControllerModule::ChangeRightWingPush();
 	pros::delay(200);
 	RopoDevice::Chassis.AutoPositionMove(0.00,0.25,-90);	// 将球尽可能扫到通道方向，防止前往导球点时被卡
@@ -619,14 +619,20 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	ControllerModule::GpsUpdate();
 
 	RopoDevice::Chassis.AutoPositionMoveBack(-0.34,-0.10);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::ChangeLeftWingPush();
-	RopoDevice::Chassis.AutoPositionMoveBack(-0.44,-0.75,90.0);
-	RopoDevice::Chassis.MoveVelocity(-0.7,-0.2);
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.MoveVelocity(0,-5);
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoPositionMoveBack(-0.44,-0.75,90);
+	RopoDevice::Chassis.MoveVelocity(-0.7,-0.1);
 	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(-0.5,-0.2);
+	RopoDevice::Chassis.MoveVelocity(-0.5,-0.1);
 	pros::delay(1100);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(50);
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(-0.25,0.5);
 	pros::delay(2000);
 	RopoDevice::Chassis.MoveVelocity(0,0);
@@ -647,7 +653,7 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(2,0);
-	pros::delay(300);
+	pros::delay(250);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.AutoRotateAbs(156);
 	delay();
@@ -681,9 +687,13 @@ void autonomous_KnockoutMatch_1(){ // 仅自动赛后半段测试
 	ControllerModule::Intake();
 	ControllerModule::GpsUpdate();
 
-	RopoDevice::Chassis.AutoPositionMoveBack(-0.34,-0.10);
+	RopoDevice::Chassis.AutoPositionMoveBack(-0.44,-0.10);
 	ControllerModule::ChangeLeftWingPush();
-	RopoDevice::Chassis.AutoPositionMoveBack(-0.44,-0.75,90.0);
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoRotateAbs(90);
+	delay();
+	ControllerModule::ChangeRightWingPush();
+	RopoDevice::Chassis.AutoPositionMoveBack(-0.44,-0.75);
 	RopoDevice::Chassis.MoveVelocity(-0.7,-0.1);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,-0.1);
