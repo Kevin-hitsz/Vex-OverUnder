@@ -21,12 +21,12 @@ namespace RopoChassis{
 			static constexpr float WheelRad = RopoParameter::WHEEL_RAD;						//轮子半径
 			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
 			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
-			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.007;  //加速过程每SampleTime的增加的速度
+			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.009;  //加速过程每SampleTime的增加的速度
 			static constexpr float AccelerationVelocityLimits = 1.2;
 			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.0040 ,0.0002  ,0.00006 ,0.0013,-0.0016,0.02,0.15};
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0040 ,0.00023  ,0.00006 ,0.0013,-0.0016,0.02,0.15};
 			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
-			inline static RopoControl::PIDRegulator SlowDegRegulator {0.0000592,0.0000015,0.0000045,0.0110 ,-0.0110 ,1.5   ,0.15};			//0.000055,0.000008,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.000061,0.0000015,0.0000040,0.0110 ,-0.0110 ,1.5   ,0.15};			//0.000055,0.000008,0.0000030,0.0060 ,-0.0060 ,1.8   ,0.3
 			RopoControl::TankChassisCore Core;		
 			
 									
