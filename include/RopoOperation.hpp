@@ -179,7 +179,13 @@ namespace ControllerModule {
         {
 			MasterController.print(0,0,"%.2f,%.2f,%.1f ",RopoDevice::Position_Motor::MyPosition.Get_X()
 			,RopoDevice::Position_Motor::MyPosition.Get_Y(),RopoDevice::Position_Motor::MyPosition.Get_Angle());
-			pros::delay(200); 	
+            pros::delay(100);
+            MasterController.print(1,0,"%.2f,%.2f ",RopoDevice:: GetTransformedPosition()[1],
+			RopoDevice:: GetTransformedPosition()[2]);
+            pros::delay(100);
+            MasterController.print(2,0,"%.2f,%.2f,%.0f,%.2f ",RopoDevice:: Gpss::vexGps.get_status().x,
+			RopoDevice:: Gpss::vexGps.get_status().y,RopoDevice:: Gpss::vexGps.get_status().yaw,RopoDevice:: Gpss::vexGps.get_error());
+			pros::delay(100); 	
 		}
 	}
 	//中断测试任务

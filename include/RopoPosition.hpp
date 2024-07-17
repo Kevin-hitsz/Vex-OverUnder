@@ -56,7 +56,7 @@ namespace RopoPosition{
                         This -> X  += cos(This->Angle/180*Pi) * This->Delta_Distance;
                         This -> Y  += sin(This->Angle/180*Pi) * This->Delta_Distance;
                     }
-                    pros::lcd::print(1,"X:%.4f,Y:%.4f,theta:%f",This->X,This->Y,This -> Angle);
+                    pros::lcd::print(0,"X:%.4f,Y:%.4f,theta:%f",This->X,This->Y,This -> Angle);
                     pros::delay(SampleTime);
                 }
 			}

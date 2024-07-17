@@ -50,7 +50,8 @@ void opcontrol()
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Rising , ControllerModule::intake);    
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1 , RopoController::Falling , ControllerModule::intaker_stop);
     ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X , RopoController::Rising , ControllerModule::pos_reset);   
-
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising , ControllerModule::GpsUpdate);   
+	
 
 	ButtonDetectLine.Enable();
 

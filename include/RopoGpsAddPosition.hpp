@@ -45,7 +45,7 @@ namespace RopoGpsAddPosition {
                     This -> transformedPosition[2] = This -> gpsRelativeY0 + This -> originalPosition[2] - This -> originalY0;
                     //x,y坐标通过gps是否更新来使得全场定位，gps的全场坐标通过坐标转换，转换为对于车体初始化的相对坐标
                     This -> transformedPosition[3] = This -> originalPosition[3];//theta直接拿来
-
+                    pros::lcd::print(1,"X:%.4f,Y:%.4f",This -> transformedPosition[1],This -> transformedPosition[2]);
                     This -> GpsTransformUpdate();
                     pros::delay(This -> sampleTime);
                     if(This -> updateFlag != 0) {
@@ -63,8 +63,8 @@ namespace RopoGpsAddPosition {
                     double X = gps1.get_status().x - RopoParameter::GPSX_INITIAL;
                     double Y = gps1.get_status().y - RopoParameter::GPSY_INITIAL;
                     double theta = RopoParameter::ROPO_HEADING_INITIAL;
-                    gpsRelativeX = ( X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta)) * 0.9 + gpsRelativeX * 0.1;
-                    gpsRelativeY = (-X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta)) * 0.9 + gpsRelativeY * 0.1;
+                    gpsRelativeX = ( X * RopoMath::Cos(theta) + Y * RopoMath::Sin(theta));
+                    gpsRelativeY = (-X * RopoMath::Sin(theta) + Y * RopoMath::Cos(theta)) ;
                     originalX = originalPosition[1];
                     originalY = originalPosition[2];
                 }
