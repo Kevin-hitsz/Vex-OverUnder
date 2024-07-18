@@ -30,6 +30,9 @@ namespace RopoDevice{
 		
 		
 		pros::ADIDigitalOut right_wing_pneumatic(RopoParameter::right_wing_pneumatic_port,false);
+
+
+		pros::ADIDigitalOut lead_ball_pneumatic(RopoParameter::lead_ball_pneumatic_port,false);
 	}
 
 	//创建惯性传感器
@@ -125,7 +128,7 @@ namespace RopoDevice{
 	}
 
 	void MotorsInit(){
-		Chassis.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+		Chassis.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
 		intaker.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 	}
 

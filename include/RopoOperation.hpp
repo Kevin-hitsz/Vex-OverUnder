@@ -8,6 +8,7 @@
 #ifndef ROPO_OPERATION_HPP
 #define ROPO_OPERATION_HPP
 
+
 #include "main.h"
 #include "RopoApi.hpp"
 #include "RoPoPros/RopoController.hpp"
@@ -17,38 +18,17 @@
 #include "RopoPosition.hpp"
 #include "pros/misc.h"
 #include "pros/rtos.hpp"
-#include "RopoOperation.hpp"
 #include <cmath>
 
 void reset_main();
 void block_main();
 
-
-/// @brief 定义自动程序
-
-void Auto(){
-
-    RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
-    pros::delay(2000);
-    RopoDevice::Chassis.AutoPositionMove(1.2,-0.3);//向前走一点
-    pros::delay(2000);
-    RopoDevice::Chassis.AutoRotateAbs(180);//扫球
-    while(!RopoDevice::Chassis.IfArrived()) pros::delay(100);
-
-    while(1) pros::delay(100);
-
-}
-void skill(){
-}
-
-
-
-/// @brief 手柄操作定义
 namespace ControllerModule {	
 	
     bool right_wing_pneumaticvalue = false;
     bool climb_Pneumaticvalue = false;
     bool left_wing_pneumaticvalue = false;
+    bool lead_ball_pneumaticvalue = false;
     void open_right_wing()
     {
         RopoDevice::ThreeWire::right_wing_pneumatic.set_value(true);
@@ -143,6 +123,42 @@ namespace ControllerModule {
         RopoDevice::intaker.move_voltage(0);
     }
 	
+    void open_lead_ball()
+    {
+        RopoDevice::ThreeWire::lead_ball_pneumatic.set_value(true);
+        lead_ball_pneumaticvalue = true;
+    }
+
+    void close_lead_ball()
+    {
+        RopoDevice::ThreeWire::lead_ball_pneumatic.set_value(false);
+        lead_ball_pneumaticvalue = false;
+    }
+
+ void switch_lead_ball()
+    {
+        lead_ball_pneumaticvalue ^= 1; 
+        RopoDevice::ThreeWire::lead_ball_pneumatic.set_value(lead_ball_pneumaticvalue);
+    }
+
+
+    void lead_ball()
+    {
+        for(int i=1;i<=3;i++)
+        {
+            RopoDevice::Chassis.MoveVelocity(0.3,0);
+            pros::delay(10);
+            pros::delay(500);
+            RopoDevice::Chassis.AutoRotateAbs_block(-90);//131.9
+            // RopoDevice::Chassis.MoveVelocity(0.3,0);
+            // pros::delay(100);
+            if(i==3){
+                break;
+            }
+            RopoDevice::Chassis.AutoRotateAbs_block(129.5);
+
+        }
+    }
 
     void pos_reset()
     {
@@ -188,7 +204,78 @@ namespace ControllerModule {
 			pros::delay(100); 	
 		}
 	}
-	//中断测试任务
+	
+}
+
+
+/// @brief 定义自动程序
+
+void Auto(){
+    //初始化
+    RopoDevice::Chassis.StartChassisAutoControll();
+    pros::delay(100);
+   
+
+    RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
+    RopoDevice::Chassis.AutoPositionMove(1.2,-0.47);//向前走一点
+    ControllerModule::open_both_wing();//开翅膀
+    pros::delay(200);
+    RopoDevice::Chassis.AutoRotateAbs_block(180);//扫球
+    pros::delay(300);
+    RopoDevice::Chassis.MoveVelocity(1,0);//把球推到过道//推不过去
+    pros::delay(470);
+    ControllerModule::close_both_wing();//关翅膀
+
+    //后面加斜坡 用斜坡撞球
+    RopoDevice::Chassis.AutoRotateAbs(0);
+    pros::delay(800);
+    RopoDevice::Chassis.MoveVelocity(-1,0.5);
+    pros::delay(270);
+    RopoDevice::Chassis.MoveVelocity(1,-0.5);
+    pros::delay(270);
+
+    //RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
+    RopoDevice::Chassis.MoveVelocity(1,0);
+    pros::delay(300);
+
+
+    RopoDevice::Chassis.AutoPositionMove(0.17,0.20,129.5);//到达导球点//-0.06 0.53//不够靠近导入区//-0.06 0.44//-0.05,0.35
+    ControllerModule::open_left_wing();
+
+    ControllerModule::lead_ball();//导球
+    ControllerModule::close_left_wing();
+    RopoDevice::Chassis.AutoRotateAbs(-129.5);
+    pros::delay(700);
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
+    pros::delay(500);
+    RopoDevice::Chassis.AutoRotateAbs(-90);
+    pros::delay(300);
+
+    //RopoDevice::Chassis.AutoPositionMove(-0.15,0.10,-90);//到达推球点//-0.30,0.3,90
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
+    pros::delay(1300);
+   RopoDevice::Chassis.AutoPositionMove(-0.35,-1.60);//向前推球//-0.10
+    ControllerModule::open_left_wing();//开左翅膀
+    RopoDevice::Chassis.AutoPositionMove(0.20,-2.1,0);//推球至门前//y-2.20
+    RopoDevice::Chassis.MoveVelocity(1.8,0);//推球入网
+    pros::delay(100);
+    RopoDevice::Chassis.MoveVelocity(-0.8,0);
+    pros::delay(200);
+    ControllerModule::close_left_wing();
+    RopoDevice::Chassis.AutoPositionMove(-0.30,-1.50);//-0.24,-1.85
+    RopoDevice::Chassis.AutoRotateAbs(90);
+    pros::delay(800);
+    ControllerModule::switch_climber();//碰杆
+    RopoDevice::Chassis.AutoPositionMove(-0.3,-0.55);//-0.3 -0.55
+
+    // RopoDevice::Chassis.MoveVelocity(0.8,0);
+    // pros::delay(200);//300
+    
+
+
+}
+
+//中断测试任务
 	void Test_Task()
 	{
 
@@ -211,7 +298,13 @@ namespace ControllerModule {
 		RopoDevice::Chassis.StartChassisOpControll();
 		reset_main();
 	}
+
+void skill(){
 }
+
+
+
+/// @brief 手柄操作定义
 
 
 

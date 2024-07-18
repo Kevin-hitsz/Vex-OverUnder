@@ -41,6 +41,7 @@ namespace RopoParameter {
 	const char climb_pneumatic_port = 'B';
 	const char left_wing_pneumatic_port  = 'C';
 	const char right_wing_pneumatic_port  = 'D';
+	const char lead_ball_pneumatic_port = 'E';
 
 
 		const pros::motor_gearset_e_t ChassisGearset = pros::E_MOTOR_GEAR_BLUE;
