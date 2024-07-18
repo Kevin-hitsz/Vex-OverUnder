@@ -144,19 +144,21 @@ namespace ControllerModule {
 
     void lead_ball()
     {
-        for(int i=1;i<=5;i++)
+        for(int i=1;i<=4;i++)
         {
-            RopoDevice::Chassis.MoveVelocity(0.3,0);
+            RopoDevice::Chassis.MoveVelocity(0.2,0);
             pros::delay(10);
             pros::delay(500);
             RopoDevice::Chassis.AutoRotateAbs_block(-90);//131.9
             // RopoDevice::Chassis.MoveVelocity(0.3,0);
             // pros::delay(100);
-            if(i==5){
-                ControllerModule::GpsUpdate();
+            if(i==4){
+                
                 break;
             }
             RopoDevice::Chassis.AutoRotateAbs_block(129.5);
+            if(i==3){GpsUpdate();}
+
 
         }
     }
@@ -222,40 +224,53 @@ void Auto(){
    
 
     RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
-    RopoDevice::Chassis.AutoRotateAbs_block(-90);
+    //RopoDevice::Chassis.AutoRotateAbs_block(-90);
     RopoDevice::Chassis.MoveVelocity(0.6,0);//把球推到过道//推不过去
-    pros::delay(550);
+    pros::delay(580);
     
     //RopoDevice::Chassis.AutoPositionMove(1.2,-0.47);//向前走一点
     ControllerModule::open_both_wing();//开翅膀
     pros::delay(200);
+
     RopoDevice::Chassis.AutoRotateAbs_block(180);//扫球
     pros::delay(300);
-    RopoDevice::Chassis.MoveVelocity(1,0);//把球推到过道//推不过去
-    pros::delay(470);
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//把球推到过道//推不过去
+    pros::delay(280);
     ControllerModule::close_both_wing();//关翅膀
-    pros::delay(400);
+    pros::delay(300);
+    RopoDevice::Chassis.AutoRotateAbs_block(-90);
+    
+    RopoDevice::Chassis.MoveVelocity(0.8,0);
+    pros::delay(200);
+    RopoDevice::Chassis.AutoRotateAbs_block(0);
+    RopoDevice::Chassis.MoveVelocity(-0.4,0);
+    pros::delay(500);
 
-    //后面加斜坡 用斜坡撞球
-    RopoDevice::Chassis.AutoRotateAbs(0);
-    pros::delay(800);
-    RopoDevice::Chassis.MoveVelocity(-0.4,0.5);
-    pros::delay(270);
-    RopoDevice::Chassis.MoveVelocity(0.4,-0.5);
-    pros::delay(270);
-    ControllerModule::GpsUpdate();
+
+
+    // //后面加斜坡 用斜坡撞球
+    // RopoDevice::Chassis.AutoRotateAbs_block(0);
+    
+    // RopoDevice::Chassis.MoveVelocity(-0.3,0.5);
+    // pros::delay(270);
+    // RopoDevice::Chassis.MoveVelocity(0.4,-0.5);
+    // pros::delay(270);
+    
     //RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
     RopoDevice::Chassis.MoveVelocity(1,0);
     pros::delay(300);
+    RopoDevice::Chassis.AutoRotateAbs_block(-90);
+    ControllerModule::GpsUpdate();
 
 
-    RopoDevice::Chassis.AutoPositionMove(0.16,0.48,135.6);//到达导球点//-0.06 0.53//不够靠近导入区//不开gps 0.17,0.20,129.5
+
+    RopoDevice::Chassis.AutoPositionMove(0.16,0.48,135.6);//到达导球点
     ControllerModule::open_left_wing();
 
     ControllerModule::lead_ball();//导球
     ControllerModule::close_left_wing();
 
-    RopoDevice::Chassis.AutoPositionMove(-0.1,-0.1,-90.9);//-0.05
+    RopoDevice::Chassis.AutoPositionMove(-0.13,0.03,-90.9);//容易擦边 位置不对
     // RopoDevice::Chassis.AutoRotateAbs(-129.5);
     // pros::delay(700);
     // RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
@@ -267,7 +282,7 @@ void Auto(){
     RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
     pros::delay(1300);
 
-   RopoDevice::Chassis.AutoPositionMove(-0.03,-1.75,-88.6);//向前推球//-0.10
+   RopoDevice::Chassis.AutoPositionMove(-0.03,-1.85,-88.6);//向前推球//-0.10
     ControllerModule::open_left_wing();//开左翅膀
     RopoDevice::Chassis.AutoPositionMove(0.46,-2.32,0);//推球至门前//y-2.20
     RopoDevice::Chassis.MoveVelocity(1.8,0);//推球入网
@@ -284,6 +299,7 @@ void Auto(){
     pros::delay(800);
    
     RopoDevice::Chassis.AutoPositionMove(-0.15,-0.80);//-0.3 -0.55
+    pros::delay(100);
     ControllerModule::switch_climber();//碰杆
 
     // RopoDevice::Chassis.MoveVelocity(0.8,0);
