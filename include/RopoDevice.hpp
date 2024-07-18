@@ -105,7 +105,7 @@ namespace RopoDevice{
 						     RopoParameter::GPS_HEADING_INITIAL, RopoParameter::GPSX_OFFSET , RopoParameter::GPSY_OFFSET);
 	}
 	
-	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20);
+	RopoGpsAddPosition::GpsAddPositionModule gpsAddPosition(GetPosition,Gpss::vexGps,20,0);
 
 	Vector GetTransformedPosition(){
 		return gpsAddPosition.GetTransformedPosition();
