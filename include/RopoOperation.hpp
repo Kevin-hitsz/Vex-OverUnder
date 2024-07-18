@@ -269,7 +269,7 @@ void autonomous_C1b(){
 	pros::delay(10);
 	ControllerModule::ChangeIntakerPneumatic0();//？
 	pros::delay(800);
-	for(int i = 0; i < 3; i++){
+	for(int i = 0; i < 5; i++){
 		RopoDevice::Chassis.MoveVelocity(0.0,3.6);
 		pros::delay(430);
 		ControllerModule::ChangeLift();
@@ -286,14 +286,13 @@ void autonomous_C1b(){
 		RopoDevice::Chassis.MoveVelocity(0.33,0.05);
 		pros::delay(400);
 	}
-	//能不能简化导球缩短时间 导更多球《=10//注释掉changelift
 	RopoDevice::Position_Motor::MyPosition.Set_XY(0, 0);//重置原点
 	RopoDevice::Chassis.AutoRotateAbs(50);
 	pros::delay(600);
 	ControllerModule::ChangeLift();//收
 	RopoDevice::Chassis.AutoRotateAbs(-90);//-91
 	pros::delay(900);
-	ControllerModule::WingPush();//开翅膀
+	
 	RopoDevice::Chassis.MoveVelocity(-0.55,0.1);
 	pros::delay(560);
 	RopoDevice::Chassis.AutoRotateAbs(-52);//-51
@@ -303,6 +302,7 @@ void autonomous_C1b(){
 	RopoDevice::Chassis.AutoDirectMove(-1.38,1.58,1);//过道//车头对x//y 1.65
 
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
+	ControllerModule::WingPush();//开翅膀
 
 	RopoDevice::Chassis.AutoRotateAbs(-40);//过场地四角
 	pros::delay(700);
@@ -382,7 +382,7 @@ void autonomous_C1b(){
 
 //	//中间吃球+推球
 	ControllerModule::Intake();
-	RopoDevice::Chassis.AutoPositionMove(-1.53,0.40,10000,4500);//定位有点问题//y 0.20//0.05 //正中心位
+	RopoDevice::Chassis.AutoPositionMove(-1.78,0.15,10000,4500);//定位有点问题//y 0.20//0.05 //正中心位//-1.53,0.40
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	RopoDevice::Chassis.MoveVelocity(0.3,1.0);
 	// pros::delay(600);
@@ -444,8 +444,8 @@ void autonomous_C1b(){
 	pros::delay(800); 
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
 	pros::delay(200); 
-	 ControllerModule::ChangeLift();
-	 pros::delay(200);
+	ControllerModule::ChangeLift();
+	pros::delay(50);
 }
 
 
