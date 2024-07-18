@@ -146,9 +146,17 @@ namespace ControllerModule {
     {
         for(int i=1;i<=3;i++)
         {
+            RopoDevice::Chassis.MoveVelocity(0.3,0);
+            pros::delay(10);
             pros::delay(500);
-            RopoDevice::Chassis.AutoRotateAbs_block(131.9);
-            RopoDevice::Chassis.AutoRotateAbs_block(39.5);
+            RopoDevice::Chassis.AutoRotateAbs_block(-90);//131.9
+            // RopoDevice::Chassis.MoveVelocity(0.3,0);
+            // pros::delay(100);
+            if(i==3){
+                break;
+            }
+            RopoDevice::Chassis.AutoRotateAbs_block(129.5);
+
         }
     }
 
@@ -197,50 +205,67 @@ namespace ControllerModule {
 /// @brief 定义自动程序
 
 void Auto(){
-	//初始化
-	RopoDevice::Chassis.StartChassisAutoControll();
+    //初始化
+    RopoDevice::Chassis.StartChassisAutoControll();
+    pros::delay(100);
+   
 
     RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
-    RopoDevice::Chassis.AutoPositionMove(1.2,-0.35);//向前走一点
+    RopoDevice::Chassis.AutoPositionMove(1.2,-0.47);//向前走一点
     ControllerModule::open_both_wing();//开翅膀
-    pros::delay(500);
+    pros::delay(200);
     RopoDevice::Chassis.AutoRotateAbs_block(180);//扫球
-    pros::delay(1000);
+    pros::delay(300);
     RopoDevice::Chassis.MoveVelocity(1,0);//把球推到过道//推不过去
-    pros::delay(450);
+    pros::delay(470);
     ControllerModule::close_both_wing();//关翅膀
 
     //后面加斜坡 用斜坡撞球
     RopoDevice::Chassis.AutoRotateAbs(0);
     pros::delay(800);
-    RopoDevice::Chassis.MoveVelocity(-1,0.9);
-    pros::delay(300);
-    RopoDevice::Chassis.MoveVelocity(1,-0.9);
-    pros::delay(300);
+    RopoDevice::Chassis.MoveVelocity(-1,0.5);
+    pros::delay(270);
+    RopoDevice::Chassis.MoveVelocity(1,-0.5);
+    pros::delay(270);
 
     //RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
     RopoDevice::Chassis.MoveVelocity(1,0);
     pros::delay(300);
 
 
-    RopoDevice::Chassis.AutoPositionMove(-0.10,0.40,39.5);//到达导球点//-0.06 0.53//不够靠近导入区//-0.06 0.44
+    RopoDevice::Chassis.AutoPositionMove(0.17,0.20,129.5);//到达导球点//-0.06 0.53//不够靠近导入区//-0.06 0.44//-0.05,0.35
+    ControllerModule::open_left_wing();
 
     ControllerModule::lead_ball();//导球
-    RopoDevice::Chassis.AutoPositionMove(-0.25,0.4);//到达推球点
-    RopoDevice::Chassis.AutoPositionMove(-0.24,-1.85);//向前推球
+    ControllerModule::close_left_wing();
+    RopoDevice::Chassis.AutoRotateAbs(-129.5);
+    pros::delay(700);
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
+    pros::delay(500);
+    RopoDevice::Chassis.AutoRotateAbs(-90);
+    pros::delay(300);
+
+    //RopoDevice::Chassis.AutoPositionMove(-0.15,0.10,-90);//到达推球点//-0.30,0.3,90
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
+    pros::delay(1300);
+   RopoDevice::Chassis.AutoPositionMove(-0.35,-1.60);//向前推球//-0.10
     ControllerModule::open_left_wing();//开左翅膀
-    RopoDevice::Chassis.AutoPositionMove(0.22,-2.26,0);//推球至门前
-    RopoDevice::Chassis.MoveVelocity(2,0);//推球入网
+    RopoDevice::Chassis.AutoPositionMove(0.20,-2.1,0);//推球至门前//y-2.20
+    RopoDevice::Chassis.MoveVelocity(1.8,0);//推球入网
     pros::delay(100);
     RopoDevice::Chassis.MoveVelocity(-0.8,0);
     pros::delay(200);
-    RopoDevice::Chassis.AutoPositionMove(-0.24,-1.85);
+    ControllerModule::close_left_wing();
+    RopoDevice::Chassis.AutoPositionMove(-0.30,-1.50);//-0.24,-1.85
     RopoDevice::Chassis.AutoRotateAbs(90);
     pros::delay(800);
-
-    RopoDevice::Chassis.MoveVelocity(1.5,0);
-    pros::delay(250);//300
     ControllerModule::switch_climber();//碰杆
+    RopoDevice::Chassis.AutoPositionMove(-0.3,-0.55);//-0.3 -0.55
+
+    // RopoDevice::Chassis.MoveVelocity(0.8,0);
+    // pros::delay(200);//300
+    
+
 
 }
 
