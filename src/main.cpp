@@ -290,12 +290,13 @@ void autonomous_1(){
 
 	/*----- Stage 1 抢场地中心四个球 ------*/
 	ControllerModule::HitBall();		// 出杆
-	RopoDevice::Chassis.AutoDirectMove(1.00,0,false);
+	RopoDevice::Chassis.AutoDirectMove(0.95,0,false);
 	delay();
 	ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
-	pros::delay(250);
-	RopoDevice::Chassis.MoveVelocity(0, -1.5);
-	pros::delay(700);						// 先转一点，防止太快
+	
+	pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(0, -1.5);
+	// pros::delay(700);						// 先转一点，防止太快
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);	// 开启GPS更新
 	RopoDevice::Chassis.AutoRotateAbs(-120);	// 旋转120度，用杆将两个球扫入己方半场
 	delay();
@@ -321,7 +322,7 @@ void autonomous_1(){
 	pros::delay(600);
 	ControllerModule::HitBall();		// 出杆
 	pros::delay(400);
-	RopoDevice::Chassis.AutoRotateAbs(-90);	// 旋转至-70度，用杆将一个球扫入己方半场
+	RopoDevice::Chassis.AutoRotateAbs(-80);	// 旋转至-70度，用杆将一个球扫入己方半场
 	delay();
 	RopoDevice::ChassisBrake();
 	ControllerModule::HitBall();		// 收杆
@@ -330,90 +331,96 @@ void autonomous_1(){
 	RopoDevice::Chassis.MoveVelocity(-0.6, 0.0);
 	pros::delay(300);
 	// //RopoDevice::Chassis.AutoPositionMoveWithTimeLimit(1.13, -0.11, 1500);	// 找点
-	RopoDevice::Chassis.AutoRotateAbs(40);	// 旋转至30度
+	RopoDevice::Chassis.AutoRotateAbs(45);	// 旋转至45度
 	delay();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);	//关闭GPS更新
 	
-	ControllerModule::WideExternSwitch();	// 两侧翅膀打开
-	// RopoDevice::Chassis.AutoPositionMove(1.03, -0.41);	// 找点
+	ControllerModule::PushExternSwitch();	// 两侧翅膀打开
+	// RopoDevice::Chassis.AutoPositionMove(1.29, -0.24);	// 找点
 	// delay();
-	// RopoDevice::Chassis.AutoRotateAbs(0);
-	// delay();
-	// RopoDevice::Chassis.MoveVelocity(1.0,0.0);
-	// pros::delay(400);
-	// ControllerModule::SwitchIntakerForToBack();
-	// RopoDevice::Chassis.MoveVelocity(0.4, 0.0);
-	// pros::delay(800);
-	// // if (fabs(RopoDevice::Position_Motor::MyPosition.Get_Angle() + 180) > 3) {
-	// // 	RopoDevice::Chassis.AutoRotateAbs(180);
-	// // 	delay();
-	// // }
-	// RopoDevice::Chassis.MoveVelocity(0,-0.8);
-	// pros::delay(1000);
-	// RopoDevice::Chassis.MoveVelocity(0,0.8);
-	// pros::delay(1000);
-	// // RopoDevice::Chassis.MoveVelocity(-0.6,0.0);
-	// // pros::delay(100);
-	// // RopoDevice::Chassis.AutoPositionMoveWithTimeLimit(0.55, -0.41, 1000);
+	RopoDevice::Chassis.MoveVelocity(-0.6,-1.0);
+	pros::delay(500);
+	RopoDevice::Chassis.AutoRotateAbs(0);
+	delay();
+	RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
+	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(-0.4, 0.0);
+	pros::delay(800);
+	
 
 	// /*----- Stage 2 回到导入区扫球 + 导三个球 ------*/
-	// ControllerModule::BothExternSwitch();	 // 前翅膀关闭
-	// ControllerModule::SwitchIntakerForToBack();
-	// // RopoDevice::Chassis.MoveVelocity(-0.6,0.0);
-	// // pros::delay(100);
-	// RopoDevice::Chassis.AutoRotateAbs(-85.0);	// 旋转至-90度
-	// delay();
-	// RopoDevice::Chassis.MoveVelocity(0.0,0.0);
-	// pros::delay(300);
-	// RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
-	// RopoDevice::gpsAddPosition.SetUpdateFlag(1);	// 开启GPS更新
-	// pros::delay(1400);
-	// RopoDevice::Chassis.MoveVelocity(0.0,0.0);
-	// pros::delay(600);
-	
-	// RopoDevice::Chassis.AutoRotateAbs(-135);	// 再向右旋转45度
-	// delay();
-	// RopoDevice::Chassis.MoveVelocity(0.8,0.0);
-	// pros::delay(200);
-	// ControllerModule::BothExternSwitch();	// 前两侧翅膀打开
-	// ControllerModule::SwitchIntakerForToBack();
-	// pros::delay(250);
-	// RopoDevice::Chassis.MoveVelocity(0.8,2.0);
-	// pros::delay(400);
-	// // RopoDevice::Chassis.MoveVelocity(0.8,0.0);
-	// // pros::delay(400);
-	// RopoDevice::Chassis.MoveVelocity(0,0);		// 第一次扫球结束
-
-	// ControllerModule::SwitchIntakerBack();
-	// ControllerModule::BothExternSwitch();	// 前两侧翅膀关闭
+	ControllerModule::PushExternSwitch();	 // 翅膀关闭
+	RopoDevice::Chassis.MoveVelocity(0.8, 0.0);
+	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(-0.8, 0.0);
+	pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(-0.6,0.0);
 	// pros::delay(100);
-	// // RopoDevice::Chassis.MoveVelocity(-0.8,-2.0);
-	// // pros::delay(400);
-	// RopoDevice::Chassis.AutoPositionMoveBack(0.36, 0.72, 135);	// 找点导入
-	// delay();
-	// RopoDevice::gpsAddPosition.SetUpdateFlag(0);	// 关闭GPS更新
-	// ControllerModule::HitBall();		// 出杆
-	// RopoDevice::ChassisHold();
-	// pros::delay(1000);
-	// for (int i = 0; i < 5; i++)
-	// {
-	// 	RopoDevice::Chassis.AutoRotateAbs(170);	// 旋转至170度
-	// 	delay();
-	// 	RopoDevice::Chassis.AutoRotateAbs(110);
-	// 	delay();
-	// }
-	// RopoDevice::Chassis.AutoRotateAbs(-155);	// 旋转至-155度
-	// delay();
-	// ControllerModule::HitBall();		// 收杆
-	// RopoDevice::Chassis.AutoRotateAbs(-125);	// 旋转至-125度
-	// delay();
-	// ControllerModule::BothExternSwitch();	// 前两侧翅膀打开
+	RopoDevice::Chassis.AutoRotateAbs(-87.0);	// 旋转至-90度
+	delay();
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
+	RopoDevice::gpsAddPosition.SetUpdateFlag(1);	// 开启GPS更新
+	pros::delay(1400);
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	pros::delay(600);
+	
+	RopoDevice::Chassis.AutoRotateAbs(-135);	// 再向右旋转45度
+	delay();
+	RopoDevice::Chassis.MoveVelocity(0.8,0.0);
+	pros::delay(300);
+	ControllerModule::LeftExternSwitch();	// 左侧翅膀打开
+	ControllerModule::SwitchIntakerForToBack();
+	pros::delay(250);
+	RopoDevice::Chassis.MoveVelocity(0.8,2.2);
+	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(1.0,0.0);
+	pros::delay(800);
+	RopoDevice::Chassis.MoveVelocity(0,0);		// 第一次扫球结束
 
-	// RopoDevice::Chassis.MoveVelocity(0.75,0.4);	// 过窄道
-	// pros::delay(500);
-	// ControllerModule::LeftExternSwitch();	// 左侧翅膀关闭
-	// RopoDevice::Chassis.MoveVelocity(1.2,0);
-	// pros::delay(1000);				// 窄道直行
+	ControllerModule::SwitchIntakerBack();
+	ControllerModule::LeftExternSwitch();	// 左侧翅膀关闭
+	pros::delay(100);
+	RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
+	pros::delay(600);
+	RopoDevice::Chassis.AutoPositionMoveBack(0.30, 0.65, 130);	// 找点导入
+	delay();
+	RopoDevice::Chassis.MoveVelocity(1.0,0.0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
+	ControllerModule::IntakerPusherSwitch();
+	// //ControllerModule::HitBall();		// 出杆
+	RopoDevice::ChassisHold();
+	RopoDevice::gpsAddPosition.SetUpdateFlag(0);	// 关闭GPS更新
+	pros::delay(800);
+	for (int i = 0; i < 7; i++)
+	{
+		RopoDevice::Chassis.AutoRotateAbs(170);	// 旋转至170度
+		delay();
+		RopoDevice::Chassis.AutoRotateAbs(120);
+		delay();
+	}
+	RopoDevice::Chassis.AutoRotateAbs(170);	// 旋转至170度
+	delay();
+	ControllerModule::BothExternSwitch();	// 前两侧翅膀打开
+	RopoDevice::Chassis.AutoRotateAbs(-135);	// 旋转至-155度
+	delay();
+	// //ControllerModule::HitBall();		// 收杆
+	ControllerModule::IntakerPusherSwitch();
+	RopoDevice::ChassisBrake();
+	// // RopoDevice::Chassis.AutoRotateAbs(-125);	// 旋转至-125度
+	// // delay();
+	
+
+	RopoDevice::Chassis.MoveVelocity(0.8,1.0);	// 过窄道
+	pros::delay(800);
+	RopoDevice::Chassis.AutoRotateAbs(-90);
+	delay();
+	RopoDevice::Chassis.MoveVelocity(1.2,0.0);
+	pros::delay(300);
+	ControllerModule::LeftExternSwitch();	// 左侧翅膀关闭
+	pros::delay(1000);				// 窄道直行
 	// RopoDevice::Chassis.MoveVelocity(0,0);
 	// pros::delay(200);
 	// RopoDevice::Chassis.AutoRotateAbs(-55);	// 旋转至-55度
