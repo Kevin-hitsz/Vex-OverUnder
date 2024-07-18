@@ -539,7 +539,9 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	// pros::delay(200);
 
 	RopoDevice::Chassis.MoveVelocity(0,-4);				   // 扫对面半场棕球
-	pros::delay(400);
+	pros::delay(200);
+	ControllerModule::BarRecover();
+	pros::delay(200);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 
 	ControllerModule::ChangeIntakerPneumatic();					  // 收回吃球部分与导入杆
@@ -602,12 +604,12 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	for(int i = 1 ; i <= 7 ; i++){										// 导球*8
 
 		RopoDevice::Chassis.MoveVelocity(0,7.5);
-		pros::delay(300);
+		pros::delay(320);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(50);
 		RopoDevice::Chassis.AutoRotateAbs(160);
 		delay();
-		pros::delay(200);
+		pros::delay(400);
 	}
 
 	RopoDevice::Chassis.AutoRotateAbs(-90);
@@ -630,7 +632,7 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	RopoDevice::Chassis.MoveVelocity(-0.7,-0.1);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,-0.1);
-	pros::delay(1100);
+	pros::delay(1150);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(-0.25,0.5);
