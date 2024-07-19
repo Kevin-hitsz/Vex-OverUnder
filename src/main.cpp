@@ -285,36 +285,54 @@ void delay(){ //代替pros::delay()进行时间控制
 }
 
 void test(){
-	RopoDevice::Chassis.AutoPositionMove(2,0);
-	delay();
-	RopoDevice::Chassis.AutoRotateAbs(180);
-	delay();
-	RopoDevice::Chassis.AutoPositionMove(0,0);
-	delay();	
-	RopoDevice::Chassis.AutoRotateAbs(90);
-	delay();
+	
 }
 
 // 资格赛
 void autonomous_1(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	RopoDevice::ChassisBrake();
 	// --------- begin ------------
 
 	// 等队友走
-	pros::delay(1000);
+	// pros::delay(200);
 	// 己方导入四个球：开环旋转前进，闭环回原位
 	ControllerModule::RightExternChange();
 	pros::delay(500);
-	for(int i=0; i<3; i++){
+	// for(int i=0; i<3; i++){
+	// 	RopoDevice::Chassis.MoveVelocity(1,6);
+	// 	pros::delay(250);
+	// 	RopoDevice::Chassis.MoveVelocity(0,0);
+	// 	pros::delay(100);
+	// 	RopoDevice::Chassis.AutoPositionMoveBack(0,0,0);
+	// 	delay();
+	// }
+	// RopoDevice::Chassis.MoveVelocity(1,6);	// 第四个球直接往前走通道
+	// pros::delay(250); 
+	// ControllerModule::RightExternChange();
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(200);
+	// 前两个开环来回
+	for(int i=0; i<2; i++){
 		RopoDevice::Chassis.MoveVelocity(1,6);
 		pros::delay(250);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(100);
-		RopoDevice::Chassis.AutoPositionMoveBack(0,0,0);
-		delay();
+		RopoDevice::Chassis.MoveVelocity(-1,-6);
+		pros::delay(250);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(900);
 	}
-	RopoDevice::Chassis.MoveVelocity(1,6);	// 第四个球直接往前走通道
-	pros::delay(300); 
+	// 第三个闭环回原位
+	RopoDevice::Chassis.MoveVelocity(1,6);
+	pros::delay(250);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(100);
+	RopoDevice::Chassis.AutoPositionMoveBack(0,0,0);
+	delay();
+	// 第四个直接走通道
+	RopoDevice::Chassis.MoveVelocity(1,6);	
+	pros::delay(250); 
 	ControllerModule::RightExternChange();
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
@@ -330,30 +348,28 @@ void autonomous_1(){
 	pros::delay(2650); 	// 2350
 	RopoDevice::Chassis.AutoRotateAbs(62);
 	delay();
-	// 转弯：开环，开左边翅膀
-	ControllerModule::LeftExternChange();
-	RopoDevice::Chassis.MoveVelocity(0.67,1.3);		// 0.67, 0.95
+	// 转弯：开环
+	RopoDevice::Chassis.MoveVelocity(0.67,1.5);		// 0.67, 0.95
 	pros::delay(1700);								// 1700
-	ControllerModule::RightExternChange();
-	ControllerModule::LeftExternChange();
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
 		RopoDevice::Chassis.AutoRotateAbs(140);
 		delay();
 	}
+	ControllerModule::RightExternChange();
 
 	// 处理对面进攻区三个球
 	// 第一个球
 	RopoDevice::Chassis.MoveVelocity(-1.8,0);
 	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	RopoDevice::Chassis.AutoRotateAbs(-158);
+	RopoDevice::Chassis.AutoRotateAbs(-158);	// -163
 	delay();
 	ControllerModule::SwitchIntakerpusherback();
 	ControllerModule::GpsUpdate();	
 	pros::delay(200);
-	RopoDevice::Chassis.AutoPositionMove(0.65,1.75);	// 0.69,1.81
+	RopoDevice::Chassis.AutoPositionMove(-0.80,-0.42);	// -0.77,-0.27
 	delay();
 	ControllerModule::SwitchIntakerintake();
 	pros::delay(800);
@@ -367,7 +383,7 @@ void autonomous_1(){
 	// 第二、三个球
 	ControllerModule::SwitchIntakerpusherback();
 	ControllerModule::SwitchIntakerintake();
-	RopoDevice::Chassis.AutoPositionMove(0.23, 1.85, 150);	// 0.28, 1.98, 150
+	RopoDevice::Chassis.AutoPositionMove(-1.21,-0.23, 150);	// -1.12,-0.11, 150
 	delay();
 	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0.2,-5);
@@ -390,7 +406,7 @@ void autonomous_1(){
 	// 吃联队粽球
 	ControllerModule::SwitchIntakerpusherfor();
 	ControllerModule::SwitchIntakerintake();
-	RopoDevice::Chassis.AutoPositionMove(1.85, 2.08,7);
+	RopoDevice::Chassis.AutoPositionMove(0.29,-0.04,6);	// 1.85, 2.08,7
 	delay();
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
@@ -408,7 +424,7 @@ void autonomous_1(){
 	pros::delay(500);
 	// 椪杆
 	ControllerModule::SwitchIntakerpusherfor();
-	RopoDevice::Chassis.AutoPositionMove(0.85, 1.53);	// 0.82, 1.58, -87
+	RopoDevice::Chassis.AutoPositionMove(-1.00, -0.71);	// 0.82, 1.58, -87
 	delay();
 }
 
