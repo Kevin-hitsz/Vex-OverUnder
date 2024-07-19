@@ -488,52 +488,16 @@ void autonomous_2(){	// 资格赛 保守策略
 	ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
 	
 	pros::delay(500);
-	// RopoDevice::Chassis.MoveVelocity(0, -1.5);
-	// pros::delay(700);						// 先转一点，防止太快
-	//RopoDevice::gpsAddPosition.SetUpdateFlag(1);	// 开启GPS更新
 	RopoDevice::Chassis.AutoRotateAbs(-90);	// 旋转110度，用杆将两个球扫入己方半场
 	delay();
 	ControllerModule::HitBall();		// 收杆
-	//ControllerModule::IntakerPusherSwitch();	// Intaker收回（有必要吗）
 	pros::delay(300);
 	ControllerModule::SwitchIntakerFor();	// 开启Intaker
-	// RopoDevice::Chassis.AutoRotateAbs(-90);
-	// delay();
-
 	RopoDevice::Chassis.AutoDirectMove(1.08,-0.44,false);
 	delay();
-	// RopoDevice::Chassis.AutoRotateAbs(-40);
-	// delay();
-
-	// RopoDevice::Chassis.AutoDirectMove(1.32,-0.34,false);		// 1.32 -0.34
-	// pros::delay(1000);
-	// // // RopoDevice::Chassis.AutoPositionMoveWithTimeLimit(1.31, -0.37, 3000);	// 找点 1.33 0.25
-	// RopoDevice::Chassis.MoveVelocity(0.0, 0.0);
-	// RopoDevice::ChassisHold();
-
-	// ControllerModule::IntakerPusherSwitch();	// Intaker前伸，延长杆的范围
-	// pros::delay(600);
-	// ControllerModule::HitBall();		// 出杆
-	// pros::delay(400);
-	// RopoDevice::Chassis.AutoRotateAbs(-80);	// 旋转至-70度，用杆将一个球扫入己方半场
-	// delay();
 	pros::delay(300);
-	// RopoDevice::ChassisBrake();
-	// ControllerModule::HitBall();		// 收杆
 	ControllerModule::IntakerPusherSwitch();	// Intaker收回
 	pros::delay(300);
-	// RopoDevice::Chassis.MoveVelocity(-0.8, 0.0);	// 后退
-	// pros::delay(150);
-	// //RopoDevice::Chassis.AutoPositionMoveWithTimeLimit(1.13, -0.11, 1500);	// 找点
-	// RopoDevice::Chassis.AutoRotateAbs(45);	// 旋转至45度
-	// delay();
-	//RopoDevice::gpsAddPosition.SetUpdateFlag(0);	//关闭GPS更新
-	
-
-	// RopoDevice::Chassis.AutoPositionMove(1.29, -0.24);	// 找点
-	// delay();
-	// RopoDevice::Chassis.MoveVelocity(-0.6,-1.0);
-	// pros::delay(500);
 	RopoDevice::Chassis.AutoRotateAbs(5);
 	delay();
 	ControllerModule::PushExternSwitch();	// 两侧翅膀打开
@@ -549,8 +513,6 @@ void autonomous_2(){	// 资格赛 保守策略
 	pros::delay(250);
 	RopoDevice::Chassis.MoveVelocity(-0.8, 0.0);
 	pros::delay(300);
-	// RopoDevice::Chassis.MoveVelocity(-0.6,0.0);
-	// pros::delay(100);
 	RopoDevice::Chassis.AutoRotateAbs(-87.0);	// 旋转至-90度
 	delay();
 	RopoDevice::Chassis.MoveVelocity(-1.7,0.0);
@@ -562,22 +524,22 @@ void autonomous_2(){	// 资格赛 保守策略
 	RopoDevice::Chassis.AutoRotateAbs(-135);	// 再向右旋转45度
 	delay();
 	ControllerModule::BothExternSwitch();	// 两侧翅膀打开
-	RopoDevice::Chassis.MoveVelocity(0.8,0.0);
-	pros::delay(200);
 	ControllerModule::SwitchIntakerForToBack();
+	RopoDevice::Chassis.MoveVelocity(0.8,0.0);
+	//pros::delay(200);
 	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0.8,2.4);
 	pros::delay(400);
-	RopoDevice::Chassis.MoveVelocity(1.0,0.0);
-	pros::delay(700);
+	// RopoDevice::Chassis.MoveVelocity(1.0,0.0);
+	// pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(0,0);		// 第一次扫球结束
 
 	ControllerModule::SwitchIntakerBack();
 	pros::delay(100);
 	// RopoDevice::Chassis.MoveVelocity(-1.0,-1.0);
 	// pros::delay(400);
-	RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
-	pros::delay(800);
+	// RopoDevice::Chassis.MoveVelocity(-1.0,0.0);
+	// pros::delay(800);
 	ControllerModule::BothExternSwitch();	// 两侧翅膀关闭
 	RopoDevice::Chassis.AutoPositionMoveBack(0.30, 0.70, 120);	// 找点导入 0.65
 	delay();
