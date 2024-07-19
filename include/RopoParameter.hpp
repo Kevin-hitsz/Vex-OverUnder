@@ -11,20 +11,20 @@ namespace RopoParameter {
 	//    第 4 个参数是gps传感器初始化时朝向场地的角度方向，y轴正方向为0°，角度遵循顺时针
 	//    第 5、6个参数gps位于车体的坐标，若gps所视方向为车体0°，车体y轴正方向为车体0°，则车体x轴正方向为车体90°，角度遵循顺时针
 
-	static constexpr double FIELD_HEADING_INITIAL = 0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
+	static constexpr double FIELD_HEADING_INITIAL = 90;//比赛场地相对于战队场地，逆时针为+		(红270，蓝90)
 	static constexpr double ROPO_HEADING_INITIAL  = 90 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
 	static constexpr int GPS_PORT = 14;
-	static constexpr double GPSX_INITIAL_0 = -0.84;
-	static constexpr double GPSY_INITIAL_0 = -1.41;
-	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
-	static double GPSY_INITIAL =  GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
+	static constexpr double GPSX_INITIAL_0 = -0.91;
+	static constexpr double GPSY_INITIAL_0 = -1.56;
+	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL)+GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
+	static double GPSY_INITIAL =  -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL)+GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
 	
 	static constexpr double GPS_HEADING_INITIAL_0 = 90;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	
 	static constexpr double GPSX_OFFSET =0.15;
-	static constexpr double GPSY_OFFSET =0.05;////大车Y_OFFSET在原有基础上减少7cm
+	static constexpr double GPSY_OFFSET =0.12;////大车Y_OFFSET在原有基础上减少7cm
 
 	//Chassis参数
 	static constexpr double CHASSIS_PARAMETER = 0.336 ; 				//车体宽度
@@ -39,8 +39,8 @@ namespace RopoParameter {
 
 	//气动
 	const char climb_pneumatic_port = 'B';
-	const char left_wing_pneumatic_port  = 'C';
-	const char right_wing_pneumatic_port  = 'D';
+	const char left_wing_pneumatic_port  = 'D';
+	const char right_wing_pneumatic_port  = 'C';
 	const char lead_ball_pneumatic_port = 'E';
 
 
