@@ -244,18 +244,17 @@ void opcontrol()
 
 	MasterController.clear();
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R1   , RopoController::Rising, ControllerModule::BothExternSwitch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Rising,ControllerModule::PushExternSwitch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Rising,ControllerModule::UnderExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::DoubleEdge, ControllerModule::SwitchIntakerForToBack);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::DoubleEdge, ControllerModule::IntakerPusherSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, ControllerModule::LeftExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising, ControllerModule::RightExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::SwitchIntakerFor);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B    , RopoController::Rising, ControllerModule::ChangeCatch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B    , RopoController::DoubleEdge, ControllerModule::BulletTimeStart);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B    , RopoController::Rising, ControllerModule::WideExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A    , RopoController::Rising, RopoDevice::ChassisBrake);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising,  ControllerModule::HitBall);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_1);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y    , RopoController::Rising,  autonomous_2);
 
 	ButtonDetectLine.Enable();
 	RopoDevice::ChassisCoast();
@@ -293,11 +292,6 @@ void opcontrol()
 			ChassisMove = true;
 		}
 		pros::delay(4);
-	}
-
-	if (pros::millis() - nowTime > 55000) {
-		ControllerModule::timeFlag = 1;
-		ControllerModule::UnderExternSwitch();
 	}
 }
 
@@ -430,7 +424,7 @@ void autonomous_1(){	//淘汰赛 上限策略
 	RopoDevice::Chassis.AutoRotateAbs(170);	// 旋转至170度
 	delay();
 	ControllerModule::BothExternSwitch();	// 前两侧翅膀打开
-	RopoDevice::Chassis.AutoRotateAbs(-125);	// 旋转至-155度
+	RopoDevice::Chassis.AutoRotateAbs(-130);	// 旋转至-155度
 	delay();
 	// //ControllerModule::HitBall();		// 收杆
 	ControllerModule::IntakerPusherSwitch();
@@ -607,7 +601,7 @@ void autonomous_2(){	// 资格赛 保守策略
 	RopoDevice::Chassis.AutoRotateAbs(170);	// 旋转至170度
 	delay();
 	ControllerModule::BothExternSwitch();	// 前两侧翅膀打开
-	RopoDevice::Chassis.AutoRotateAbs(-125);	// 旋转至-155度
+	RopoDevice::Chassis.AutoRotateAbs(-130);	// 旋转至-155度
 	delay();
 	// //ControllerModule::HitBall();		// 收杆
 	ControllerModule::IntakerPusherSwitch();
