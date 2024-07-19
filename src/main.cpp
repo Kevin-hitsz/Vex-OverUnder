@@ -616,7 +616,7 @@ void autonomous_2(){	// 资格赛 保守策略
 
 	RopoDevice::Chassis.MoveVelocity(0.8,1.0);	// 过窄道
 	pros::delay(800);
-	RopoDevice::Chassis.AutoRotateAbs(-90);
+	RopoDevice::Chassis.AutoRotateAbs(-92);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(1.2,0.0);
 	pros::delay(400);
@@ -625,12 +625,13 @@ void autonomous_2(){	// 资格赛 保守策略
 	ControllerModule::LeftExternSwitch();	// 左侧翅膀开启
 	RopoDevice::Chassis.AutoDirectMove(-0.29,-1.57,false);
 	delay();
-	ControllerModule::RightExternSwitch();	// 右侧翅膀关闭
+
 
 	/*----- Stage 3 推球入网 + 回到导球区 ------*/
 	
 	RopoDevice::Chassis.MoveVelocity(0.6,0.0);
 	pros::delay(300);
+	ControllerModule::RightExternSwitch();	// 右侧翅膀关闭
 	RopoDevice::Chassis.AutoRotateAbs(-60);	// 旋转至-60度
 	delay();
 	RopoDevice::Chassis.MoveVelocity(1.0,0.0);

@@ -13,7 +13,7 @@ namespace RopoParameter {
 
 
 	// 自动一
-	static constexpr double FIELD_HEADING_INITIAL = 180.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
+	static constexpr double FIELD_HEADING_INITIAL = -90.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
 	static constexpr double ROPO_HEADING_INITIAL  = 90.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
 	static constexpr int GPS_PORT = 15;
