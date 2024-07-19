@@ -612,7 +612,7 @@ void autonomous_C1b(){
 	RopoDevice::Chassis.MoveVelocity(-0.7,1.5);
 	pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	pros::delay(520);
+	pros::delay(620);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);//退出网
 	RopoDevice::Chassis.AutoRotateAbs(135);
@@ -623,6 +623,8 @@ void autonomous_C1b(){
 	pros::delay(50);//塞进网
 	RopoDevice::Chassis.MoveVelocity(-0.6,1.5);
 	pros::delay(700);
+	RopoDevice::Chassis.AutoRotateAbs(-135);
+	pros::delay(700);//旋转对准
 	//结束
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);
