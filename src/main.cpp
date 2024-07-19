@@ -202,8 +202,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	autonomous_qualify();
-	//autonomous_KnockoutMatch();
+	//autonomous_qualify();
+	autonomous_KnockoutMatch();
 }
 
 void opcontrol()
@@ -633,7 +633,7 @@ void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 	RopoDevice::Chassis.MoveVelocity(-0.7,-0.1);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(-0.5,-0.1);
-	pros::delay(1100);
+	pros::delay(1000);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(-0.25,0.5);
