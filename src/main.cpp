@@ -351,7 +351,7 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.MoveVelocity(0.4,0);
 	pros::delay(350);
 	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(200);
+	pros::delay(700);
 	//推球
 	RopoDevice::Chassis.MoveVelocity(-1.1,0);
 	pros::delay(1350); //1350
@@ -396,9 +396,15 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	pros::delay(600);
+	while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) > 3) {
+	 	pros::delay(10);
+	}
+	// pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(400);
 	ControllerModule::ChangeIntakerPneumatic();
-	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	pros::delay(300);
 	//送入网
 	RopoDevice::Chassis.AutoPositionMove(-2.18,-0.6);//-2.20,-0.51,-90
 	delay();
@@ -422,6 +428,7 @@ void autonomous_qualify(){
 	ControllerModule::Intake();
 	RopoDevice::Chassis.AutoPositionMove(-1.05,-0.85);//-0.95 -1
 	delay();
+	pros::delay(200);
 	//吐球
 	RopoDevice::Chassis.AutoRotateAbs(-120);
 	delay();
