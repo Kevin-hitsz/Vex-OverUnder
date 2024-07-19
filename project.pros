@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "5/29/test",
+    "project_name": "skill_7/19",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -168,7 +168,7 @@
     },
     "upload_options": {
       "icon": "planet",
-      "slot": 6,
+      "slot": 1,
       "description": "2"
     }
   }

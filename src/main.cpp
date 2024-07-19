@@ -628,7 +628,8 @@ void skill_new2(){      //机创赛版本2 上方导球22->推入联队球->爬�
 	/* step_3 爬杆 */
 	closemove(0.20, 0.50, 47.721,1500);
 	Climber();
-	closemove(0.76, 1.1, 45.233,2000);
+	closemove(0.89, 0.91, 45.233,2000);
+	openmove(-0.7,0,0,500);
 	Climber();
 	/* step_3 end */
 
@@ -637,8 +638,10 @@ void skill_new2(){      //机创赛版本2 上方导球22->推入联队球->爬�
 
 void autonomous(){
 	//autonomous_Wisco();
-	RopoFunction::autonomous_1();
+	//RopoFunction::autonomous_1();
 	//skill();
+	skill_new2();
+	
 }
 
 void opcontrol() {
@@ -667,16 +670,19 @@ void opcontrol() {
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP, RopoController::Rising, RopoFunction::Climber);
 
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, Test);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B, RopoController::Rising, RopoFunction::ReLoad);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising, RopoFunction::Shoot);
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN, RopoController::Rising, RopoFunction::ShooterPneumatic);
+
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
+
+	/*正式比赛时需屏蔽*/
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising, skill_new2);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising, RopoFunction::MoveToZero);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, RopoFunction::Test);
+	/*end*/
 
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, RopoFunction::ChangeControlMode);
 	ButtonDetectLine.Enable();
 	RopoDevice::Chassis.Operator();
 	float Second = 0.0;
