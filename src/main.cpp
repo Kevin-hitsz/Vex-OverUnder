@@ -134,6 +134,8 @@ namespace ControllerModule {
 		intaker_status ^= 1;
 		RopoDevice::ThreeWire::IntakerPneumatic1.set_value(intaker_status);
 		RopoDevice::ThreeWire::IntakerPneumatic2.set_value(intaker_status);
+		if(intaker_status == 1){Intake();}
+		else {IntakerStop();}
 		//pros::delay(100);
 		//if(intaker_status)Outtake();
 	}
