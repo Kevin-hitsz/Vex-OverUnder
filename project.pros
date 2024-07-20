@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "BLUE",
+    "project_name": "BLUE_NEW_1",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -309,7 +309,7 @@
       }
     },
     "upload_options": {
-      "slot": 8,
+      "slot": 5,
       "icon": "X",
       "description": "HITSZ3"
     }

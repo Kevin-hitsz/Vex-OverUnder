@@ -143,7 +143,7 @@ namespace ControllerModule {
 
 void GpsUpdate(){
 		RopoDevice::Chassis.MoveVelocity(0,0);
-        pros::delay(700);
+        pros::delay(400);
         RopoDevice::gpsAddPosition.SetUpdateFlag(1);
         pros::delay(100);
         RopoDevice::gpsAddPosition.SetUpdateFlag(0);
@@ -152,20 +152,15 @@ void GpsUpdate(){
     {
         for(int i=1;i<=4;i++)
         {
-            RopoDevice::Chassis.MoveVelocity(0.2,0);
-            pros::delay(10);
-            pros::delay(500);
+            RopoDevice::Chassis.MoveVelocity(0.3,0);
+            pros::delay(330);
             RopoDevice::Chassis.AutoRotateAbs_block(-90);//131.9
-            // RopoDevice::Chassis.MoveVelocity(0.3,0);
-            // pros::delay(100);
+            
             if(i==4){
-                
                 break;
             }
             RopoDevice::Chassis.AutoRotateAbs_block(129.5);
-            if(i==3){GpsUpdate();}
-
-
+            
         }
     }
 
@@ -220,114 +215,97 @@ void GpsUpdate(){
 void Auto(){
     //初始化
     RopoDevice::Chassis.StartChassisAutoControll();
-    pros::delay(100);
+    pros::delay(10);
    
 
     RopoDevice::Chassis.AutoPositionMove(1.2,0,-90);//前进到场地中段，并转90面向球
-    //RopoDevice::Chassis.AutoRotateAbs_block(-90);
     ControllerModule::open_both_wing();//开翅膀
-    pros::delay(300);
-    RopoDevice::Chassis.MoveVelocity(0.6,0);//把球推到过道//推不过去
+    pros::delay(100);
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//把球往前堆一堆
+    pros::delay(600);
+    RopoDevice::Chassis.MoveVelocity(0,0);//刹车
+    pros::delay(50);
+
+    RopoDevice::Chassis.AutoRotateAbs_block(180);//扫球
+
+
+    RopoDevice::Chassis.MoveVelocity(0.7,0);//把球推到接近过道
+    ControllerModule::outtake();//
     pros::delay(700);
-    RopoDevice::Chassis.MoveVelocity(0,0);
-    pros::delay(200);
-    //RopoDevice::Chassis.AutoPositionMove(1.2,-0.47);//向前走一点
-
-    //RopoDevice::Chassis.MoveVelocity(0,-1);//扫球
-    //pros::delay(1000);
-
-    RopoDevice::Chassis.AutoRotateAbs_block(180);
-
-
-    RopoDevice::Chassis.MoveVelocity(0.6,0);//把球推到过道//推不过去
-    ControllerModule::outtake();
-    pros::delay(800);
-    RopoDevice::Chassis.MoveVelocity(0,0);
+    RopoDevice::Chassis.MoveVelocity(0,0);//刹车
 
     ControllerModule::close_both_wing();//关翅膀
-    pros::delay(300);
-    RopoDevice::Chassis.MoveVelocity(-0.6,0);//把球推到过道//推不过去
+    pros::delay(50);
+    RopoDevice::Chassis.MoveVelocity(-0.8,0);//后撤步
     pros::delay(300);
     ControllerModule::intaker_stop();
 
-    RopoDevice::Chassis.AutoRotateAbs_block(-90);
+    RopoDevice::Chassis.AutoRotateAbs_block(-90);//旋转反向调整推球位置
     
-    RopoDevice::Chassis.MoveVelocity(0.8,0);
+    RopoDevice::Chassis.MoveVelocity(0.8,0);//调整推球位置
     pros::delay(200);
-    RopoDevice::Chassis.AutoRotateAbs_block(0);
-    RopoDevice::Chassis.MoveVelocity(-0.6,0);
+    RopoDevice::Chassis.AutoRotateAbs_block(0);//旋转屁股对准球
+    RopoDevice::Chassis.MoveVelocity(-0.7,0);//推球过杆
     pros::delay(800);
 
 
 
-    // //后面加斜坡 用斜坡撞球
-    // RopoDevice::Chassis.AutoRotateAbs_block(0);
-    
-    // RopoDevice::Chassis.MoveVelocity(-0.3,0.5);
-    // pros::delay(270);
-    // RopoDevice::Chassis.MoveVelocity(0.4,-0.5);
-    // pros::delay(270);
-    
-    //RopoDevice::Chassis.AutoPositionMoveBack(0.84,-0.36);//倒退一段距离
     RopoDevice::Chassis.MoveVelocity(1,0);
     pros::delay(300);
-    RopoDevice::Chassis.AutoRotateAbs_block(-90);
+    RopoDevice::Chassis.AutoRotateAbs_block(-90);//往前一点旋转，gps看一眼
     ControllerModule::GpsUpdate();
 
 
 
     RopoDevice::Chassis.AutoPositionMove(0.30,0.39,135.6);//到达导球点
-    ControllerModule::open_right_wing();
+    ControllerModule::open_right_wing();//开翅膀准备导球
 
     ControllerModule::lead_ball();//导球
-    ControllerModule::close_right_wing();
+    ControllerModule::close_right_wing();//关翅膀，导球结束
+
+    RopoDevice::Chassis.MoveVelocity(0.6,0);
+    pros::delay(300);
+    ControllerModule::GpsUpdate();
+    
+    RopoDevice::Chassis.AutoRotateAbs_block(90);
+    ControllerModule::GpsUpdate();
+    RopoDevice::Chassis.AutoPositionMove(-0.06,-0.06,-90);//来到过道口
+
+    
+    RopoDevice::Chassis.AutoPositionMove(-0.07,-1.92,-90);//推球至过道另一端
+
+
+    RopoDevice::Chassis.MoveVelocity(0.4,0.8);//弧线推球入网
+    pros::delay(2300);
+    RopoDevice::Chassis.MoveVelocity(0,0);//
+    pros::delay(100);
+
+    RopoDevice::Chassis.MoveVelocity(-0.3,0);//后撤步调整角度
+    pros::delay(600);
+    RopoDevice::Chassis.AutoRotateAbs_block(-20);//调整角度准备反复推球入网
 
 
 
-    RopoDevice::Chassis.AutoPositionMove(-0.08,-0.15,-90.9);//容易擦边 位置不对
-    // RopoDevice::Chassis.AutoRotateAbs(-129.5);
-    // pros::delay(700);
-    // RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
-    // pros::delay(500);
-    // RopoDevice::Chassis.AutoRotateAbs(-90);
-    // pros::delay(300);
+     RopoDevice::Chassis.MoveVelocity(1.0,0);//第一次推球入网
+    pros::delay(400);
+    RopoDevice::Chassis.MoveVelocity(-1.0,0);//后撤步
+    pros::delay(300);
+    RopoDevice::Chassis.MoveVelocity(1.8,0);//第二次推球入网
+    pros::delay(500);
+    RopoDevice::Chassis.MoveVelocity(-0.6,0);//后撤步
+    pros::delay(400);
 
-    //RopoDevice::Chassis.AutoPositionMove(-0.15,0.10,-90);//到达推球点//-0.30,0.3,90
-    RopoDevice::Chassis.MoveVelocity(0.8,0);//推球入网
-    pros::delay(1300);
+    RopoDevice::Chassis.AutoRotateAbs(-90);//调整角度看gps
+    ControllerModule::GpsUpdate();
 
-   RopoDevice::Chassis.AutoPositionMove(-0.03,-1.85,-88.6);//向前推球//-0.10
-    ControllerModule::open_left_wing();//开左翅膀
+    RopoDevice::Chassis.AutoPositionMove(-0.03,-1.75,90);//-0.24,-1.85
+    RopoDevice::Chassis.MoveVelocity(1.8,0);
+    pros::delay(550);
+
+    RopoDevice::Chassis.MoveVelocity(0,0);
 
 
     
-    RopoDevice::Chassis.AutoPositionMove(-0.02,-1.84,0);//推球至门前//y-2.20
-    ControllerModule::close_left_wing();
-    RopoDevice::Chassis.MoveVelocity(0.4,0.8);//推球入网
-    pros::delay(1000);
-    RopoDevice::Chassis.AutoRotateAbs_block(0);
-
-    while(1) pros::delay(100);
-
-
-     RopoDevice::Chassis.MoveVelocity(1.0,0);//推球入网
-    pros::delay(300);
-    RopoDevice::Chassis.MoveVelocity(-1.0,0);//推球入网
-    pros::delay(200);
-    RopoDevice::Chassis.MoveVelocity(1.8,0);//推球入网
-    pros::delay(300);
-    RopoDevice::Chassis.MoveVelocity(-0.8,0);
-    pros::delay(200);
-
-    RopoDevice::Chassis.AutoRotateAbs(-90);
-    ControllerModule::GpsUpdate();
-
-    RopoDevice::Chassis.AutoPositionMove(-0.03,-1.75);//-0.24,-1.85
-    RopoDevice::Chassis.AutoRotateAbs(90);
-    pros::delay(800);
-   
-    RopoDevice::Chassis.AutoPositionMove(-0.15,-0.80);//-0.3 -0.55
-    pros::delay(100);
     
 
     // RopoDevice::Chassis.MoveVelocity(0.8,0);
