@@ -256,6 +256,7 @@ void opcontrol()
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , autonomous_qualify);
 	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  skill);
 	/*end*/
 
 	ButtonDetectLine.Enable();
@@ -564,8 +565,20 @@ void autonomous_qualify(){
 }
 
 void skill(){
-	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
-	// --------- begin ------------
+	RopoDevice::Chassis.StartChassisAutoControll();   			// 设置为自动状态
+	RopoDevice::ChassisBrake();						  			// 自动赛时需要设置刹车状态为brake
+
+	RopoDevice::Chassis.MoveVelocity(-2,0);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(50);
+	RopoDevice::Chassis.MoveVelocity(2,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0.8,0);
+	pros::delay(200);
+	RopoDevice::Chassis.AutoPositionMove(0.40,-0.14,45.0);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+
 }
 
 void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
