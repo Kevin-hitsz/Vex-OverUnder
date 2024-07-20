@@ -359,8 +359,8 @@ void autonomous_1(){
 		RopoDevice::Chassis.AutoRotateAbs(140);
 		delay();
 	}
-	RopoDevice::Chassis.MoveVelocity(-5,0);
-	pros::delay(450);
+	RopoDevice::Chassis.MoveVelocity(-8,0);
+	pros::delay(250);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
 	// // 后退倒车撞网
@@ -375,13 +375,13 @@ void autonomous_1(){
 
 	// 处理对面进攻区三个球
 	// 第一个球
-	RopoDevice::Chassis.AutoRotateAbs(-158);	// -163
+	RopoDevice::Chassis.AutoRotateAbs(-160);	// -158
 	delay();
 	ControllerModule::SwitchIntakerpusherback();
 	ControllerModule::GpsUpdate();	
 	pros::delay(300);
 	int flag = 0;
-	while((RopoDevice::GetTransformedPosition()[1]) >= 0.4 || (RopoDevice::GetTransformedPosition()[1]) < 0.30){
+	while((RopoDevice::GetTransformedPosition()[1]) >= 2 || (RopoDevice::GetTransformedPosition()[1]) <= 1.92){
 		if(flag == 0){
 			RopoDevice::Chassis.MoveVelocity(0.3,0);
 			pros::delay(200);
@@ -401,7 +401,7 @@ void autonomous_1(){
 			break;
 		}
 	}
-	RopoDevice::Chassis.AutoPositionMove(-0.78,-0.48);	// -0.77,-0.27
+	RopoDevice::Chassis.AutoPositionMove(0.84,1.61);	// -0.78,-0.48
 	delay();
 	ControllerModule::SwitchIntakerintake();
 	pros::delay(800);
@@ -415,7 +415,7 @@ void autonomous_1(){
 	// 吃联队粽球
 	// ControllerModule::SwitchIntakerpusherfor();
 	ControllerModule::SwitchIntakerintake();
-	RopoDevice::Chassis.AutoPositionMove(0.35,-0.156,3,4000);	// 0.27,-0.27,6
+	RopoDevice::Chassis.AutoPositionMove(2.01,1.96,7,4000);	// 0.35,-0.156,3,4000
 	delay();
 	RopoDevice::Chassis.MoveVelocity(0.4,0);
 	pros::delay(700);
@@ -440,11 +440,11 @@ void autonomous_1(){
 	// 第二、三个球
 	ControllerModule::SwitchIntakerpusherback();
 	ControllerModule::SwitchIntakerintake();
-	RopoDevice::Chassis.AutoPositionMove(-1.20,-0.17,150,4000);	
+	RopoDevice::Chassis.AutoPositionMove(0.37,1.82, 150,4000);		//-1.20,-0.17,150
 	delay();
 	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(-0.2,0);
-	pros::delay(100);
+	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.MoveVelocity(0.2,-5);
 	pros::delay(500);
@@ -465,7 +465,7 @@ void autonomous_1(){
 	ControllerModule::LeftExternChange();
 	// 椪杆
 	ControllerModule::SwitchIntakerpusherfor();
-	RopoDevice::Chassis.AutoPositionMove(-0.52, -0.98, -87);	
+	RopoDevice::Chassis.AutoPositionMove(0.73,1.36, -87);		// -0.52, -0.98, -87
 	delay();
 }
 
