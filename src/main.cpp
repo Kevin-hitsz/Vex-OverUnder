@@ -20,21 +20,21 @@ namespace ControllerModule {
 
 	// 挂杆
 	int trigger_flag = 0; // 0：触发 0    1：触发 1 & 主气缸 0    2：触发 1 & 主气缸 1
-		// 钩爪升起，触发flag置1
-		void UpperExternSwitch(){
-			RopoDevice::ThreeWire::UpperExternPneumatic.set_value(true);
-			trigger_flag = 1;
-		}
-		// 钩爪发力挂杆，触发flag置2
-		void UnderExternSwitch(){
-			RopoDevice::ThreeWire::UnderExternPneumatic.set_value(true);
-			trigger_flag = 2;
-		}
-		// 钩爪卸力松杆，触发flag置1
-		void DisUnderExternSwitch(){
-			RopoDevice::ThreeWire::UnderExternPneumatic.set_value(false);
-			trigger_flag = 1;
-		}
+	// 钩爪升起，触发flag置1
+	void UpperExternSwitch(){
+		RopoDevice::ThreeWire::UpperExternPneumatic.set_value(true);
+		trigger_flag = 1;
+	}
+	// 钩爪发力挂杆，触发flag置2
+	void UnderExternSwitch(){
+		RopoDevice::ThreeWire::UnderExternPneumatic.set_value(true);
+		trigger_flag = 2;
+	}
+	// 钩爪卸力松杆，触发flag置1
+	void DisUnderExternSwitch(){
+		RopoDevice::ThreeWire::UnderExternPneumatic.set_value(false);
+		trigger_flag = 1;
+	}
 	void Hangingup(){
 		if(trigger_flag == 0){
 			UpperExternSwitch();
@@ -44,6 +44,8 @@ namespace ControllerModule {
 			DisUnderExternSwitch();
 		}
 	}
+	// 分两个键，按下触发，长按上收起
+	
 
 	bool LeftExternFlag = false;
 	void LeftExternChange(){
@@ -216,7 +218,7 @@ void opcontrol()
 	pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
 	RopoController::ButtonTaskLine ButtonDetectLine(MasterController);
 	FloatType VelocityMax = 2.0;					// 1.7 m/s
-	FloatType WcMax = 15;							// 20 
+	FloatType WcMax = 12;							// 20 
 	FloatType VelocityRestrainRatio = 0.4; 			// 0 ~ 1
 	FloatType WcRestrainRatio = 0.6; 				// 0 ~ 1
 	bool ChassisMove = false;
@@ -224,7 +226,7 @@ void opcontrol()
 	RopoDevice::ChassisCoast();
 	
 	RopoController::AxisValueCast XVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_LEFT_Y,RopoController::Linear);
-	RopoController::AxisValueCast WVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_RIGHT_X,RopoController::Linear);
+	RopoController::AxisValueCast WVelocityInput(MasterController,pros::E_CONTROLLER_ANALOG_RIGHT_X,RopoController::Exp);
 
 	Vector Velocity(RopoMath::ColumnVector,2),ResVelocity;
 
@@ -235,8 +237,8 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_R2   , RopoController::Falling,ControllerModule::SwitchIntakerStop);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1   , RopoController::Rising, ControllerModule::BothExternChange);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2   , RopoController::Rising, ControllerModule::SwitchIntakerpusherchange);
-	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Rising, ControllerModule::LeftExternChange);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising, ControllerModule::Hangingup);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP   , RopoController::Pressing, ControllerModule::UnderExternSwitch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising, ControllerModule::UpperExternSwitch);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT, RopoController::Rising, ControllerModule::HitOut);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT, RopoController::Rising, ControllerModule::HitIn);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X    , RopoController::Rising, ControllerModule::GpsUpdate);
@@ -360,7 +362,7 @@ void autonomous_1(){
 		delay();
 	}
 	RopoDevice::Chassis.MoveVelocity(-8,0);
-	pros::delay(250);
+	pros::delay(280);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
 	// // 后退倒车撞网
@@ -465,7 +467,7 @@ void autonomous_1(){
 	ControllerModule::LeftExternChange();
 	// 椪杆
 	ControllerModule::SwitchIntakerpusherfor();
-	RopoDevice::Chassis.AutoPositionMove(0.73,1.36, -87);		// -0.52, -0.98, -87
+	RopoDevice::Chassis.AutoPositionMove(0.82,0.97, -87);		// -0.52, -0.98, -87
 	delay();
 }
 
