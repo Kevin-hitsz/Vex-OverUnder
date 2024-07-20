@@ -549,6 +549,21 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
 	pros::delay(200);
 	RopoDevice::Chassis.AutoPositionMove(0.40,-0.14,45.0);
+	ControllerModule::BarExtend();
+	pros::delay(400);
+
+	for(int i = 1 ; i <= 11 ; i++){										// 导球*8
+
+		RopoDevice::Chassis.MoveVelocity(0,-7.5);
+		pros::delay(320);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(50);
+		RopoDevice::Chassis.AutoRotateAbs(45);
+		delay();
+		pros::delay(350);
+	}
+	ControllerModule::BarRecover();
+
 	RopoDevice::Chassis.MoveVelocity(0,0);
 
 }
