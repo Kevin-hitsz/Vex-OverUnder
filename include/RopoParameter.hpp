@@ -13,7 +13,7 @@ namespace RopoParameter {
 
 
 	// 资格赛gps参数
-	static constexpr double FIELD_HEADING_INITIAL = 270;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)  校内比赛：红方270，蓝方90
+	static constexpr double FIELD_HEADING_INITIAL = 0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)  校内比赛：红方0，蓝方180
 	static constexpr double ROPO_HEADING_INITIAL  = 180 - FIELD_HEADING_INITIAL;
 	static constexpr int GPS_PORT = 6;
 	static constexpr double GPSX_INITIAL_0 = -0.6 - 0.150;

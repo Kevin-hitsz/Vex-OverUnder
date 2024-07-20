@@ -146,9 +146,9 @@ namespace ControllerModule {
 
 	void GpsUpdate(){
 		RopoDevice::Chassis.MoveVelocity(0,0);
-		pros::delay(700);
+		pros::delay(600);
 		RopoDevice::gpsAddPosition.SetUpdateFlag(1);
-		pros::delay(100);
+		pros::delay(200);
 		RopoDevice::gpsAddPosition.SetUpdateFlag(0);
 	}
 
@@ -383,6 +383,8 @@ void autonomous_qualify(){
 	pros::delay(200);
 	RopoDevice::Chassis.MoveVelocity(-0.3,-1.5);
 	pros::delay(1800);//1300
+	RopoDevice::Chassis.MoveVelocity(-0.65,0);
+	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(100);
 	RopoDevice::Chassis.AutoPositionMove(-1.95,-0.42,135);//-1.97 -0.41
@@ -392,19 +394,17 @@ void autonomous_qualify(){
 	ControllerModule::Intake();
 	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(-0.2,0);
-	pros::delay(350);
+	pros::delay(400);
 	RopoDevice::Chassis.MoveVelocity(0.3,0);
-	pros::delay(1250);
+	pros::delay(950);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(900);
-	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) > 3) {
-	 	pros::delay(10);
-	}
-	// pros::delay(600);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(-0.7,0);
+	pros::delay(900);
 	ControllerModule::ChangeIntakerPneumatic();
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(200);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
 	pros::delay(300);
 	//送入网
@@ -445,7 +445,7 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.MoveVelocity(-0.5,-1.0);
 	pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(-0.45,0);
-	pros::delay(200);
+	pros::delay(150);
 	RopoDevice::Chassis.MoveVelocity(-0.4,-1.3);
 	pros::delay(500);
 	ControllerModule::ChangeRightWingPush();
@@ -526,6 +526,7 @@ void autonomous_qualify(){
 	delay();
 	ControllerModule::BarExtend();
 	ControllerModule::ChangeIntakerPneumatic();
+	ControllerModule::IntakerStop();
 	RopoDevice::Chassis.MoveVelocity(0.1,0.2);
 	pros::delay(3000);
 	RopoDevice::Chassis.MoveVelocity(0,0);
