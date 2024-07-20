@@ -649,7 +649,7 @@ void skill(){
 	pros::delay(200);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
 
-	RopoDevice::Chassis.AutoPositionMove(0.64,-2.41);
+	RopoDevice::Chassis.AutoPositionMove(0.58,-2.41);
 	RopoDevice::Chassis.AutoPositionMove(0.58,-1.5);
 	ControllerModule::GpsUpdate();
 	RopoDevice::Chassis.AutoPositionMove(0.54,-0.50,180);
