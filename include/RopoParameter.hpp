@@ -29,7 +29,7 @@ namespace RopoParameter {
 	// static constexpr double GPSY_OFFSET =  0.17500;
 
 	// 自动二
-	static constexpr double FIELD_HEADING_INITIAL = 180;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)、
+	static constexpr double FIELD_HEADING_INITIAL = 0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)、
 	// 蓝方90 红方0
 	static constexpr double ROPO_HEADING_INITIAL  = -45.0 - FIELD_HEADING_INITIAL;// 车头方向对于战队场地X轴（逆时针为正）
 	

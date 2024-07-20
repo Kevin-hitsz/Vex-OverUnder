@@ -572,21 +572,33 @@ void autonomous_2(){
 // 技能赛
 void skill(){
 	RopoDevice::Chassis.StartChassisAutoControll();//底盘MoveType设置为AutoMove
+	RopoDevice::ChassisBrake();
 	// --------- begin ------------
 
-	// 第一趟 导入3+预装1+通道1+对角1
-	// 导入两个球：开环旋转前进，闭环回原位
+	// 第一趟 导入4+预装1+通道1+对角1
+	// 己方导入四个球
 	ControllerModule::RightExternChange();
 	pros::delay(500);
+	// 前两个开环来回
 	for(int i=0; i<2; i++){
 		RopoDevice::Chassis.MoveVelocity(1,6);
-		pros::delay(250);
+		pros::delay(300);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(100);
-		RopoDevice::Chassis.AutoPositionMoveBack(0,0,0);
-		delay();
+		RopoDevice::Chassis.MoveVelocity(-1,-6);
+		pros::delay(260);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(900);
 	}
-	RopoDevice::Chassis.MoveVelocity(1,6);	// 第三个球直接往前走通道
+	// 第三个闭环回原位
+	RopoDevice::Chassis.MoveVelocity(1,6);
+	pros::delay(300);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	pros::delay(100);
+	RopoDevice::Chassis.AutoPositionMoveBack(0,0,0);
+	delay();
+	// 第四个直接走通道
+	RopoDevice::Chassis.MoveVelocity(1,6);	
 	pros::delay(300); 
 	ControllerModule::RightExternChange();
 	RopoDevice::Chassis.MoveVelocity(0,0);
@@ -597,44 +609,49 @@ void skill(){
 	delay();
 		
 	// 沿通道推入网
-	// 直行：开环
+	// 直行：开环，开右边翅膀
+	ControllerModule::RightExternChange();
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(2650); 	
+	pros::delay(2650); 	// 2350
 	RopoDevice::Chassis.AutoRotateAbs(62);
 	delay();
+	// 转弯：开环，开左边翅膀
+	ControllerModule::LeftExternChange();
+	RopoDevice::Chassis.MoveVelocity(0.67,1.5);		// 0.67, 0.95
+	pros::delay(1800);
+	pros::delay(300);								
 	ControllerModule::RightExternChange();
-	// 转弯：开环
-	RopoDevice::Chassis.MoveVelocity(0.67,1.3);		
-	pros::delay(1700);								
-	ControllerModule::RightExternChange();
-	pros::delay(500);
+	ControllerModule::LeftExternChange();	// 提早收翅膀防止卡住
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
 		RopoDevice::Chassis.AutoRotateAbs(140);
 		delay();
 	}
-	// 后退倒车撞网（不开后翅膀）
-	RopoDevice::Chassis.MoveVelocity(-0.7,0);
+	RopoDevice::Chassis.MoveVelocity(5,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	// 后退倒车撞网
+	RopoDevice::Chassis.MoveVelocity(-5,0);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.AutoRotateAbs(320);
 	delay();
-	RopoDevice::Chassis.MoveVelocity(-5,0);
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(300);
+	// RopoDevice::Chassis.MoveVelocity(-5,0);
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(300);
+	// RopoDevice::Chassis.AutoRotateAbs(140);
+	// delay();
 
-	// 前行返回 开intaker防通道内有球
-	ControllerModule::SwitchIntakerpusherback();
-	ControllerModule::SwitchIntakerintake();
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0.67, -1.3);
+	// 前行返回 
+	RopoDevice::Chassis.MoveVelocity(0.67, -1.5);
 	pros::delay(1350);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.AutoRotateAbs(227);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(2650);
+	pros::delay(2750);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 
 	// 第二趟 导入10
@@ -658,94 +675,100 @@ void skill(){
 	delay();
 
 	// 沿通道推入网
-	// 直行：开环（不收击球件）
+	// 直行：开环 收击球件 开右翅膀
+	ControllerModule::HitIn();
+	ControllerModule::RightExternChange();
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(2450);
+	pros::delay(2650); 	// 2350
 	RopoDevice::Chassis.AutoRotateAbs(62);
 	delay();
+	// 转弯：开环，开左边翅膀
+	ControllerModule::LeftExternChange();
+	RopoDevice::Chassis.MoveVelocity(0.67,1.5);		// 0.67, 0.95
+	pros::delay(1800);
+	pros::delay(300);								
 	ControllerModule::RightExternChange();
-	// 转弯：开环
-	RopoDevice::Chassis.MoveVelocity(0.67,1.3);		
-	pros::delay(1700);								
-	ControllerModule::RightExternChange();
-	ControllerModule::SwitchIntakerouttake();
-	pros::delay(500);
+	ControllerModule::LeftExternChange();	// 提早收翅膀防止卡住
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
 		RopoDevice::Chassis.AutoRotateAbs(140);
 		delay();
 	}
+	RopoDevice::Chassis.MoveVelocity(5,0);
+	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0,0);
 	// 后退倒车撞网（收击球件）
 	ControllerModule::HitIn();
-	RopoDevice::Chassis.MoveVelocity(-0.7,0);
+	RopoDevice::Chassis.MoveVelocity(-5,0);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.AutoRotateAbs(320);
 	delay();
-	RopoDevice::Chassis.MoveVelocity(-5,0);
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(300);
+	// RopoDevice::Chassis.MoveVelocity(-5,0);
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(300);
 
-	// 前行返回 开intaker防通道内有球
-	ControllerModule::SwitchIntakerintake();
+	// 前行返回 
+	// ControllerModule::SwitchIntakerintake();
 	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0.67, -1.3);
+	RopoDevice::Chassis.MoveVelocity(0.67, -1.5);
 	pros::delay(1350);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	RopoDevice::Chassis.AutoRotateAbs(227);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(2650);
+	pros::delay(2750);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 
-	// 第三趟 导入10
-	// 导入十个球，开环旋转，闭环回原角度
-	RopoDevice::Chassis.AutoRotateAbs(50);
-	delay();
-	RopoDevice::Chassis.MoveVelocity(-0.5,0);
-	pros::delay(400);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(500);
-	ControllerModule::HitOut();
-	for(int i=0; i<6; i++){
-		RopoDevice::Chassis.MoveVelocity(0,7);
-		pros::delay(150);
-		RopoDevice::Chassis.AutoRotateAbs(50);
-		delay();
-	}
-	RopoDevice::Chassis.MoveVelocity(0.6,-3.5);
-	pros::delay(650);
-	RopoDevice::Chassis.AutoRotateAbs(50);
-	delay();
+	// // 第三趟 导入10
+	// // 导入十个球，开环旋转，闭环回原角度
+	// RopoDevice::Chassis.AutoRotateAbs(50);
+	// delay();
+	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	// pros::delay(400);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(500);
+	// ControllerModule::HitOut();
+	// for(int i=0; i<6; i++){
+	// 	RopoDevice::Chassis.MoveVelocity(0,7);
+	// 	pros::delay(150);
+	// 	RopoDevice::Chassis.AutoRotateAbs(50);
+	// 	delay();
+	// }
+	// RopoDevice::Chassis.MoveVelocity(0.6,-3.5);
+	// pros::delay(650);
+	// RopoDevice::Chassis.AutoRotateAbs(50);
+	// delay();
 
-	// 沿通道推入网
-	// 直行：开环（不收击球件）
-	RopoDevice::Chassis.MoveVelocity(0.8,0);
-	pros::delay(2450);
-	RopoDevice::Chassis.AutoRotateAbs(62);
-	delay();
-	ControllerModule::RightExternChange();
-	// 转弯：开环
-	RopoDevice::Chassis.MoveVelocity(0.67,1.3);		
-	pros::delay(1700);								
-	ControllerModule::RightExternChange();
-	ControllerModule::SwitchIntakerouttake();
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
-		RopoDevice::Chassis.AutoRotateAbs(140);
-		delay();
-	}
-	// 后退倒车撞网（收击球件）
-	ControllerModule::HitIn();
-	RopoDevice::Chassis.MoveVelocity(-0.7,0);
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	RopoDevice::Chassis.AutoRotateAbs(320);
-	delay();
-	RopoDevice::Chassis.MoveVelocity(-5,0);
-	pros::delay(500);
-	RopoDevice::Chassis.MoveVelocity(0,0);
-	pros::delay(300);
+	// // 沿通道推入网
+	// // 直行：开环（不收击球件）
+	// RopoDevice::Chassis.MoveVelocity(0.8,0);
+	// pros::delay(2450);
+	// RopoDevice::Chassis.AutoRotateAbs(62);
+	// delay();
+	// ControllerModule::RightExternChange();
+	// // 转弯：开环
+	// RopoDevice::Chassis.MoveVelocity(0.67,1.3);		
+	// pros::delay(1700);								
+	// ControllerModule::RightExternChange();
+	// ControllerModule::SwitchIntakerouttake();
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
+	// 	RopoDevice::Chassis.AutoRotateAbs(140);
+	// 	delay();
+	// }
+	// // 后退倒车撞网（收击球件）
+	// ControllerModule::HitIn();
+	// RopoDevice::Chassis.MoveVelocity(-0.7,0);
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// RopoDevice::Chassis.AutoRotateAbs(320);
+	// delay();
+	// RopoDevice::Chassis.MoveVelocity(-5,0);
+	// pros::delay(500);
+	// RopoDevice::Chassis.MoveVelocity(0,0);
+	// pros::delay(300);
 }
