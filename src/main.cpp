@@ -111,7 +111,7 @@ namespace ControllerModule {
 		RopoDevice::ThreeWire::BarPneumatic.set_value(true);
 	}
 
-	  
+	bool intaker_status = false; 
 	void Intake(){
 		RopoDevice::Motors::LeftIntakeMotor.move_voltage(-550.0 / 600.0 * 12000.0);
 		RopoDevice::Motors::RightIntakeMotor.move_voltage(-550.0 / 600.0 * 12000.0);
@@ -124,11 +124,13 @@ namespace ControllerModule {
 		RopoDevice::Motors::RightIntakeMotor.move_voltage(8000);
 	}
 	void IntakerStop(){
-		RopoDevice::Motors::LeftIntakeMotor.move_voltage(0);
-		RopoDevice::Motors::RightIntakeMotor.move_voltage(0);
+		if (intaker_status == 0) {
+			RopoDevice::Motors::LeftIntakeMotor.move_voltage(0);
+			RopoDevice::Motors::RightIntakeMotor.move_voltage(0);
+		}
 	}
 
-	bool intaker_status = false;  
+	  
 	void ChangeIntakerPneumatic(){
 		
 		intaker_status ^= 1;
@@ -204,7 +206,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	//autonomous_qualify();
+	// autonomous_qualify();
 	autonomous_KnockoutMatch();
 }
 
@@ -400,6 +402,7 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.MoveVelocity(-0.7,0);
 	pros::delay(900);
 	ControllerModule::ChangeIntakerPneumatic();
+	ControllerModule::Intake();
 	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(200);
