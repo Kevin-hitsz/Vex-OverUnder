@@ -476,7 +476,7 @@ void autonomous_C1b(){
 
 
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
-	pros::delay(300);
+	pros::delay(420);
 
 	//弧线推球
 	ControllerModule::WingUnpush();
@@ -488,14 +488,14 @@ void autonomous_C1b(){
 
 
 	
-	pros::delay(200);
+	pros::delay(100);
 	RopoDevice::Chassis.MoveVelocity(0.4,0);
-	pros::delay(300);
+	pros::delay(250);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);
 	//推进网
 	RopoDevice::Chassis.MoveVelocity(-1.5,0.0);
-	pros::delay(360);
+	pros::delay(380);
 
 	//退出网
 	RopoDevice::Chassis.MoveVelocity(0.7,0);
@@ -540,9 +540,9 @@ void autonomous_C1b(){
 //	//中间吃球+推球
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-2.19,0.50,10000,4500);
+	RopoDevice::Chassis.AutoPositionMove(-2.02,0.26,10000,4500);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
-	RopoDevice::Chassis.MoveVelocity(0.4,1.5);
+	RopoDevice::Chassis.MoveVelocity(0.4,2);
 	pros::delay(500);
 	RopoDevice::Chassis.AutoRotateAbs(-48);
 	pros::delay(600);
@@ -582,9 +582,9 @@ void autonomous_C1b(){
 //	//中间的旁边吃球
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-1.77,0.57,10000,3000);
+	RopoDevice::Chassis.AutoPositionMove(-1.88,0.42,10000,3000);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
-	RopoDevice::Chassis.MoveVelocity(0.2,-1.0);
+	RopoDevice::Chassis.MoveVelocity(0.2,-2.0);
 	pros::delay(500);//吃到球
 	RopoDevice::Chassis.MoveVelocity(-0.3,0);
 	pros::delay(200);
@@ -608,8 +608,8 @@ void autonomous_C1b(){
 //虚空扫球
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-1.63,0.79,10000,3000);
-	RopoDevice::Chassis.MoveVelocity(-0.7,1.5);
+	RopoDevice::Chassis.AutoPositionMove(-1.60,0.87,10000,3000);
+	RopoDevice::Chassis.MoveVelocity(-0.7,2.2);
 	pros::delay(700);
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
 	pros::delay(620);

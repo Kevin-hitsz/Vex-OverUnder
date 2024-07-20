@@ -11,7 +11,7 @@ namespace RopoParameter {
 	//    第 4 个参数是gps传感器初始化时朝向场地的角度方向，y轴正方向为0°，角度遵循顺时针
 	//    第 5、6个参数gps位于车体的坐标，若gps所视方向为车体0°，车体y轴正方向为车体0°，则车体x轴正方向为车体90°，角度遵循顺时针
 
-	static constexpr double FIELD_HEADING_INITIAL = 90.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
+	static constexpr double FIELD_HEADING_INITIAL = 180.0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
 	static constexpr double ROPO_HEADING_INITIAL  = 225.0 - FIELD_HEADING_INITIAL;//对于战队场地X轴
 	
 	static constexpr int GPS_PORT = 10;
