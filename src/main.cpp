@@ -216,7 +216,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	autonomous_qualify();
+	skill();
+	//autonomous_qualify();
 	// autonomous_KnockoutMatch();
 }
 
@@ -582,7 +583,7 @@ void skill(){
 	for(int i = 1 ; i <= 8 ; i++){										// 导球*8
 
 		RopoDevice::Chassis.MoveVelocity(0,-7.5);
-		pros::delay(320);
+		pros::delay(350);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(50);
 		RopoDevice::Chassis.AutoRotateAbs(45);
@@ -604,7 +605,7 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(-0.7,0.15);
 	pros::delay(1000);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0.15);
-	pros::delay(1300);
+	pros::delay(1200);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(50);
 	RopoDevice::Chassis.MoveVelocity(-0.25,-0.5);
@@ -656,7 +657,7 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(2,0);
 	pros::delay(350);
 	ControllerModule::GpsUpdate();
-	RopoDevice::Chassis.AutoPositionMove(0.25,-0.08,45.0);
+	RopoDevice::Chassis.AutoPositionMove(0.49,-0.89,45.0);
 
 	ControllerModule::BarExtend();
 	pros::delay(400);
@@ -664,7 +665,7 @@ void skill(){
 	for(int i = 1 ; i <= 8 ; i++){										// 导球*8
 
 		RopoDevice::Chassis.MoveVelocity(0,-7.5);
-		pros::delay(320);
+		pros::delay(350);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(50);
 		RopoDevice::Chassis.AutoRotateAbs(45);
@@ -686,7 +687,7 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(-0.7,0.15);
 	pros::delay(1000);
 	RopoDevice::Chassis.MoveVelocity(-0.5,0.15);
-	pros::delay(1300);
+	pros::delay(1200);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(50);
 	RopoDevice::Chassis.MoveVelocity(-0.25,-0.5);
