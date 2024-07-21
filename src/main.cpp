@@ -539,7 +539,7 @@ void autonomous_C1b(){
 	RopoDevice::Chassis.MoveVelocity(-1.0,0.03);
 	pros::delay(830);
 	RopoDevice::Chassis.MoveVelocity(-0.8,0.35);
-	pros::delay(900);
+	pros::delay(920);
 	// RopoDevice::Chassis.AutoDirectMove(-1.32,1.71,1);
 	// pros::delay(300);
 
@@ -575,13 +575,13 @@ void autonomous_C1b(){
 	pros::delay(20);
 	//推进网
 	RopoDevice::Chassis.MoveVelocity(-1.5,0.0);
-	pros::delay(380);
+	pros::delay(440);
 
 	RopoDevice::Chassis.MoveVelocity(0.6,0);
 	pros::delay(600);
-	RopoDevice::Chassis.AutoRotateAbs(45);
+	RopoDevice::Chassis.AutoRotateAbs(35);
 	pros::delay(400);
-	RopoDevice::Chassis.MoveVelocity(-1.5,0.0);
+	RopoDevice::Chassis.MoveVelocity(-1.5,1);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0.6,0);
 	pros::delay(700);
