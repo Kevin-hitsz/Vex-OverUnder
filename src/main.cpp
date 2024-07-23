@@ -198,7 +198,7 @@ namespace ControllerModule {
 		//RopoDevice::Chassis.AutoRotateAbs(-90);
 		//pros::delay(500);
 		RopoDevice::ThreeWire::IntakerPneumatic.set_value(true);
-		RopoDevice::Chassis.MoveVelocity(-0.3,-0.00);
+		RopoDevice::Chassis.MoveVelocity(-0.33,-0.00);
 		while(RopoDevice::Sensors::distance.get()  > 150 || RopoDevice::Sensors::distance.get() < 10 || RopoDevice::Sensors::distance.get() == PROS_ERR) pros::delay(20);
 		RopoDevice::Chassis.MoveVelocity(0,0);
 		pros::delay(300);
@@ -207,9 +207,9 @@ namespace ControllerModule {
 		ChangeExtern();
 		RopoDevice::Motors::IntakeMotor.move_voltage(1000);
 		pros::delay(300);
-		RopoDevice::Chassis.MoveVelocity(-0.4,-0.10);
+		RopoDevice::Chassis.MoveVelocity(-0.4,-0.00);
 		pros::delay(360);
-		RopoDevice::Chassis.MoveVelocity(-0.24,-0.10);
+		RopoDevice::Chassis.MoveVelocity(-0.30,-0.00);
 		pros::delay(200);
 		
 		RopoDevice::Chassis.MoveVelocity(0,0);
@@ -540,7 +540,7 @@ void autonomous_C1b(){
 //	//中间吃球+推球
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-2.02,0.26,10000,4500);
+	RopoDevice::Chassis.AutoPositionMove(-2.02,0.73,10000,4500);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	RopoDevice::Chassis.MoveVelocity(0.4,2);
 	pros::delay(500);
@@ -582,7 +582,7 @@ void autonomous_C1b(){
 //	//中间的旁边吃球
 	ControllerModule::Intake();
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
-	RopoDevice::Chassis.AutoPositionMove(-1.88,0.42,10000,3000);
+	RopoDevice::Chassis.AutoPositionMove(-1.88,0.47,10000,3000);
 	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
 	RopoDevice::Chassis.MoveVelocity(0.2,-2.0);
 	pros::delay(500);//吃到球
@@ -617,8 +617,8 @@ void autonomous_C1b(){
 	pros::delay(50);//退出网
 	RopoDevice::Chassis.AutoRotateAbs(135);
 	pros::delay(700);//旋转对准
-	RopoDevice::Chassis.MoveVelocity(1,0);
-	pros::delay(700);
+	RopoDevice::Chassis.MoveVelocity(1.2,0);
+	pros::delay(900);
 	RopoDevice::Chassis.MoveVelocity(0.0,0);
 	pros::delay(50);//塞进网
 	RopoDevice::Chassis.MoveVelocity(-0.6,1.5);
