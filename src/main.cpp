@@ -208,7 +208,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	autonomous_1();
+	autonomous_2();
 }
 
 void opcontrol()
@@ -548,7 +548,20 @@ void autonomous_2(){
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
 		RopoDevice::Chassis.AutoRotateAbs(140);
-		delay();
+		pros::delay(500);
+		if(!RopoDevice::Chassis.IfArrived()){
+			RopoDevice::Chassis.MoveVelocity(-8,0);
+			pros::delay(280);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			RopoDevice::Chassis.AutoRotateAbs(140);
+			if(!RopoDevice::Chassis.IfArrived()){
+				RopoDevice::Chassis.MoveVelocity(-8,0);
+				pros::delay(280);
+				RopoDevice::Chassis.MoveVelocity(0,0);
+				RopoDevice::Chassis.AutoRotateAbs(140);
+				pros::delay(500);
+			}				
+		}		
 	}
 	RopoDevice::Chassis.MoveVelocity(-8,0);
 	pros::delay(280);
@@ -558,7 +571,22 @@ void autonomous_2(){
 	// 处理对面进攻区三个球
 	// 第一个球
 	RopoDevice::Chassis.AutoRotateAbs(-160);	// -158
-	delay();
+	// 防卡在网里出不来
+	pros::delay(500);
+	if(!RopoDevice::Chassis.IfArrived()){
+		RopoDevice::Chassis.MoveVelocity(-8,0);
+		pros::delay(280);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		RopoDevice::Chassis.AutoRotateAbs(-160);
+		pros::delay(500);
+		if(!RopoDevice::Chassis.IfArrived()){
+			RopoDevice::Chassis.MoveVelocity(-8,0);
+			pros::delay(280);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			RopoDevice::Chassis.AutoRotateAbs(-160);
+			pros::delay(500);
+		}	
+	}
 	ControllerModule::SwitchIntakerpusherback();
 	ControllerModule::GpsUpdate();	
 	pros::delay(300);
@@ -651,6 +679,8 @@ void autonomous_2(){
 	RopoDevice::Chassis.MoveVelocity(10,0);
 	pros::delay(1150);
 	RopoDevice::Chassis.MoveVelocity(0,0);
+	RopoDevice::Chassis.AutoRotateAbs(140);
+	delay();        
 }
 
 // 技能赛
@@ -710,10 +740,20 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
 		RopoDevice::Chassis.AutoRotateAbs(140);
-		delay();
+		pros::delay(500);
+		if(!RopoDevice::Chassis.IfArrived()){
+			RopoDevice::Chassis.MoveVelocity(-5,0);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			RopoDevice::Chassis.AutoRotateAbs(140);
+			delay();
+		}
 	}
 	RopoDevice::Chassis.MoveVelocity(5,0);
 	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	RopoDevice::Chassis.MoveVelocity(-5,0);
+	pros::delay(150);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	// 后退返回
 	RopoDevice::Chassis.MoveVelocity(-0.67,-1.4);
@@ -751,7 +791,7 @@ void skill(){
 	// pros::delay(3000);
 	// RopoDevice::Chassis.MoveVelocity(0,0);
 
-	// 第二趟 导入8
+	// 第二趟 导入6
 	// RopoDevice::Chassis.AutoRotateAbs(50);
 	// delay();
 	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
@@ -759,11 +799,12 @@ void skill(){
 	// RopoDevice::Chassis.MoveVelocity(0,0);
 	// pros::delay(500);
 	// ControllerModule::HitOut();
-	for(int i=0; i<8; i++){
+	pros::delay(1000);
+	for(int i=0; i<6; i++){
 		ControllerModule::HitOut();
 		pros::delay(800);
 		ControllerModule::HitIn();
-		pros::delay(500);
+		pros::delay(800);
 	}
 	RopoDevice::Chassis.AutoRotateAbs(50);
 	delay();
@@ -791,10 +832,20 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	if (fabs(RopoDevice::GetPosition()[3] - 140) >= 5){
 		RopoDevice::Chassis.AutoRotateAbs(140);
-		delay();
+		pros::delay(500);
+		if(!RopoDevice::Chassis.IfArrived()){
+			RopoDevice::Chassis.MoveVelocity(-5,0);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			RopoDevice::Chassis.AutoRotateAbs(140);
+			delay();
+		}
 	}
 	RopoDevice::Chassis.MoveVelocity(5,0);
 	pros::delay(200);
+	RopoDevice::Chassis.MoveVelocity(0,0);
+	RopoDevice::Chassis.MoveVelocity(-5,0);
+	pros::delay(150);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	// 后退返回
 	RopoDevice::Chassis.MoveVelocity(-0.67,-1.5);
@@ -810,12 +861,13 @@ void skill(){
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
 	pros::delay(2100);
 
-	// 第三趟 导入8
-	for(int i=0; i<8; i++){
+	// 第三趟 导入6
+	pros::delay(1000);
+	for(int i=0; i<6; i++){
 		ControllerModule::HitOut();
 		pros::delay(800);
 		ControllerModule::HitIn();
-		pros::delay(500);
+		pros::delay(800);
 	}
 	RopoDevice::Chassis.AutoRotateAbs(50);
 	delay();
