@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Skill",
+    "project_name": "Blue_Final_KnockoutMatch",
     "target": "v5",
     "templates": {
       "kernel": {
@@ -309,7 +309,7 @@
       }
     },
     "upload_options": {
-      "slot": 5,
+      "slot": 4,
       "icon": "X"
     }
   }
