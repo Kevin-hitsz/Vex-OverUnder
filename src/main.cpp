@@ -29,8 +29,8 @@ void competition_initialize() {}
 
 void autonomous(){
 	RopoDevice::ChassisBrake();
-	AutoOperation::autonomous_C1b();
-	//skill();
+	// AutoOperation::autonomous_C1b();
+	AutoOperation::skill();
 }
 
 void opcontrol()
@@ -61,7 +61,7 @@ void opcontrol()
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L1, RopoController::Rising , ControllerModule::ChangeWingStatus);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_L2, RopoController::Rising , ControllerModule::ChangeTogetherWingStatus);
 	
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , ControllerModule::AutoLift);	
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y , RopoController::Rising , AutoOperation::skill);	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_B , RopoController::Rising , ControllerModule::Switch);
 
 
