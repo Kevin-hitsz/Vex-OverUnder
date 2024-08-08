@@ -155,9 +155,13 @@ namespace ControllerModule {
 
 	void GpsUpdate(){
 		RopoDevice::Chassis.MoveVelocity(0,0);
-		pros::delay(600);
+		pros::delay(500);
 		RopoDevice::gpsAddPosition.SetUpdateFlag(1);
-		pros::delay(200);
+		pros::delay(100);
+		RopoDevice::gpsAddPosition.SetUpdateFlag(0);
+		pros::delay(100);
+		RopoDevice::gpsAddPosition.SetUpdateFlag(1);
+		pros::delay(100);
 		RopoDevice::gpsAddPosition.SetUpdateFlag(0);
 	}
 
