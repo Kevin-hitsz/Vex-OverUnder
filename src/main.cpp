@@ -29,6 +29,7 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
+	RopoAutonomous::FinalKnockoutMatch::Final_KnockoutMatch(3);
 }
 
 void opcontrol()
@@ -67,7 +68,7 @@ void opcontrol()
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , autonomous_qualify);
 	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  RopoAutonomous::FinalKnockoutMatch::Final_KnockoutMatch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  RopoAutonomous::FinalKnockoutMatch::Test_Final_KnockoutMatch);
 	/*end*/
 
 	ButtonDetectLine.Enable();

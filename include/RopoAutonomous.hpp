@@ -1,6 +1,6 @@
-# pragma once
+#ifndef ROPO_AUTONOMOUS_HPP
+#define ROPO_AUTONOMOUS_HPP
 
-#include "RopoAutonomous.hpp"
 #include "main.h"
 #include "RopoApi.hpp"
 #include "RopoController.hpp"
@@ -29,7 +29,8 @@ namespace RopoAutonomous {
 	}
 	namespace  FinalKnockoutMatch{
 
-		void Step_1(){	// 扫出导入区棕球并准备推预装与路径棕球
+		// 扫出导入区棕球并准备推预装与路径棕球
+		void Step_1(){	
 			ControllerModule::BarExtend();
 			pros::delay(400);
 			RopoDevice::Chassis.MoveVelocity(0,2);
@@ -47,7 +48,8 @@ namespace RopoAutonomous {
 			pros::delay(200);
 		}
 
-		void Step_2(){	// 将四个棕球推入球网
+		// 将四个棕球推入球网
+		void Step_2(){	
 			RopoDevice::Chassis.MoveVelocity(-0.75,1.5);
 			pros::delay(950);
 			RopoDevice::Chassis.MoveVelocity(-1,-0.2);
@@ -71,7 +73,8 @@ namespace RopoAutonomous {
 		}
 
 		/*	step-3	更新gps，准备进入中间区域、处理中间区域原有与被推过来的棕球、完成越障	*/
-		void Step_3_Approach_1(){	// 方案1 精准清球
+		// 方案1 精准清球
+		void Step_3_Approach_1(){	
 
 			RopoDevice::Chassis.MoveVelocity(1,0);
 			pros::delay(400);
@@ -122,7 +125,8 @@ namespace RopoAutonomous {
 			ControllerModule::IntakerStop();
 		}
 
-		void Step_3_Approach_2(){	// 方案2 扫一遍中间区域推入球门
+		// 方案2 扫一遍中间区域推入球门
+		void Step_3_Approach_2(){	
 
 			RopoDevice::Chassis.MoveVelocity(1,0);
 			pros::delay(400);
@@ -177,7 +181,8 @@ namespace RopoAutonomous {
 			ControllerModule::IntakerStop();
 		}
 
-		void Step_3_Approach_3(){	// 方案3 将中间球推到我方通道
+		// 方案3 将中间球推到我方通道
+		void Step_3_Approach_3(){	
 
 			RopoDevice::Chassis.MoveVelocity(1,0);
 			pros::delay(500);
@@ -191,8 +196,10 @@ namespace RopoAutonomous {
 			ControllerModule::ChangeRightWingPush();
 			RopoDevice::Chassis.MoveVelocity(-0.25,0);
 			pros::delay(1300);
+			RopoDevice::Chassis.MoveVelocity(-0.15,1);
+			pros::delay(500);
 			RopoDevice::Chassis.MoveVelocity(-0.15,0.5);
-			pros::delay(2000);
+			pros::delay(1000);
 			RopoDevice::Chassis.MoveVelocity(-0.1,0.5);
 			pros::delay(1000);
 			RopoDevice::Chassis.MoveVelocity(-0.25,0);
@@ -203,8 +210,8 @@ namespace RopoAutonomous {
 			pros::delay(1100);
 			RopoDevice::Chassis.MoveVelocity(0,0);
 			pros::delay(200);
-			RopoDevice::Chassis.MoveVelocity(1.2,0);
-			pros::delay(300);
+			RopoDevice::Chassis.MoveVelocity(1,0);
+			pros::delay(200);
 			ControllerModule::ChangeRightWingPush();
 			RopoDevice::Chassis.AutoRotateAbs(18.5);
 			delay();
@@ -230,29 +237,137 @@ namespace RopoAutonomous {
 			RopoDevice::Chassis.MoveVelocity(0,0);
 			ControllerModule::ChangeRightWingPush();
 			ControllerModule::ChangeLeftWingPush();
-			
-			pros::delay(100);
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(0,1);
+			pros::delay(600);
 			RopoDevice::Chassis.AutoRotateAbs(109.5);
 			delay();
-			RopoDevice::Chassis.MoveVelocity(2,0);
-			pros::delay(400);
-			RopoDevice::Chassis.MoveVelocity(0,0);
-			pros::delay(100);
-
-
 
 		}
+		/*	step3	end	*/
+		// 配合step3的1、2方案
+		void Step_4_Approach_1(){
+			RopoDevice::Chassis.MoveVelocity(0,0);
+		}
 
-		void Final_KnockoutMatch(){
+		// 配合step3的3方案
+		void Step_4_Approach_2(){
+
+			RopoDevice::Chassis.MoveVelocity(2,0);
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(-2,0);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			pros::delay(400);
+			RopoDevice::Chassis.AutoRotateAbs(-69);
+			delay();
+			ControllerModule::Intake();
+			ControllerModule::GpsUpdate();
+			RopoDevice::Chassis.AutoPositionMove(-0.99,1.43);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(2,0);
+			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) < 15) {
+				pros::delay(10);
+			}
+
+			RopoDevice::Chassis.MoveVelocity(1,0);
+			pros::delay(500);
+			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) > 3) {
+				pros::delay(10);
+			}
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(400);
+			RopoDevice::Chassis.AutoRotateAbs(-156.6);
+			delay();
+			ControllerModule::GpsUpdate();
+			RopoDevice::Chassis.AutoPositionMove(-0.90,-0.01,-156.6);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
+			ControllerModule::ChangeIntakerPneumatic();
+			ControllerModule::BarExtend();
+			pros::delay(1000);
+			RopoDevice::Chassis.MoveVelocity(0.25,0);
+			pros::delay(600);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(500);
+
+			double HoldAngle;
+			double CurrentAngle;
+			while (true) {
+
+				HoldAngle = RopoDevice::GetPosition()[3] / 1.0184;
+				CurrentAngle = HoldAngle;
+
+				while(fabs(CurrentAngle - HoldAngle) <= 5){
+					pros::delay(50);
+					CurrentAngle = RopoDevice::GetPosition()[3] / 1.0184;
+				}
+				ControllerModule::BarRecover();
+				RopoDevice::Chassis.MoveVelocity(-0.5,0);
+				pros::delay(600);
+				RopoDevice::Chassis.AutoRotateAbs(-156.6);
+				delay();
+				ControllerModule::GpsUpdate();
+				RopoDevice::Chassis.AutoPositionMove(-0.90,-0.01,-156.6);
+				RopoDevice::Chassis.MoveVelocity(0,0);
+				pros::delay(200);
+				RopoDevice::Chassis.MoveVelocity(0.25,0);
+				pros::delay(600);
+				ControllerModule::BarExtend();
+				RopoDevice::Chassis.MoveVelocity(0,0);
+				pros::delay(500);
+			}
+		}
+
+		// 请在定义处修改参数mode 1精准清球 2扫一遍中间区域推入球门 3将中间球推到我方通道
+		void Test_Final_KnockoutMatch(){
+
+			int mode = 3;
 
 			AutonomousInit();
 			Step_1();
 			Step_2();
-			//Step_3_Approach_1();
-			//Step_3_Approach_2();
-			Step_3_Approach_3();
-			RopoDevice::Chassis.MoveVelocity(0,0);
 
+			if(mode == 1){
+				Step_3_Approach_1();
+				Step_4_Approach_1();
+			}
+
+			else if(mode == 2){
+				Step_3_Approach_2();
+				Step_4_Approach_1();
+			}
+
+			else{
+				Step_3_Approach_3();
+				Step_4_Approach_2();
+			}
+		}
+
+		// 参数mode 1精准清球 2扫一遍中间区域推入球门 3将中间球推到我方通道
+		void Final_KnockoutMatch(int mode){
+
+			AutonomousInit();
+			Step_1();
+			Step_2();
+
+			if(mode == 1){
+				Step_3_Approach_1();
+				Step_4_Approach_1();
+			}
+
+			else if(mode == 2){
+				Step_3_Approach_2();
+				Step_4_Approach_1();
+			}
+
+			else{
+				Step_3_Approach_3();
+				Step_4_Approach_2();
+			}
 		}
 	
 	}
@@ -937,3 +1052,5 @@ namespace RopoAutonomous {
     }
 
 }
+
+#endif

@@ -173,8 +173,8 @@ namespace ControllerModule {
 			pros::delay(50); 
 			MasterController.print(1,1,"degree: %.3lf    ",RopoDevice::GetPosition()[3]);
 			pros::delay(50); 
-			// MasterController.print(2,1,"%.2lf    ",RopoDevice::Sensors::Inertial.get_pitch());
-			// pros::delay(50);
+			MasterController.print(2,1,"%.2lf    ",RopoDevice::Sensors::Inertial.get_pitch());
+			pros::delay(50);
 
 			
 
