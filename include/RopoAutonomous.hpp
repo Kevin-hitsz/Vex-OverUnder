@@ -123,6 +123,7 @@ namespace RopoAutonomous {
 			RopoDevice::Chassis.MoveVelocity(-0.8,0);
 			pros::delay(600);
 			ControllerModule::IntakerStop();
+			
 		}
 
 		// 方案2 扫一遍中间区域推入球门
@@ -171,6 +172,8 @@ namespace RopoAutonomous {
 			pros::delay(200);
 			RopoDevice::Chassis.AutoRotateAbs(104);
 			delay();
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
 			RopoDevice::Chassis.MoveVelocity(0.8,0);
 			ControllerModule::Outtake();
 			pros::delay(400);
@@ -244,13 +247,77 @@ namespace RopoAutonomous {
 			delay();
 
 		}
+
+		// 方案4 将部分球推进球门将部分球推到我方通道
+		void Step_3_Approach_4(){
+
+			RopoDevice::Chassis.MoveVelocity(1,0);
+			pros::delay(500);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(100);
+			RopoDevice::Chassis.AutoRotateAbs(-69.6);
+			delay();
+			ControllerModule::GpsUpdate();
+			RopoDevice::Chassis.AutoPositionMoveBack(-1.52,1.51,44.1);
+			RopoDevice::Chassis.MoveVelocity(-0.4,0);
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(-0.15,-0.75);
+			pros::delay(1500);
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			pros::delay(500);
+			RopoDevice::Chassis.MoveVelocity(0,-1);
+			pros::delay(800);
+			RopoDevice::Chassis.AutoRotateAbs(-69.6);
+			delay();
+			RopoDevice::Chassis.MoveVelocity(-0.8,0);
+			pros::delay(600);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
+			RopoDevice::Chassis.AutoRotateAbs(-69.6);
+			delay();
+			ControllerModule::Intake();
+			RopoDevice::Chassis.MoveVelocity(0.5,0);
+			pros::delay(1500);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0.15,1.5);
+			pros::delay(1900);
+			RopoDevice::Chassis.AutoRotateAbs(21);
+			delay();
+			ControllerModule::Outtake();
+			RopoDevice::Chassis.MoveVelocity(0.5,0);
+			pros::delay(1000);
+			RopoDevice::Chassis.MoveVelocity(0.5,0);					
+			int count = 0 ;
+			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) < 18 && count <= 2500) {
+				pros::delay(10);
+				count = count + 10;
+			}
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(100);
+			RopoDevice::Chassis.MoveVelocity(-1,0);					
+			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) > 3) {
+				pros::delay(10);
+			}
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(0,1);
+			pros::delay(600);
+			RopoDevice::Chassis.AutoRotateAbs(109.5);
+			delay();
+		}
 		/*	step3	end	*/
 		// 配合step3的1、2方案
 		void Step_4_Approach_1(){
 			RopoDevice::Chassis.MoveVelocity(0,0);
 		}
 
-		// 配合step3的3方案
+		// 配合step3的3、4方案
 		void Step_4_Approach_2(){
 
 			RopoDevice::Chassis.MoveVelocity(2,0);
@@ -325,7 +392,7 @@ namespace RopoAutonomous {
 		// 请在定义处修改参数mode 1精准清球 2扫一遍中间区域推入球门 3将中间球推到我方通道
 		void Test_Final_KnockoutMatch(){
 
-			int mode = 3;
+			int mode = 2;
 
 			AutonomousInit();
 			Step_1();
@@ -339,6 +406,11 @@ namespace RopoAutonomous {
 			else if(mode == 2){
 				Step_3_Approach_2();
 				Step_4_Approach_1();
+			}
+
+			else if(mode == 4){
+				Step_3_Approach_4();
+				Step_4_Approach_2();
 			}
 
 			else{
@@ -362,6 +434,11 @@ namespace RopoAutonomous {
 			else if(mode == 2){
 				Step_3_Approach_2();
 				Step_4_Approach_1();
+			}
+
+			else if(mode == 4){
+				Step_3_Approach_4();
+				Step_4_Approach_2();
 			}
 
 			else{
