@@ -641,47 +641,72 @@ void skill_new2(){      //机创赛版本2 上方导球22->推入联队球->爬�
 
 void skill_new3(){		//机创赛版本3 上方翅膀导入
 	using namespace RopoFunction;
-	ExternRight();
-	closemove(0.03, 0.04, 0, 400);
-		if (RopoDevice::Sensors::Encoder.GetPosX()/1000 >= 0.04 || RopoDevice::Sensors::Encoder.GetPosY()/1000 >= 0.05) {
-		closemove(0.03, 0.04, -20, 400);
-	}
-	openmove(0, 0, -8, 300);
-	openmove(0.0, 0.0,  0.0, 150);
-	openmove(0, 0, 8, 270);
-	openmove(0.0, 0.0,  0.0, 400);
 
+	float CurrentX = 0;
+	float CurrentY = 0;
+
+	// 暂时屏蔽
+	// openmove(0.0, 1,  0, 500);
+	// openmove(0.0, 0.0,  0.0, 200);
+	// openmove(0.0, -1,  0, 300);
+
+	CurrentX = RopoDevice::Sensors::Encoder.GetPosX() / 1000 ;
+	CurrentY = RopoDevice::Sensors::Encoder.GetPosY() / 1000 ;
+	closemove(CurrentX, CurrentY, -120, 1000);
+	ExternRight();
+	closemove(0.07, 0.27, -137, 1000);
 
 	int load_number = 11;
-
 	for (int i = 0; i < load_number; i++) {
-		openmove(0.0, 0.0,  -8.0, 310);
-		openmove(0.0, 0.0,  0.0, 150);
-		openmove(0.0, 0.0, 8.0, 300);
-		openmove(0.0, 0.0,  0.0, 550);
-		if (i % 3 == 2) {
-			closemove(0.03, 0.04, -20, 400);
-			if (RopoDevice::Sensors::Encoder.GetPosX()/1000 >= 0.04 || RopoDevice::Sensors::Encoder.GetPosY()/1000 >= 0.05) {
-				closemove(0.03, 0.04, -20, 400);
-			}
-		}
+		openmove(-1, 0.1,0, 400);
+		openmove(0, 0, 0, 100);
+		openmove(0.8, 0.1, 0, 400);
+		openmove(0, 0, 0, 300);
 	}
 	ExternRight();
-	closemove(-0.15, 0.28, -93, 1000);
-	pros::delay(2000);
-	openmove(-0.6, 0.01, 0, 2300);
-	openmove(0, 0, 0, 50);
-	pros::delay(2000);
-	closemove(-0.16, 2.28, -110, 800);
-	pros::delay(2000);
-	closemove(-0.01, 2.49, -130, 800);
-	pros::delay(2000);
-	closemove(0.16, 2.70, -170, 800);
-	pros::delay(2000);
-	openmove(-1.5, 0, 0, 600);
-	openmove(1.5, 0, 0, 500);
-	openmove(-1.5, 0, 0, 600);
-	openmove(0, 0, 0, 300);
+
+
+
+
+
+	// closemove(0.27, 0.39, -100, 2000);
+	// ExternRight();
+	// pros::delay(500);
+
+	// openmove(0, 0, -8, 300);
+	// openmove(0.0, 0.0,  0.0, 150);
+	// openmove(0, 0, 8, 350);
+	// openmove(0.0, 0.0,  0.0, 400);
+
+
+	// int load_number = 11;
+	// for (int i = 0; i < load_number; i++) {
+	// 	openmove(0.0, 0.0,  -8.0, 310);
+	// 	openmove(0.0, 0.0,  0.0, 200);
+	// 	openmove(0.0, 0.0, 8.0, 270);
+	// 	openmove(0.0, 0.0,  0.0, 600);
+
+	// 	if (fabs(RopoDevice::Sensors::Encoder.GetPosX()/1000 - 0.27) >= 0.03 || fabs(RopoDevice::Sensors::Encoder.GetPosY()/1000 - 0.39) >= 0.03){
+	// 		closemove(0.27, 0.39, -100, 1000);
+	// 	}
+	// }
+	// ExternRight();
+
+	// closemove(-0.15, 0.28, -93, 1000);
+	// pros::delay(2000);
+	// openmove(-0.6, 0.01, 0, 2300);
+	// openmove(0, 0, 0, 50);
+	// pros::delay(2000);
+	// closemove(-0.16, 2.28, -110, 800);
+	// pros::delay(2000);
+	// closemove(-0.01, 2.49, -130, 800);
+	// pros::delay(2000);
+	// closemove(0.16, 2.70, -170, 800);
+	// pros::delay(2000);
+	// openmove(-1.5, 0, 0, 600);
+	// openmove(1.5, 0, 0, 500);
+	// openmove(-1.5, 0, 0, 600);
+	// openmove(0, 0, 0, 300);
 	RopoDevice::Chassis.Operator();
 
 }
@@ -690,7 +715,7 @@ void autonomous(){
 	//autonomous_Wisco();
 	//RopoFunction::autonomous_1();
 	//skill();
-	skill_new2();
+	skill_new3();
 	
 }
 
