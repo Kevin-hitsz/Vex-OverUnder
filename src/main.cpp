@@ -654,16 +654,29 @@ void skill_new3(){		//机创赛版本3 上方翅膀导入
 	CurrentY = RopoDevice::Sensors::Encoder.GetPosY() / 1000 ;
 	closemove(CurrentX, CurrentY, -120, 1000);
 	ExternRight();
-	closemove(0.07, 0.27, -137, 1000);
 
-	int load_number = 11;
+	int load_number = 3;
 	for (int i = 0; i < load_number; i++) {
-		openmove(-1, 0.1,0, 400);
-		openmove(0, 0, 0, 100);
-		openmove(0.8, 0.1, 0, 400);
-		openmove(0, 0, 0, 300);
+		closemove(0.07, 0.27, -137, 1000);
+		openmove(-1.2, 0,0, 320);
 	}
+
+
+	closemove(0.69,0.43, -180, 2000);
+	openmove(1.2, 0,0, 400);
+	closemove(0.64,0.56, 45, 1000);
+	closemove(1.24,0.56, 45, 2000);
+	CurrentX = RopoDevice::Sensors::Encoder.GetPosX() / 1000 ;
+	CurrentY = RopoDevice::Sensors::Encoder.GetPosY() / 1000 ;
+	closemove(CurrentX, CurrentY, 0, 1000);
 	ExternRight();
+	openmove(0, 0,0, 200);
+	openmove(1, 0,0, 500);
+	closemove(1.54,0.56, 45, 2000);
+	ExternRight();
+	openmove(0, 0,0, 400);
+	closemove(2.14,0.56, 45, 2000);
+
 
 
 
