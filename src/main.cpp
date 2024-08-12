@@ -645,10 +645,9 @@ void skill_new3(){		//机创赛版本3 上方翅膀导入
 	float CurrentX = 0;
 	float CurrentY = 0;
 
-	// 暂时屏蔽
-	// openmove(0.0, 1,  0, 500);
-	// openmove(0.0, 0.0,  0.0, 200);
-	// openmove(0.0, -1,  0, 300);
+	openmove(0.0, 1,  0, 500);
+	openmove(0.0, 0.0,  0.0, 200);
+	openmove(0.0, -1,  0, 300);
 
 	CurrentX = RopoDevice::Sensors::Encoder.GetPosX() / 1000 ;
 	CurrentY = RopoDevice::Sensors::Encoder.GetPosY() / 1000 ;
@@ -657,25 +656,38 @@ void skill_new3(){		//机创赛版本3 上方翅膀导入
 
 	int load_number = 3;
 	for (int i = 0; i < load_number; i++) {
-		closemove(0.07, 0.27, -137, 1000);
-		openmove(-1.2, 0,0, 320);
+		closemove(0.07, 0.27, -137, 800);
+		openmove(-1.2, 0,-1.5, 350);
 	}
 
 
 	closemove(0.69,0.43, -180, 2000);
-	openmove(1.2, 0,0, 400);
-	closemove(0.64,0.56, 45, 1000);
-	closemove(1.24,0.56, 45, 2000);
+	ExternRight();
+	openmove(1.2, 0,0, 300);
+
 	CurrentX = RopoDevice::Sensors::Encoder.GetPosX() / 1000 ;
 	CurrentY = RopoDevice::Sensors::Encoder.GetPosY() / 1000 ;
-	closemove(CurrentX, CurrentY, 0, 1000);
-	ExternRight();
-	openmove(0, 0,0, 200);
-	openmove(1, 0,0, 500);
-	closemove(1.54,0.56, 45, 2000);
-	ExternRight();
-	openmove(0, 0,0, 400);
-	closemove(2.14,0.56, 45, 2000);
+	closemove(CurrentX, CurrentY, 135, 1000);
+
+
+	closemove(1.24,0.58, 135, 2000);
+	// ExternRight();
+	// pros::delay(400);
+	closemove(1.69, 0.58, 135, 1000);
+	// ExternRight();
+	// pros::delay(400);
+
+	// CurrentX = RopoDevice::Sensors::Encoder.GetPosX() / 1000 ;
+	// closemove(CurrentX, 0.68, 0, 1000);
+	// closemove(1.69, 0.68, 0, 1000);
+	// ExternRight();
+	// pros::delay(400);
+
+	closemove(2.14,0.64, 135, 1000);
+	// openmove(0.25, 0,0, 800);
+	// openmove(0.25, 0,-0.25, 2200);
+
+
 
 
 
