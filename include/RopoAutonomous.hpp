@@ -180,8 +180,64 @@ namespace RopoAutonomous {
 			RopoDevice::Chassis.MoveVelocity(0,0);
 			pros::delay(100);
 			RopoDevice::Chassis.MoveVelocity(-0.8,0);
-			pros::delay(600);
+			pros::delay(400);
 			ControllerModule::IntakerStop();
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			RopoDevice::Chassis.AutoRotateAbs(18.5);
+			delay();
+			ControllerModule::GpsUpdate();
+
+			RopoDevice::Chassis.AutoPositionMoveBack(-1.94,1.54,108.83);
+			ControllerModule::ChangeRightWingPush();
+			RopoDevice::Chassis.MoveVelocity(-0.25,0);
+			pros::delay(1300);
+			RopoDevice::Chassis.MoveVelocity(-0.15,1);
+			pros::delay(500);
+			RopoDevice::Chassis.MoveVelocity(-0.15,0.5);
+			pros::delay(1000);
+			RopoDevice::Chassis.MoveVelocity(-0.1,0.5);
+			pros::delay(1000);
+			RopoDevice::Chassis.MoveVelocity(-0.25,0);
+			pros::delay(1000);
+			RopoDevice::Chassis.AutoRotateAbs(-159.5);
+			delay();
+			RopoDevice::Chassis.MoveVelocity(-0.5,0);
+			pros::delay(1100);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(1,0);
+			pros::delay(200);
+			ControllerModule::ChangeRightWingPush();
+			RopoDevice::Chassis.AutoRotateAbs(18.5);
+			delay();
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			pros::delay(100);
+			ControllerModule::Outtake();
+			RopoDevice::Chassis.MoveVelocity(0.5,0);					
+			int count = 0 ;
+			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) < 18 && count <= 2500) {
+				pros::delay(10);
+				count = count + 10;
+			}
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(100);
+			RopoDevice::Chassis.MoveVelocity(-1,0);					
+			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) > 3) {
+				pros::delay(10);
+			}
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			ControllerModule::ChangeRightWingPush();
+			ControllerModule::ChangeLeftWingPush();
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(0,1);
+			pros::delay(600);
+			RopoDevice::Chassis.AutoRotateAbs(109.5);
+			delay();
 		}
 
 		// 方案3 将中间球推到我方通道
@@ -321,7 +377,7 @@ namespace RopoAutonomous {
 		void Step_4_Approach_2(){
 
 			RopoDevice::Chassis.MoveVelocity(2,0);
-			pros::delay(400);
+			pros::delay(350);
 			RopoDevice::Chassis.MoveVelocity(-2,0);
 			pros::delay(200);
 			RopoDevice::Chassis.MoveVelocity(0,0);
@@ -341,7 +397,7 @@ namespace RopoAutonomous {
 			}
 
 			RopoDevice::Chassis.MoveVelocity(1,0);
-			pros::delay(500);
+			pros::delay(700);
 			while (fabs(RopoDevice::Sensors::Inertial.get_pitch()) > 3) {
 				pros::delay(10);
 			}
@@ -384,8 +440,6 @@ namespace RopoAutonomous {
 				RopoDevice::Chassis.MoveVelocity(0.25,0);
 				pros::delay(600);
 				ControllerModule::BarExtend();
-				RopoDevice::Chassis.MoveVelocity(0,0);
-				pros::delay(500);
 			}
 		}
 
