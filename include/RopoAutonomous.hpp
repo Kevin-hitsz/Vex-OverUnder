@@ -950,6 +950,188 @@ namespace RopoAutonomous {
 
     }
 
+	void skill_new(){
+
+		RopoDevice::Chassis.StartChassisAutoControll();   			// 设置为自动状态
+		RopoDevice::ChassisBrake();						  			// 自动赛时需要设置刹车状态为brake
+
+		RopoDevice::Chassis.MoveVelocity(-1,0);
+		pros::delay(300);
+		RopoDevice::Chassis.MoveVelocity(0,0);
+		pros::delay(50);
+		RopoDevice::Chassis.MoveVelocity(1,0);
+		pros::delay(200);
+		RopoDevice::Chassis.MoveVelocity(0.8,0);
+		pros::delay(200);
+		RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+
+		int round = 1;
+		while (round <= 3) {
+
+			
+			ControllerModule::BarExtend();
+			pros::delay(400);
+
+			for(int i = 1 ; i <= 8 ; i++){										// 导球*8
+			RopoDevice::Chassis.MoveVelocity(0,-5);
+			pros::delay(350);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(50);
+			RopoDevice::Chassis.AutoRotateAbs(45);
+			delay();
+			pros::delay(250);
+			}
+
+			ControllerModule::BarRecover();
+			pros::delay(300);
+			RopoDevice::Chassis.AutoRotateAbs(135);
+			delay();
+			ControllerModule::ChangeLeftWingPush();
+
+			RopoDevice::Chassis.MoveVelocity(-0.9,-1.5);
+			pros::delay(720);
+			RopoDevice::Chassis.MoveVelocity(-1,0.2);
+			pros::delay(1300);
+			RopoDevice::Chassis.MoveVelocity(-1,-1.1);
+			pros::delay(1200);
+			RopoDevice::Chassis.MoveVelocity(-1.2,-0.5);
+			pros::delay(200);
+			ControllerModule::ChangeLeftWingPush();
+			pros::delay(300);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(100);
+			RopoDevice::Chassis.MoveVelocity(1,0);
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
+			pros::delay(400);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(100);
+
+			if(round != 3){
+				RopoDevice::Chassis.AutoRotateAbs(0);
+				delay();
+				RopoDevice::Chassis.MoveVelocity(0.6,0.5);
+				pros::delay(400);
+				RopoDevice::Chassis.MoveVelocity(0.6,1.5);
+				pros::delay(1200);
+				RopoDevice::Chassis.MoveVelocity(0,0);
+				ControllerModule::GpsUpdate();
+				RopoDevice::Chassis.AutoPositionMove(0.62,-0.58);
+				RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+			}
+
+			round ++;
+		
+		}
+
+		// int round = 1;
+		// while (round <= 3) {
+		// 	RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+		// 	ControllerModule::BarExtend();
+		// 	pros::delay(400);
+		// 	for(int i = 1 ; i <= 8 ; i++){										
+		// 	RopoDevice::Chassis.MoveVelocity(0,-5);
+		// 	pros::delay(350);
+		// 	RopoDevice::Chassis.MoveVelocity(0,0);
+		// 	pros::delay(50);
+		// 	RopoDevice::Chassis.AutoRotateAbs(45);
+		// 	delay();
+		// 	pros::delay(250);
+		// 	}
+		// 	ControllerModule::BarRecover();
+		// 	pros::delay(300);
+		// 	RopoDevice::Chassis.AutoRotateAbs(135);
+		// 	delay();
+		// 	ControllerModule::ChangeLeftWingPush();
+		// 	RopoDevice::Chassis.MoveVelocity(-0.9,-1.5);
+		// 	pros::delay(720);
+		// 	RopoDevice::Chassis.MoveVelocity(-1,0.2);
+		// 	pros::delay(1400);
+		// 	RopoDevice::Chassis.MoveVelocity(-1,-1.1);
+		// 	pros::delay(1200);
+		// 	RopoDevice::Chassis.MoveVelocity(-1.2,-0.5);
+		// 	pros::delay(200);
+		// 	ControllerModule::ChangeLeftWingPush();
+		// 	pros::delay(300);
+		// 	RopoDevice::Chassis.MoveVelocity(0,0);
+		// 	pros::delay(100);
+		// 	RopoDevice::Chassis.MoveVelocity(1,0);
+		// 	pros::delay(400);
+		// 	RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
+		// 	pros::delay(400);
+		// 	if(round != 3){
+		// 		RopoDevice::Chassis.MoveVelocity(0,0);
+		// 		pros::delay(100);
+		// 		RopoDevice::Chassis.MoveVelocity(0.5,2);
+		// 		pros::delay(900);
+		// 		RopoDevice::Chassis.MoveVelocity(1,0);
+		// 		pros::delay(400);
+		// 		RopoDevice::Chassis.AutoRotateAbs(90);
+		// 		delay();
+		// 		ControllerModule::GpsUpdate();
+		// 		RopoDevice::Chassis.AutoPositionMoveBack(0.60,-2.40,-90);
+		// 		RopoDevice::Chassis.AutoPositionMoveBack(0.62,-0.58);
+		// 		ControllerModule::GpsUpdate();
+		// 	}
+		// 	round ++;
+		// }
+
+
+
+
+
+		// RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+		// ControllerModule::BarExtend();
+		// pros::delay(400);
+
+		// for(int i = 1 ; i <= 2 ; i++){										// 导球*8
+		// RopoDevice::Chassis.MoveVelocity(0,-5);
+		// pros::delay(350);
+		// RopoDevice::Chassis.MoveVelocity(0,0);
+		// pros::delay(50);
+		// RopoDevice::Chassis.AutoRotateAbs(45);
+		// delay();
+		// pros::delay(250);
+		// }
+
+		// ControllerModule::BarRecover();
+		// pros::delay(300);
+		// RopoDevice::Chassis.AutoRotateAbs(135);
+		// delay();
+		// ControllerModule::ChangeLeftWingPush();
+
+		// RopoDevice::Chassis.MoveVelocity(-0.9,-1.5);
+		// pros::delay(720);
+		// RopoDevice::Chassis.MoveVelocity(-1,0.2);
+		// pros::delay(1400);
+		// RopoDevice::Chassis.MoveVelocity(-1,-1.1);
+		// pros::delay(1200);
+		// RopoDevice::Chassis.MoveVelocity(-1.2,-0.5);
+		// pros::delay(200);
+		// ControllerModule::ChangeLeftWingPush();
+		// pros::delay(300);
+		// RopoDevice::Chassis.MoveVelocity(0,0);
+		// pros::delay(100);
+		// RopoDevice::Chassis.MoveVelocity(1,0);
+		// pros::delay(400);
+		// RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
+		// pros::delay(400);
+		// RopoDevice::Chassis.MoveVelocity(0,0);
+		// pros::delay(100);
+
+		// RopoDevice::Chassis.AutoRotateAbs(0);
+		// delay();
+		// RopoDevice::Chassis.MoveVelocity(0.8,0.5);
+		// pros::delay(400);
+		// RopoDevice::Chassis.MoveVelocity(0.8,1.5);
+		// pros::delay(1200);
+		// RopoDevice::Chassis.MoveVelocity(0,0);
+		// ControllerModule::GpsUpdate();
+		// RopoDevice::Chassis.AutoPositionMove(0.62,-0.58);
+		// RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+
+	}
+
     void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛
 
 	// 初始化部分
