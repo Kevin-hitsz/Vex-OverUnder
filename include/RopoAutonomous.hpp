@@ -963,32 +963,32 @@ namespace RopoAutonomous {
 		pros::delay(200);
 		RopoDevice::Chassis.MoveVelocity(0.8,0);
 		pros::delay(200);
-		RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+		RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,55.0);
 
 		int round = 1;
 		while (round <= 3) {
 
-			
+			ControllerModule::IntakerStop();
 			ControllerModule::BarExtend();
-			pros::delay(400);
+			pros::delay(200);
 
 			for(int i = 1 ; i <= 8 ; i++){										// 导球*8
-			RopoDevice::Chassis.MoveVelocity(0,-5);
-			pros::delay(350);
+			RopoDevice::Chassis.MoveVelocity(0,-7.5);
+			pros::delay(300);
 			RopoDevice::Chassis.MoveVelocity(0,0);
-			pros::delay(50);
-			RopoDevice::Chassis.AutoRotateAbs(45);
+			pros::delay(100);
+			RopoDevice::Chassis.AutoRotateAbs(55);
 			delay();
-			pros::delay(250);
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
 			}
 
 			ControllerModule::BarRecover();
-			pros::delay(300);
 			RopoDevice::Chassis.AutoRotateAbs(135);
 			delay();
 			ControllerModule::ChangeLeftWingPush();
 
-			RopoDevice::Chassis.MoveVelocity(-0.9,-1.5);
+			RopoDevice::Chassis.MoveVelocity(-1,-1.5);
 			pros::delay(720);
 			RopoDevice::Chassis.MoveVelocity(-1,0.2);
 			pros::delay(1300);
@@ -1008,16 +1008,22 @@ namespace RopoAutonomous {
 			pros::delay(100);
 
 			if(round != 3){
+				RopoDevice::Chassis.MoveVelocity(0.5,0);
+				pros::delay(400);
 				RopoDevice::Chassis.AutoRotateAbs(0);
 				delay();
-				RopoDevice::Chassis.MoveVelocity(0.6,0.5);
-				pros::delay(400);
-				RopoDevice::Chassis.MoveVelocity(0.6,1.5);
+				RopoDevice::Chassis.MoveVelocity(0.7,1.7);
 				pros::delay(1200);
-				RopoDevice::Chassis.MoveVelocity(0,0);
+				
 				ControllerModule::GpsUpdate();
-				RopoDevice::Chassis.AutoPositionMove(0.62,-0.58);
-				RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,45.0);
+				ControllerModule::Outtake();
+				RopoDevice::Chassis.AutoPositionMove(0.60,-0.50);
+				RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,55.0);
+			}
+			else{
+				RopoDevice::Chassis.MoveVelocity(1,0);
+				pros::delay(400);
+				RopoDevice::Chassis.MoveVelocity(0,0);
 			}
 
 			round ++;
