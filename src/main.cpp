@@ -68,8 +68,9 @@ void opcontrol()
 	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , autonomous_qualify);
 	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  RopoAutonomous::FinalKnockoutMatch::Test_Final_KnockoutMatch);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  RopoAutonomous::skill_new);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  RopoAutonomous::FinalKnockoutMatch::Test_Final_KnockoutMatch);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  RopoAutonomous::skill_new1);
+	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising,  RopoAutonomous::skill_new2);
 	/*end*/
 
 	ButtonDetectLine.Enable();

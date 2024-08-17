@@ -26,30 +26,30 @@ namespace RopoParameter {
 	// static constexpr double GPSY_OFFSET = 0.1388;
 
 	// 决赛淘汰赛gps参数
-	// static constexpr double FIELD_HEADING_INITIAL = 180;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
-	// static constexpr double ROPO_HEADING_INITIAL  = 250 - FIELD_HEADING_INITIAL; //对于战队场地X轴
-	// static constexpr int GPS_PORT = 6;
-	// static constexpr double GPSX_INITIAL_0 = -1.2 - 0.03765; // 需要校正旋转中心初始位置  dX=0.0062 dy=0.04382 
-	// static constexpr double GPSY_INITIAL_0 = -1.2 - 0.05090;
-	// static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
-	// static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
-	// static constexpr double GPS_HEADING_INITIAL_0 = 17.590;
-	// static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
-	// static constexpr double GPSX_OFFSET = 0.0655;  // 138.8 65.5
-	// static constexpr double GPSY_OFFSET = 0.1388;
-
-	//skill gps
-	static constexpr double FIELD_HEADING_INITIAL = 180;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
-	static constexpr double ROPO_HEADING_INITIAL  = 90 - FIELD_HEADING_INITIAL; //对于战队场地X轴
+	static constexpr double FIELD_HEADING_INITIAL = 0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
+	static constexpr double ROPO_HEADING_INITIAL  = 250 - FIELD_HEADING_INITIAL; //对于战队场地X轴
 	static constexpr int GPS_PORT = 6;
-	static constexpr double GPSX_INITIAL_0 = -0.6 - 0.08511 - 0.18 - 0.6; // 需要校正旋转中心初始位置
-	static constexpr double GPSY_INITIAL_0 = -1.2 - 0.13791 + 2.4 - 0.14;
+	static constexpr double GPSX_INITIAL_0 = -1.2 - 0.03765; // 需要校正旋转中心初始位置  dX=0.0062 dy=0.04382 
+	static constexpr double GPSY_INITIAL_0 = -1.2 - 0.05090;
 	static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
 	static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
-	static constexpr double GPS_HEADING_INITIAL_0 = 180;
+	static constexpr double GPS_HEADING_INITIAL_0 = 17.590;
 	static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
 	static constexpr double GPSX_OFFSET = 0.0655;  // 138.8 65.5
 	static constexpr double GPSY_OFFSET = 0.1388;
+
+	//skill gps
+	// static constexpr double FIELD_HEADING_INITIAL = 0;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
+	// static constexpr double ROPO_HEADING_INITIAL  = 90 - FIELD_HEADING_INITIAL; //对于战队场地X轴
+	// static constexpr int GPS_PORT = 6;
+	// static constexpr double GPSX_INITIAL_0 = -0.6 - 0.08511 - 0.18 - 0.6; // 需要校正旋转中心初始位置
+	// static constexpr double GPSY_INITIAL_0 = -1.2 - 0.13791 + 2.4 - 0.14;
+	// static double GPSX_INITIAL =  GPSX_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL);
+	// static double GPSY_INITIAL = -GPSX_INITIAL_0 * RopoMath::Sin(FIELD_HEADING_INITIAL) + GPSY_INITIAL_0 * RopoMath::Cos(FIELD_HEADING_INITIAL);
+	// static constexpr double GPS_HEADING_INITIAL_0 = 180;
+	// static constexpr double GPS_HEADING_INITIAL = (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL) >= 360 ? (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL -  360) : (GPS_HEADING_INITIAL_0 + FIELD_HEADING_INITIAL);
+	// static constexpr double GPSX_OFFSET = 0.0655;  // 138.8 65.5
+	// static constexpr double GPSY_OFFSET = 0.1388;
 
 	// 预赛淘汰赛gps参数
 	// static constexpr double FIELD_HEADING_INITIAL = 180;//比赛场地相对于战队场地，逆时针为+		(校内场地红方出发为0)
