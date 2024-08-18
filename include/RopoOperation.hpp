@@ -564,21 +564,22 @@ void skill(){
 	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	pros::delay(600);
-	RopoDevice::Chassis.AutoPositionMove(-1.55,1.66,10000,4000);
-	RopoDevice::Chassis.AutoRotateAbs(-45);
+	RopoDevice::Chassis.AutoPositionMove(-1.65,1.54);
+	pros::delay(500);
+	RopoDevice::Chassis.AutoRotateAbs(-41);
 	pros::delay(800);
 	// RopoDevice::Chassis.AutoDirectMove(0.15,0.11,0);// -0.3,0.3,0
 	// pros::delay(300);
 	// delay();
-	RopoDevice::Chassis.MoveVelocity(3,-0.1);
-	pros::delay(1280);
+	RopoDevice::Chassis.MoveVelocity(3,0);
+	pros::delay(1250);
 	RopoDevice::Chassis.MoveVelocity(0.8,-3);
-	pros::delay(450);
+	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 	pros::delay(100);
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	pros::delay(800);
-	RopoDevice::Chassis.MoveVelocity(0.5,0);
+	RopoDevice::Chassis.MoveVelocity(0.3,0);
 	pros::delay(500);
 	RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 	pros::delay(300);

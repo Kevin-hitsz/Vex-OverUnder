@@ -151,7 +151,7 @@ namespace RopoDevice{
 	// 创建运球模块
 	RopoLifter::LifterModule LiftMotors(Motors::RightLiftMotor);
 	FloatType GetHeading(){
-		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.011; 
+		return -RopoDevice::Sensors::Inertial.get_rotation() * 1.00208; 
 	}
 
 	// 坐标获取函数
