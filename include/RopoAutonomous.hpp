@@ -439,6 +439,7 @@ namespace RopoAutonomous {
 				pros::delay(200);
 				RopoDevice::Chassis.MoveVelocity(0.25,0);
 				pros::delay(600);
+				RopoDevice::Chassis.MoveVelocity(0,0);
 				ControllerModule::BarExtend();
 			}
 		}
@@ -446,7 +447,7 @@ namespace RopoAutonomous {
 		// 请在定义处修改参数mode 1精准清球 2扫一遍中间区域推入球门 3将中间球推到我方通道
 		void Test_Final_KnockoutMatch(){
 
-			int mode = 3;
+			int mode = 4;
 
 			AutonomousInit();
 			Step_1();
