@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "Skill",
+    "project_name": "Red_Qualification",
     "target": "v5",
     "templates": {
       "kernel": {

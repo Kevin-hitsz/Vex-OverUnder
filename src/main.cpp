@@ -254,10 +254,10 @@ void opcontrol()
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising , ControllerModule::Hang);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising , ControllerModule::Bar);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , autonomous_qualify);
+	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , autonomous_qualify);
 	
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  skill);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A , RopoController::Rising,  skill);
 	/*end*/
 
 	ButtonDetectLine.Enable();
@@ -386,7 +386,7 @@ void autonomous_qualify(){
 	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	//吃联队粽球---------------
-	//gps定位，退出至合适位置
+	//退出至合适位置
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);   // -0.35 300
 	pros::delay(200);
 	RopoDevice::Chassis.MoveVelocity(0,0);
@@ -401,7 +401,8 @@ void autonomous_qualify(){
 	pros::delay(400);
 	// RopoDevice::Chassis.MoveVelocity(0,0);
 	// pros::delay(100);
-
+	
+	//gps定位
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	delay();
 	ControllerModule::GpsUpdate();
@@ -431,14 +432,14 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);
 	pros::delay(300);
 	//送入网
-	RopoDevice::Chassis.AutoPositionMove(-2.18,-0.48);//-2.20,-0.51,-90
+	RopoDevice::Chassis.AutoPositionMove(-2.16,-0.48);//-2.18,-0.48    -2.20,-0.51
 	delay();
 	pros::delay(100);
-	RopoDevice::Chassis.AutoRotateAbs(-90);
+	RopoDevice::Chassis.AutoRotateAbs(-100);//-90
 	delay();
 	ControllerModule::Outtake();
-	RopoDevice::Chassis.MoveVelocity(0.7,0); //0.4
-	pros::delay(600);
+	RopoDevice::Chassis.MoveVelocity(0.8,0); //0.4
+	pros::delay(650);//600
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	
 	//处理场地球-----------------
@@ -477,7 +478,7 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(-0.8,0); //-0.7
-	pros::delay(800); //700
+	pros::delay(900); //700
 	ControllerModule::ChangeRightWingPush();
 	ControllerModule::ChangeLeftWingPush();
 	//送入吃到的
@@ -530,7 +531,7 @@ void autonomous_qualify(){
 	delay();
 	pros::delay(500);
 	ControllerModule::ChangeIntakerPneumatic();
-	pros::delay(200);
+	pros::delay(400);  //200
 	RopoDevice::Chassis.AutoRotateAbs(180);
 	delay();
 	ControllerModule::ChangeLeftWingPush();
