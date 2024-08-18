@@ -342,6 +342,7 @@ namespace RopoAutonomous {
 			RopoDevice::Chassis.AutoRotateAbs(21);
 			delay();
 			ControllerModule::Outtake();
+			pros::delay(3000);
 			RopoDevice::Chassis.MoveVelocity(0.5,0);
 			pros::delay(1000);
 			RopoDevice::Chassis.MoveVelocity(0.5,0);					
@@ -419,7 +420,7 @@ namespace RopoAutonomous {
 
 			double HoldAngle;
 			double CurrentAngle;
-			while (true) {
+			while (RopoDevice::Chassis.GetMoveType() == 0) {
 
 				HoldAngle = RopoDevice::GetPosition()[3] / 1.0184;
 				CurrentAngle = HoldAngle;
@@ -946,11 +947,10 @@ void autonomous_qualify(){
 
 			for(int i = 1 ; i <= a ; i++){										// 导球*8
 			RopoDevice::Chassis.MoveVelocity(0.2,-6);
-			pros::delay(100);
-			RopoDevice::Chassis.MoveVelocity(0,-7.5);
 			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0,-7.5);
+			pros::delay(50);
 			RopoDevice::Chassis.MoveVelocity(0,0);
-			pros::delay(100);
 			RopoDevice::Chassis.AutoRotateAbs(55);
 			delay();
 			RopoDevice::Chassis.MoveVelocity(0,0);
@@ -977,7 +977,7 @@ void autonomous_qualify(){
 			RopoDevice::Chassis.MoveVelocity(1,0);
 			pros::delay(400);
 			RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
-			pros::delay(400);
+			pros::delay(600);
 			RopoDevice::Chassis.MoveVelocity(0,0);
 			pros::delay(100);
 
@@ -1138,12 +1138,12 @@ void autonomous_qualify(){
 			for(int i = 1 ; i <= 11 ; i++){										// 导球*8
 
 			RopoDevice::Chassis.MoveVelocity(0.2,-6);
-			pros::delay(100);
-			RopoDevice::Chassis.MoveVelocity(0,-7.5);
 			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0,-7.5);
+			pros::delay(50);
 			
-			RopoDevice::Chassis.MoveVelocity(0,0);
-			pros::delay(100);
+			// RopoDevice::Chassis.MoveVelocity(0,0);
+			// pros::delay(100);
 			RopoDevice::Chassis.AutoRotateAbs(55);
 			delay();
 			RopoDevice::Chassis.MoveVelocity(0,0);
@@ -1159,43 +1159,122 @@ void autonomous_qualify(){
 			pros::delay(720);
 			RopoDevice::Chassis.MoveVelocity(-0.7,0.2);
 			pros::delay(2200);
-			RopoDevice::Chassis.MoveVelocity(-0.5,-0.8);
-			pros::delay(2400);
-			RopoDevice::Chassis.MoveVelocity(-0.8,-0.5);
-			pros::delay(500);
-			ControllerModule::ChangeLeftWingPush();
-			pros::delay(300);
-			RopoDevice::Chassis.MoveVelocity(0,0);
-			pros::delay(100);
-			RopoDevice::Chassis.MoveVelocity(1,0);
-			pros::delay(400);
-			RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
-			pros::delay(500);
-			RopoDevice::Chassis.MoveVelocity(0,0);
-			pros::delay(100);
+
+			// RopoDevice::Chassis.MoveVelocity(-1,0.2);
+			// pros::delay(1400);
+
+
 
 			if(round != 2){
-				RopoDevice::Chassis.MoveVelocity(0.5,0.5);
-				pros::delay(400);
-				RopoDevice::Chassis.AutoRotateAbs(0);
-				delay();
+
+				RopoDevice::Chassis.MoveVelocity(-0.5,-0.8);
+				pros::delay(2400);
+
+				// RopoDevice::Chassis.MoveVelocity(-1,-1.1);
+				// pros::delay(1200);
+
+				ControllerModule::ChangeLeftWingPush();
+				RopoDevice::Chassis.MoveVelocity(0,0);
+				pros::delay(200);
+
 				RopoDevice::Chassis.MoveVelocity(0.7,1.55);
 				pros::delay(1200);
-				
 				ControllerModule::GpsUpdate();
 				ControllerModule::Outtake();
-				RopoDevice::Chassis.AutoPositionMove(0.57,-0.50);
+				RopoDevice::Chassis.AutoPositionMove(0.59,-0.50);
 				RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,55.0);
 			}
+
 			else{
-				RopoDevice::Chassis.MoveVelocity(1,0);
-				pros::delay(400);
+				RopoDevice::Chassis.MoveVelocity(-0.5,-0.8);
+				pros::delay(1200);
+
+				// RopoDevice::Chassis.MoveVelocity(-1,-1.1);
+				// pros::delay(600);
+
+				ControllerModule::ChangeLeftWingPush();
 				RopoDevice::Chassis.MoveVelocity(0,0);
+				pros::delay(200);
+			}
+			// RopoDevice::Chassis.MoveVelocity(-0.8,-0.5);
+			// pros::delay(500);
+			// ControllerModule::ChangeLeftWingPush();
+			// pros::delay(300);
+			// RopoDevice::Chassis.MoveVelocity(0,0);
+			// pros::delay(100);
+			// RopoDevice::Chassis.MoveVelocity(1,0);
+			// pros::delay(400);
+			// RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
+			// pros::delay(500);
+			// RopoDevice::Chassis.MoveVelocity(0,0);
+			// pros::delay(100);
+
+			// RopoDevice::Chassis.MoveVelocity(-1,-1.5);
+			// pros::delay(720);
+			// RopoDevice::Chassis.MoveVelocity(-1,0.2);
+			// pros::delay(1300);
+			// RopoDevice::Chassis.MoveVelocity(-1,-1.1);
+			// pros::delay(1200);
+			// RopoDevice::Chassis.MoveVelocity(-1.2,-0.5);
+			// pros::delay(200);
+			// ControllerModule::ChangeLeftWingPush();
+			// pros::delay(300);
+			// RopoDevice::Chassis.MoveVelocity(0,0);
+			// pros::delay(100);
+			// RopoDevice::Chassis.MoveVelocity(1,0);
+			// pros::delay(400);
+			// RopoDevice::Chassis.MoveVelocity(-1.2,0.5);
+			// pros::delay(400);
+			// RopoDevice::Chassis.MoveVelocity(0,0);
+			// pros::delay(100);
+
+			// if(round != 2){
+			// 	RopoDevice::Chassis.MoveVelocity(0.5,0.5);
+			// 	pros::delay(400);
+			// 	RopoDevice::Chassis.AutoRotateAbs(0);
+			// 	delay();
+			// 	RopoDevice::Chassis.MoveVelocity(0.7,1.55);
+			// 	pros::delay(1200);
+				
+			// 	ControllerModule::GpsUpdate();
+			// 	ControllerModule::Outtake();
+			// 	RopoDevice::Chassis.AutoPositionMove(0.57,-0.50);
+			// 	RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,55.0);
+			// }
+			// else{
+			// 	RopoDevice::Chassis.MoveVelocity(1,0);
+			// 	pros::delay(400);
+			// 	RopoDevice::Chassis.MoveVelocity(0,0);
+			// }
+			round ++;
+		}
+
+	}
+
+	void import(){
+
+			RopoDevice::Chassis.AutoRotateAbs(55);
+			delay();
+
+			ControllerModule::IntakerStop();
+			ControllerModule::BarExtend();
+			pros::delay(200);
+
+			for(int i = 1 ; i <= 11 ; i++){										// 导球*8
+
+			RopoDevice::Chassis.MoveVelocity(0.2,-6);
+			pros::delay(200);
+			RopoDevice::Chassis.MoveVelocity(0,-7.5);
+			pros::delay(50);
+			
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			RopoDevice::Chassis.AutoRotateAbs(55);
+			delay();
+			RopoDevice::Chassis.MoveVelocity(0,0);
+			pros::delay(200);
 			}
 
-			round ++;
-		
-		}
+			ControllerModule::BarRecover();	
 	}
 
     void autonomous_KnockoutMatch(){	// 机创赛-淘汰赛

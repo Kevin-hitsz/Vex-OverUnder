@@ -456,6 +456,10 @@ namespace RopoChassis{
 				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
 				flag = true;
 			}
+
+			int GetMoveType(){
+				return MoveType;
+			}
 	};
 }
 
