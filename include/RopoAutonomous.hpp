@@ -308,15 +308,15 @@ namespace RopoAutonomous {
 		void Step_3_Approach_4(){
 
 			RopoDevice::Chassis.MoveVelocity(1,0);
-			pros::delay(500);
+			pros::delay(400);
 			RopoDevice::Chassis.MoveVelocity(0,0);
 			pros::delay(100);
 			RopoDevice::Chassis.AutoRotateAbs(-69.6);
 			delay();
 			ControllerModule::GpsUpdate();
 			RopoDevice::Chassis.AutoPositionMoveBack(-1.52,1.51,44.1);
-			RopoDevice::Chassis.MoveVelocity(-0.4,0);
-			pros::delay(400);
+			// RopoDevice::Chassis.MoveVelocity(-0.4,0);
+			// pros::delay(200);
 			RopoDevice::Chassis.MoveVelocity(-0.15,-0.75);
 			pros::delay(1500);
 			ControllerModule::ChangeRightWingPush();
@@ -342,7 +342,7 @@ namespace RopoAutonomous {
 			RopoDevice::Chassis.AutoRotateAbs(21);
 			delay();
 			ControllerModule::Outtake();
-			pros::delay(3000);
+			pros::delay(4000);
 			RopoDevice::Chassis.MoveVelocity(0.5,0);
 			pros::delay(1000);
 			RopoDevice::Chassis.MoveVelocity(0.5,0);					
@@ -389,7 +389,7 @@ namespace RopoAutonomous {
 			delay();
 			ControllerModule::Intake();
 			ControllerModule::GpsUpdate();
-			RopoDevice::Chassis.AutoPositionMove(-0.99,1.43);
+			RopoDevice::Chassis.AutoPositionMove(-1.07,1.41,-69);
 			RopoDevice::Chassis.MoveVelocity(0,0);
 			pros::delay(200);
 			RopoDevice::Chassis.MoveVelocity(2,0);
@@ -412,7 +412,10 @@ namespace RopoAutonomous {
 			pros::delay(200);
 			ControllerModule::ChangeIntakerPneumatic();
 			ControllerModule::BarExtend();
-			pros::delay(1000);
+			pros::delay(400);
+			ControllerModule::BarRecover();
+			pros::delay(400);
+			ControllerModule::BarExtend();
 			RopoDevice::Chassis.MoveVelocity(0.25,0);
 			pros::delay(600);
 			RopoDevice::Chassis.MoveVelocity(0,0);
@@ -968,6 +971,8 @@ void autonomous_qualify(){
 			pros::delay(1300);
 			RopoDevice::Chassis.MoveVelocity(-1,-1.1);
 			pros::delay(1200);
+			RopoDevice::Chassis.AutoRotateAbs(0);
+			delay();
 			RopoDevice::Chassis.MoveVelocity(-1.2,-0.5);
 			pros::delay(200);
 			ControllerModule::ChangeLeftWingPush();
@@ -987,7 +992,9 @@ void autonomous_qualify(){
 				RopoDevice::Chassis.AutoRotateAbs(0);
 				delay();
 				RopoDevice::Chassis.MoveVelocity(0.7,1.7);
-				pros::delay(1200);
+				pros::delay(1000);
+				RopoDevice::Chassis.MoveVelocity(0.7,0);
+				pros::delay(500);
 				
 				ControllerModule::GpsUpdate();
 				ControllerModule::Outtake();
@@ -1181,7 +1188,7 @@ void autonomous_qualify(){
 				pros::delay(1200);
 				ControllerModule::GpsUpdate();
 				ControllerModule::Outtake();
-				RopoDevice::Chassis.AutoPositionMove(0.59,-0.50);
+				RopoDevice::Chassis.AutoPositionMove(0.57,-0.50);
 				RopoDevice::Chassis.AutoPositionMove(0.41,-0.10,55.0);
 			}
 
