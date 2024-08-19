@@ -588,13 +588,13 @@ void autonomous_qualify(){
 	RopoDevice::Chassis.AutoRotateAbs(-90);
 	delay();
 	ControllerModule::Outtake();
-	RopoDevice::Chassis.MoveVelocity(0.9,0); // 0.5 550
-	pros::delay(350);
+	RopoDevice::Chassis.MoveVelocity(0.9,0); //0.9 350; 0.5 550
+	pros::delay(450);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	//吃联队粽球--------------------------------------------------------------------------
 	//退出至合适位置
 	RopoDevice::Chassis.MoveVelocity(-0.5,0);   // -0.35 300
-	pros::delay(250);
+	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	ControllerModule::IntakerStop();
 	RopoDevice::Chassis.AutoRotateAbs(-90);
@@ -621,10 +621,10 @@ void autonomous_qualify(){
 	ControllerModule::ChangeIntakerPneumatic();
 	ControllerModule::Intake();
 	pros::delay(100);
-	RopoDevice::Chassis.MoveVelocity(-0.25,0);
-	pros::delay(400);
+	RopoDevice::Chassis.MoveVelocity(-0.5,0);//-0.25 400
+	pros::delay(300);
 	RopoDevice::Chassis.MoveVelocity(0.3,0);
-	pros::delay(1150);//1250
+	pros::delay(1250);//1250
 	RopoDevice::Chassis.MoveVelocity(0,0);
 	pros::delay(1000);
 	RopoDevice::Chassis.MoveVelocity(-0.7,0);
@@ -661,25 +661,34 @@ void autonomous_qualify(){
 	delay();
 	pros::delay(100);
 	//吐球
-	RopoDevice::Chassis.AutoRotateAbs(-120);
+	// RopoDevice::Chassis.AutoRotateAbs(-120);
+	// delay();
+	// RopoDevice::Chassis.MoveVelocity(0.4,0);
+	// pros::delay(400);
+	// ControllerModule::Outtake();
+	// RopoDevice::Chassis.MoveVelocity(-0.8,0);
+	// pros::delay(250);
+	// RopoDevice::Chassis.AutoRotateAbs(120);
+	// delay();
+	RopoDevice::Chassis.AutoRotateAbs(-110);
 	delay();
-	RopoDevice::Chassis.MoveVelocity(0.4,0);
+	RopoDevice::Chassis.MoveVelocity(0.6,0);
 	pros::delay(400);
 	ControllerModule::Outtake();
 	RopoDevice::Chassis.MoveVelocity(-0.8,0);
-	pros::delay(250);
+	pros::delay(450);
 	RopoDevice::Chassis.AutoRotateAbs(120);
 	delay();
 	//转身开翅膀推
-	RopoDevice::Chassis.MoveVelocity(-0.65,-0.9);//-0.5，-1.0
+	RopoDevice::Chassis.MoveVelocity(-0.55,-0.7);//-0.5，-1.0
 	pros::delay(750);//700
-	// RopoDevice::Chassis.MoveVelocity(-0.4,0);
-	// pros::delay(100);
-	RopoDevice::Chassis.MoveVelocity(-0.4,-1.35);
-	pros::delay(700);
+	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
+	// pros::delay(150);
+	RopoDevice::Chassis.MoveVelocity(-0.30,-1.35);//-0.32,-1.35 ;-0.4,-1.35
+	pros::delay(600);
 	ControllerModule::ChangeRightWingPush();
 	ControllerModule::ChangeLeftWingPush();
-	pros::delay(700);
+	pros::delay(800);
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	delay();
 	RopoDevice::Chassis.MoveVelocity(-0.8,0); //-0.7
