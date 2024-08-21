@@ -464,12 +464,12 @@ void skill(){
 	ControllerModule::ChangeLift();
 	pros::delay(750);
 	RopoDevice::Motors::IntakeMotor.move_voltage(1000);
-	for(int i = 0; i < 13; i++){
+	for(int i = 0; i < 12; i++){
 		RopoDevice::Chassis.MoveVelocity(0.0,4);
 		pros::delay(410);
 		RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 		pros::delay(50);
-		RopoDevice::Chassis.AutoRotateAbs(-5.5);
+		RopoDevice::Chassis.AutoRotateAbs(-10);
 		pros::delay(600);
 		RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 		pros::delay(50);
@@ -569,7 +569,7 @@ void skill(){
 	pros::delay(500);
 	// RopoDevice::Chassis.MoveVelocity(0.5,0);
 	// pros::delay(300);
-	RopoDevice::Chassis.AutoRotateAbs(-41);
+	RopoDevice::Chassis.AutoRotateAbs(-42);
 	pros::delay(800);
 	// RopoDevice::Chassis.AutoDirectMove(0.15,0.11,0);// -0.3,0.3,0
 	// pros::delay(300);
@@ -598,7 +598,7 @@ void skill(){
 		pros::delay(410);
 		RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 		pros::delay(50);
-		RopoDevice::Chassis.AutoRotateAbs(-5);
+		RopoDevice::Chassis.AutoRotateAbs(-8);
 		pros::delay(600);
 		RopoDevice::Chassis.MoveVelocity(0.0,0.0);
 		pros::delay(50);
