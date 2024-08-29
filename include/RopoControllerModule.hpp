@@ -96,7 +96,11 @@ namespace ControllerModule {
 		RopoDevice::ThreeWire::BarPneumatic.set_value(true);
 		if (hang_status == 1) {
 			pros::delay(500);
-			RopoDevice::ThreeWire::HangPneumatic.set_value(true);	
+			RopoDevice::ThreeWire::HangPneumatic.set_value(true);
+			rightwing_status = 0;
+			leftwing_status = 0;
+			RopoDevice::ThreeWire::LeftWingPneumatic.set_value(leftwing_status);
+			RopoDevice::ThreeWire::RightWingPneumatic.set_value(rightwing_status);
 		}
 		hang_status ^= 1;
 		RopoDevice::ThreeWire::ExternPneumatic.set_value(hang_status);
