@@ -29,7 +29,8 @@ void disabled() {}
 void competition_initialize() {}
 
 void autonomous(){
-	RopoAutonomous::autonomous_qualify();
+	RopoAutonomous::FinalKnockoutMatch::Final_KnockoutMatch(4);
+	// RopoAutonomous::skill_new1();
 }
 
 void opcontrol()
@@ -65,12 +66,12 @@ void opcontrol()
 
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_X, RopoController::Rising , ControllerModule::Hang);
 	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_Y, RopoController::Rising , ControllerModule::Bar);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , RopoAutonomous::autonomous_qualify);
-	
-	ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, RopoAutonomous::skill_new2);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP , RopoController::Rising, RopoAutonomous::FinalKnockoutMatch::Test_Final_KnockoutMatch);
-	//ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising, RopoAutonomous::skill_new1);
+
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_A, RopoController::Rising , RopoAutonomous::autonomous_qualify);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_RIGHT , RopoController::Rising,  ControllerModule::GpsUpdate);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_LEFT , RopoController::Rising, RopoAutonomous::skill_new2);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_UP , RopoController::Rising, RopoAutonomous::FinalKnockoutMatch::Test_Final_KnockoutMatch);
+	// ButtonDetectLine.AddButtonDetect(pros::E_CONTROLLER_DIGITAL_DOWN , RopoController::Rising, RopoAutonomous::skill_new1);
 	/*end*/
 
 	ButtonDetectLine.Enable();
