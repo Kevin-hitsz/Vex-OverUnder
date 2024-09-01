@@ -607,14 +607,15 @@ void autonomous_qualify(){
 	pros::delay(400);
 	// RopoDevice::Chassis.MoveVelocity(0,0);
 	// pros::delay(100);
-	
 	//gps定位
 	RopoDevice::Chassis.AutoRotateAbs(0);
 	delay();
+	pros::delay(500);
+	if (!(RopoDevice::gpsAddPosition.ifGpsCorrect())) {
+		RopoDevice::gpsAddPosition.ResetOriginalPosition();
+		RopoDevice::Position_Motor::MyPosition.Set_XY(-1.60,-0.57);
+	}
 	ControllerModule::GpsUpdate();
-	RopoDevice::gpsAddPosition.SetUpdateFlag(1);
-	pros::delay(200);
-	RopoDevice::gpsAddPosition.SetUpdateFlag(0);
 	RopoDevice::Chassis.AutoPositionMove(-1.99,-0.27,135);//-1.97 -0.41
 	delay();
 	//吃联队球
@@ -684,7 +685,7 @@ void autonomous_qualify(){
 	pros::delay(750);//700
 	// RopoDevice::Chassis.MoveVelocity(-0.5,0);
 	// pros::delay(150);
-	RopoDevice::Chassis.MoveVelocity(-0.30,-1.35);//-0.32,-1.35 ;-0.4,-1.35
+	RopoDevice::Chassis.MoveVelocity(-0.15,-1.35);//-0.15,-1.35 ;-0.32,-1.35 ;-0.4,-1.35
 	pros::delay(600);
 	ControllerModule::ChangeRightWingPush();
 	ControllerModule::ChangeLeftWingPush();

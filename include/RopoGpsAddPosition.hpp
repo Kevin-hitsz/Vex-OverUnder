@@ -78,6 +78,23 @@ namespace RopoGpsAddPosition {
                     gpsRelativeY0 = gpsRelativeY;
             }
 
+            
+            void ResetOriginalPosition(){
+                gpsRelativeX0 = 0;
+                gpsRelativeY0 = 0;
+                originalX0 = 0;
+                originalY0 = 0;
+            }
+
+            bool ifGpsCorrect(){
+                if (gps1.get_error() < 0.02) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+
             FloatType GetGpsTransformRelativePositionX() {return gpsRelativeX;}
 
             FloatType GetGpsTransformRelativePositionY() {return gpsRelativeY;}
@@ -91,6 +108,7 @@ namespace RopoGpsAddPosition {
             FloatType GetTransformedPositionTheta() {return transformedPosition[3];}
 
             void      SetUpdateFlag(int updateFlag_) {updateFlag = updateFlag_;}
+
     };
 }
 
