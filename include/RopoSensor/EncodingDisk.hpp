@@ -12,7 +12,7 @@ namespace RopoSensor{
 			float PosY;
 			float Angle[3];
 			float W_Z;
-			float Encoding_in_Car_X,Encoding_in_Car_Y,Encoding_in_Car_Angle;//x为右，y为前
+			float Encoding_in_Car_X,Encoding_in_Car_Y,Encoding_in_Car_Angle;//x为右，y为前，轮子张开的方向为码盘y轴正方向
 			SystemSerial Send;
 			virtual void Update(){
 				static uint8_t ReceiveChar;
