@@ -12,6 +12,83 @@
 #include <algorithm>
 #include <cmath>
 
+namespace ControllerModule{
+
+	void BoolSwitch(void * Parameter){
+		bool *p = static_cast<bool *>(Parameter);
+		(*p) ^= 1;
+	}
+
+	void Push(){
+		RopoDevice::ThreeWire::ExternPneumatic.set_value(true);
+	}
+
+	void Pull(){
+		RopoDevice::ThreeWire::ExternPneumatic.set_value(false);
+	}
+
+	bool externFlag = false;
+	void Switch(){
+		externFlag ^= 1; 
+		RopoDevice::ThreeWire::ExternPneumatic.set_value(externFlag);
+	}
+
+	bool locktag = false;
+	void ChangeCatch(){
+		locktag ^= 1;
+		RopoDevice::ThreeWire::CatchPneumatic.set_value(locktag);
+	}
+
+	void RumbleMe(){
+		pros::Controller MasterController1(pros::E_CONTROLLER_MASTER);
+		MasterController1.rumble("-.-.-");
+		FloatType aa = pros::millis();  //.
+		while(pros::millis()-aa<45000){
+			pros::delay(100);
+		}
+		MasterController1.rumble("-.-.-");
+		while(pros::millis()-aa<65000){
+			pros::delay(100);
+		}
+		MasterController1.rumble("-.-.-");
+	}
+	int catch_1 = 0;
+	void Hold(){
+		RopoDevice::LiftMotors.Hold();
+		catch_1 = 1;
+	}
+
+	void Lift(){
+		RopoDevice::LiftMotors.Wait();
+		catch_1 = 2;
+	}
+
+	void Hide(){
+		RopoDevice::LiftMotors.Hide();
+		catch_1 = 0;
+	}
+
+	void ChangeLift(){
+		if (catch_1 == 1) {
+			Hide();
+		} else {
+			Hold();
+		}
+	}
+
+	void ControllerPrint(){
+		while(true) {
+			pros::Controller MasterController(pros::E_CONTROLLER_MASTER);
+			MasterController.print(0,1,"degree: %.1lf",-RopoDevice::Sensors::Inertial.get_yaw());
+			pros::delay(10); 
+			MasterController.print(1,1,"X: %.2lf Y:%.2lf",RopoDevice::Position_Motor::MyPosition.Get_X(),RopoDevice::Position_Motor::MyPosition.Get_Y());
+			pros::delay(10); 
+			MasterController.print(2,1,"%.2lf  %d",RopoDevice::LiftMotors.GetLifterPosition(), RopoDevice::LiftMotors.GetLifterStatus());
+			pros::delay(10);
+		}
+	}
+}
+
 void initialize() {
 	pros::lcd::initialize();
 	pros::delay(50);

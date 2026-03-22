@@ -156,6 +156,7 @@ namespace RopoDevice{
 	}
 
 	// 创建定位模块
+	
 	namespace Position_Motor{
 		RopoPosition::Position MyPosition(  Motors::LeftChassisMotor1 , Motors::LeftChassisMotor2 , Motors::LeftChassisMotor3 ,Motors::LeftChassisMotor4 , Motors::LeftChassisMotor5 ,
             Motors:: RightChassisMotor1,Motors:: RightChassisMotor2 ,Motors:: RightChassisMotor3 ,Motors:: RightChassisMotor4 ,Motors:: RightChassisMotor5 ,Sensors::Inertial);

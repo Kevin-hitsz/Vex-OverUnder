@@ -67,6 +67,8 @@ namespace RopoChassis{
 			void OpenLoopMove(const Vector& Velocity) {
 				const FloatType ChassisRatio = RopoParameter::CHASSIS_RATIO;	
 				const FloatType radTorpm = RopoParameter::RAD_TO_RPM;				
+				const FloatType ChassisRatio = 3.0 / 2.0;
+				const FloatType radTorpm = 600 / 62.83;				// 1 degree / 2pi * 60s  //
 				static Vector _Velocity(RopoMath::ColumnVector,2);
 				_Velocity = Velocity;
 				_Velocity[1] = _Velocity[1] * ChassisRatio * radTorpm;
