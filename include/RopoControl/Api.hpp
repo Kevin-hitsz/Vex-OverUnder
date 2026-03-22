@@ -10,6 +10,8 @@
 namespace RopoControl{
 
 	#ifdef _PROS_RTOS_HPP_
+		/// @brief 获取设备初始化到现在的时间（秒）
+		/// @return 设备初始化到现在的时间（秒）
 		FloatType GetSystemTimeInSec(){return pros::millis() / 1000.0;}
 	#else
 		FloatType GetSystemTimeInSec(){return 0;}

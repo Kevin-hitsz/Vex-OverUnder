@@ -41,6 +41,7 @@
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
+#include "RopoParameter.hpp"
 #include "RopoMath/Header.hpp"
 #include "RopoSensor/Header.hpp"
 #include "RopoControl/Header.hpp"

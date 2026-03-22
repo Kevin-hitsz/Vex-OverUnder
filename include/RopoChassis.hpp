@@ -10,48 +10,63 @@
 #include "pros/rtos.hpp"
 #include "RopoSensor/Debugger.hpp"
 #include "RopoPosition.hpp"
+#include "RopoParameter.hpp"
 #include <algorithm>
 
 
 namespace RopoChassis{
-	// Api
-
-	// typedef RopoApi::FloatType FloatType;
-	// typedef RopoMath::Vector<FloatType> Vector;
-	// typedef RopoMath::Matrix<FloatType> Matrix;
-
-	// Code
+	
 	class TankChassis{
 		private:
-			static constexpr float WheelRad = 0.041275;
-			static constexpr float ChassisParameter = (0.295+0.295)/2; // 0.2855
-			static constexpr float DefaultVelocityLimits = 600;
-
-			inline static RopoControl::PIDRegulator DistanceRegulator{0.004,0.0004,0.00000,0.0004,-1e7,0.15,0.3};
-			inline static RopoControl::PIDRegulator SlowDegRegulator{0.000036,0.00001,0.00001,0.0015,-1e7,2,0.3};
-			//0.00001,0.00012,0.0004
-			RopoControl::TankChassisCore Core;
+			static constexpr float WheelRad = RopoParameter::WHEEL_RAD;						//轮子半径
+			static constexpr float ChassisParameter = RopoParameter::CHASSIS_PARAMETER; 				//车体宽度
+			static constexpr float DefaultVelocityLimits = 600;				//最大速度限制
+			static constexpr float DeltaVelocity_in_AccelerationProcess = 0.02;  //加速过程每SampleTime的增加的速度
+			static constexpr float AccelerationVelocityLimits = 2;
+			//控制器参数为p，i，d，最大值限幅，最小值限幅，误差容限，到达退出时间（秒）
+			inline static RopoControl::PIDRegulator DistanceRegulator{0.0035 ,0.0001  ,0.004 ,0.002,-0.002,0.02,0.01};
+			//inline static RopoControl::PIDRegulator DistanceRegulator{0.005 ,0.0001  ,0.00006 ,0.0014,-0.0014,0.02,0.3};
+			//0.0026 ,0.0001  ,0.00001 ,0.00075,-0.00075,0.02,0.3
+			inline static RopoControl::PIDRegulator SlowDegRegulator {0.00007,0.000001,0.000060,0.0075 ,-0.0075 ,3,0.05};
+			//0.000060,0.000008,0.0000025,0.0030 ,-0.0030 ,3   ,0.2
+			RopoControl::TankChassisCore Core;		
+			
+									
 			void (*MotorMove[2])(FloatType);
 			Vector ChassisVelocity;
 			Vector MotorVelocity;
-			const int SampleTime;
-			int DetectionX;
+			FloatType AccelerationProcessSpeed;
 
-			// For AutoMove Functions
+			const int SampleTime;			//采样间隔
+			
+			
+			
 			enum AutoStatus{
-				Disable = -1,
-				MovePosAbs = 0,
-				MoveForward = 1,
-				Rotate = 2
+				DetectMove = -1,				//直接控制状态
+				MovePosAbs = 0,				//坐标运行状态
+				MoveForward = 1,			//直行
+				Rotate = 2,					//旋转
+				RotateLock = 3              //旋转锁定，速度不改
 			} AutoMoveType;
+			
+			enum OpStatus{
+				AutoMove = 0,				//非手动赛状态
+				OpMove = 1					//手动赛状态
+			} MoveType;
+
 			Vector (*GetCurPosition)();
-			Vector AimPosition;
-			FloatType DegErrorTolerance;
-			bool Arrived, DisArrived, DegArrived;
+			Vector AimPosition;									//目标位姿（x，y，theta）
+			bool DisArrived;									//距离到达标志 
+			bool DegArrived;									//角度到达标志
 
 			pros::Task* BackgroundTask;
+			bool moveReverse=false;
+			bool flag;
 
+			
 			void OpenLoopMove(const Vector& Velocity) {
+				const FloatType ChassisRatio = RopoParameter::CHASSIS_RATIO;	
+				const FloatType radTorpm = RopoParameter::RAD_TO_RPM;				
 				const FloatType ChassisRatio = 3.0 / 2.0;
 				const FloatType radTorpm = 600 / 62.83;				// 1 degree / 2pi * 60s  //
 				static Vector _Velocity(RopoMath::ColumnVector,2);
@@ -67,131 +82,153 @@ namespace RopoChassis{
 
 		public:
 
-			static inline Matrix RotationMatrix(FloatType Degree){
-				static Matrix _RotationMatrix(3, 3);
-				_RotationMatrix[1][1] = RopoMath::Cos(Degree), _RotationMatrix[1][2] = -RopoMath::Sin(Degree), _RotationMatrix[1][3] = 0;
-				_RotationMatrix[2][1] = RopoMath::Sin(Degree), _RotationMatrix[2][2] =  RopoMath::Cos(Degree), _RotationMatrix[2][3] = 0;
-				_RotationMatrix[3][1] = 0, _RotationMatrix[3][2] = 0, _RotationMatrix[3][3] = 1;
-				return _RotationMatrix;
-			}
 
 			static void ChassisMoveBackgroundFunction(void *Parameter){
 				if(Parameter == nullptr)return;
 				TankChassis *This = static_cast<TankChassis *>(Parameter);
-				AutoStatus LastMoveType = This->AutoMoveType;
-				auto AimPosition = This->GetCurPosition();
-				while(true){
-					if(LastMoveType != This->AutoMoveType){
-						This->Arrived = false;
-						DistanceRegulator.Reset();
-						SlowDegRegulator.Reset();
-						AimPosition = This->GetCurPosition();
-					}
-					if(This->AutoMoveType == Disable){
-						This->OpenLoopMove(This->ChassisVelocity);
-					}
-					else{
-						auto CurrentPosition = This->GetCurPosition();
-						Vector TempChassisVelocity(RopoMath::ColumnVector,2);
-						
-						AimPosition[1] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[1],AimPosition[1],1,1000.0 / This->SampleTime);
-						AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],1,1000.0 / This->SampleTime);
-						// AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],1,1000.0 / This->SampleTime);
-						AimPosition[3] = This->AimPosition[3];
 
-						Vector Delta(RopoMath::ColumnVector,3);
-						
-						Delta[1] = AimPosition[1] - CurrentPosition[1];
-						Delta[2] = AimPosition[2] - CurrentPosition[2];
-						Delta[3] = AimPosition[3] - CurrentPosition[3];
-						FloatType DeltaRotation = RopoMath::DeltaTwoPoint(CurrentPosition[1],CurrentPosition[2],AimPosition[1],AimPosition[2]);
-						while(Delta[3] >= 180.0) Delta[3] -= 360.0;
-						while(Delta[3] < -180.0) Delta[3] += 360.0;
-
-						if(This->AutoMoveType == MoveForward){
-							// 此情况默认车头正对
-							// FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
-							// if(Delta[1] < 0)	DeltaDis *= -1; 
-
-							// This->DisArrived = DistanceRegulator.IfArrived();
-
-							// if(!This->DisArrived){
-							// 	FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-							// 	TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );
-							// 	This->Arrived = false;
-							// 	//TempChassisVelocity[2] = TempChassisVelocity[1]
-							// }
-							// else{
-							// 	TempChassisVelocity[1] = 0;
-							// 	This->Arrived = true;
-							// 	TempChassisVelocity[2] = 0;
-							// }
-							// TempChassisVelocity[2] = 0;
-
-							FloatType DeltaDis = RopoMath::Distance(Delta[1],Delta[2]);		
-							if(Delta[1] < 0)	DeltaDis *= -1; 
-							DeltaDis *= This -> DetectionX;
-							This->DisArrived = DistanceRegulator.IfArrived();
-
-							if(!This->DisArrived){
-								FloatType DisRes = DistanceRegulator.Update(DeltaDis);
-								TempChassisVelocity[1] = DisRes / ( This->SampleTime / 1000.0 );// * 0.9
-								FloatType _R = DeltaDis;//圆心在左正，圆心在右负
-								DeltaRotation -= CurrentPosition[3];
-								if(_R > 0.5){
-									_R = (_R - 0.5)/3.0+_R;
-								}
-								if(DeltaRotation > 90 ){
-									DeltaRotation -= 180;
-								}
-								if(DeltaRotation < -90 ){
-									DeltaRotation += 180;
-								}
-								// _R = _R/RopoMath::Sin(DeltaRotation/2.0);
-
-								// if(_R > 0){
-								// 	_R = std::max(_R,0.5);			
-								// }
-								// if(_R < 0){
-								// 	_R = std::min(_R,-0.5);
-								// }
-								// if (TempChassisVelocity[1] > 3.0){	
-								// 	TempChassisVelocity[1] = 3.0;
-								// }
-								// TempChassisVelocity[2] = TempChassisVelocity[1]/_R;
-								TempChassisVelocity[2] = DeltaRotation / 45.0 ;
-								if(DeltaDis < 0.2){
-									TempChassisVelocity[2] = 0;
-								}
-
-							}
-							else{
-								TempChassisVelocity[1] = 0;
-								TempChassisVelocity[2] = 0;
-							}
+				FloatType RunDistance=0;	
+				FloatType aimDistance=0;				
+				FloatType DeltaDis=0;
+				FloatType DeltaRotation=0;
+				FloatType DegRes=0;
+				FloatType DisRes=0;
+				
+				Vector AimPosition = This->GetCurPosition();
+				Vector IniPosition = This->GetCurPosition();
+				Vector Delta(RopoMath::ColumnVector,3);
+				Vector TempChassisVelocity(RopoMath::ColumnVector,2);
+				Vector CurrentPosition=This->GetCurPosition();
+				
+				while(true)
+				{
+					if(This->MoveType == AutoMove){
+						if(This->AutoMoveType != DetectMove && This->flag)
+						{
+							AimPosition = This->GetCurPosition();
+							IniPosition = This->GetCurPosition();
 						}
-						else if(This->AutoMoveType == Rotate){
-							This->DegArrived = SlowDegRegulator.IfArrived();
 
-							if(!This->DegArrived){
-								FloatType DegRes = SlowDegRegulator.Update(Delta[3]);
-								TempChassisVelocity[2] = DegRes * 0.8 / ( This->SampleTime / 1000.0 );	// *0.8
-								This->Arrived = false;
-							}
-							else{
-								TempChassisVelocity[2] = 0;
-								This->Arrived = true;
-							}
-							TempChassisVelocity[1] = 0;
+						if(This->AutoMoveType == DetectMove)
+						{
+							This->OpenLoopMove(This->ChassisVelocity);
 						}
-						else if(This->AutoMoveType == MovePosAbs){
+						else if(!This->flag)
+						{
 							
-						}
-						
-						This->OpenLoopMove(TempChassisVelocity);
-					}					
-					LastMoveType = This->AutoMoveType;
-					pros::delay(This->SampleTime);
+							CurrentPosition = This->GetCurPosition();
+							//输入平滑
+							AimPosition[1] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[1],AimPosition[1],11,1000.0 / This->SampleTime);//10
+							AimPosition[2] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[2],AimPosition[2],11,1000.0 / This->SampleTime);//10
+							AimPosition[3] = RopoMath::LowPassFilter<FloatType>(This->AimPosition[3],AimPosition[3],11,1000.0 / This->SampleTime);//10
+							
+							// 不进行平滑
+							// AimPosition[1] = This->AimPosition[1];
+							// AimPosition[2] = This->AimPosition[2];
+							// AimPosition[3] = This->AimPosition[3];
+							
+							aimDistance=RopoMath::Distance(AimPosition[1]-IniPosition[1],AimPosition[2]-IniPosition[2]);		
+							
+							
+							DeltaRotation = RopoMath::DeltaTwoPoint(CurrentPosition[1],CurrentPosition[2],AimPosition[1],AimPosition[2]);
+							Delta[3]=AimPosition[3]-CurrentPosition[3];
+							//寻找最小转角（注意+180到-180的角度突变）
+							while(Delta[3] >= 180.0) Delta[3] -= 360.0;
+							while(Delta[3] < -180.0) Delta[3] += 360.0;
+							//自动直行状态
+							if(This->AutoMoveType == MoveForward)
+							{
+								
+								//已走距离
+								RunDistance = RopoMath::Distance(CurrentPosition[1]-IniPosition[1],CurrentPosition[2]-IniPosition[2]);		
+								//距离误差
+								DeltaDis=aimDistance-RunDistance;
+								//是否到达
+								This->DisArrived = DistanceRegulator.IfArrived();
+
+								if(!This->DisArrived)
+								{
+									
+									//pid计算直行控制量
+									DisRes = DistanceRegulator.Update(DeltaDis);
+									if( (This->AccelerationProcessSpeed < DisRes / ( This->SampleTime / 1000.0)) && DeltaDis/aimDistance>0.2){
+										TempChassisVelocity[1] = (This->moveReverse?-1:1)*This->AccelerationProcessSpeed;
+										This->AccelerationProcessSpeed += This->DeltaVelocity_in_AccelerationProcess;
+										if(This->AccelerationProcessSpeed > This->AccelerationVelocityLimits)This->AccelerationProcessSpeed = This->AccelerationVelocityLimits;
+									}
+									else{
+										TempChassisVelocity[1] = (This->moveReverse?-1:1)*(DisRes / ( This->SampleTime / 1000.0) );
+									}
+									//前90%路程车体方向锁定指向末位置，后20%路程车体方向锁定为初始方向，防止末位置方向抖动
+
+									if(!This->moveReverse)
+									{
+										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
+											DeltaRotation -= CurrentPosition[3];
+										else
+											//DeltaRotation=IniPosition[3]-CurrentPosition[3];
+											DeltaRotation = 0;
+
+										while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
+										while(DeltaRotation < -180.0) DeltaRotation += 360.0;
+									}
+									else
+									{	
+										DeltaRotation += 180;
+										if(DeltaRotation>180)
+											DeltaRotation-=360;
+
+										if(DeltaDis/aimDistance>0.2 && aimDistance >= 0.2 )
+											DeltaRotation -= CurrentPosition[3];
+										else
+											//DeltaRotation=IniPosition[3]-CurrentPosition[3];
+											DeltaRotation = 0;
+
+										while(DeltaRotation >= 180.0) DeltaRotation -= 360.0;
+										while(DeltaRotation < -180.0) DeltaRotation += 360.0;
+									}
+									
+									//方向锁定
+									//TempChassisVelocity[2] = DeltaRotation * (This->moveReverse?-1:1) * 0.02 ;
+									TempChassisVelocity[2] = DeltaRotation * 0.02 ;
+									
+
+								}
+								else
+								{
+									TempChassisVelocity[1] = 0;
+									TempChassisVelocity[2] = 0;
+									This->flag=true;
+								}
+							}
+
+							//自动旋转状态
+							else if(This->AutoMoveType == Rotate)
+							{
+								//是否到达目标角
+								This->DegArrived = SlowDegRegulator.IfArrived();
+
+								if(!This->DegArrived)
+								{
+									DegRes = SlowDegRegulator.Update(Delta[3]);
+									TempChassisVelocity[2] = DegRes *1000.0/ This->SampleTime;
+								}
+								else
+								{
+									TempChassisVelocity[2] = 0;
+									This->flag=true;
+								}
+								TempChassisVelocity[1] = 0;
+							}
+							
+							
+							This->OpenLoopMove(TempChassisVelocity);
+						}		
+						pros::delay(This->SampleTime);
+					}	
+					else if(This->MoveType == OpMove){		
+						pros::delay(This->SampleTime);
+					}
 				}
 			}
 
@@ -202,103 +239,228 @@ namespace RopoChassis{
 				Core( WheelRad, ChassisParameter, DefaultVelocityLimits),
 				MotorMove{  RightMotorMove,LeftMotorMove},
 				ChassisVelocity(RopoMath::ColumnVector,2),SampleTime(_SampleTime),
-				AutoMoveType(Disable),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
-				DegErrorTolerance(5),Arrived(false),DisArrived(false),DegArrived(false),
-				BackgroundTask(nullptr){
+				AutoMoveType(DetectMove),MoveType(AutoMove),GetCurPosition(GetPosition_),AimPosition(RopoMath::ColumnVector,3),
+				DisArrived(false),DegArrived(false),AccelerationProcessSpeed(0),
+				BackgroundTask(nullptr),moveReverse(false),flag(true){
 				BackgroundTask = new pros::Task(ChassisMoveBackgroundFunction,this);
 			}
 
 			void SetVelocityLimits(FloatType VelocityLimits) {Core.SetVelocityLimits(VelocityLimits);}
-			void SetDegErrorTolerance(FloatType ErrorTolerance) {DegErrorTolerance = ErrorTolerance;}
 			Vector GetChassisVelocity(){return ChassisVelocity;}
 			Vector GetMotorVelocity(){return MotorVelocity;}
 
-			bool IfArrived(){return Arrived;}
-			bool IfDisArrived(){return DisArrived;}
-			bool IfDegArrived(){return DegArrived;}
-
-			void MoveVelocity(const Vector& Velocity) {
-				ChassisVelocity = Velocity, AutoMoveType = Disable;
+			/// @brief 单次直行或旋转是否完成
+			/// @return 单次直行或旋转是否完成
+			bool IfArrived()
+			{
+				return flag;
 			}
-			void MoveVelocity(FloatType X,FloatType W){
+
+			/// @brief 直行是否到达
+			/// @return 直行是否到达
+			bool IfDisArrived(){return DisArrived;}
+
+			/// @brief 旋转是否到达
+			/// @return 旋转是否到达
+			bool IfDegArrived(){return DegArrived;}
+			
+			//MoveType 的底盘控制优先级高于 AutoMoveType
+			/// @brief 设置底盘为手动赛模式，该模式底盘模块不会操控底盘电机，此时底盘模块只会等待
+			void StartChassisOpControll(){
+				MoveType = OpMove;
+				flag = true;
+			}
+
+			/// @brief 设置底盘为自动赛模式，该模式底盘模块会操控底盘电机
+			void StartChassisAutoControll(){
+				MoveType = AutoMove;
+			}
+
+			/// @brief 赋予车速度
+			/// @param Velocity 赋予的速度矢量
+			void MoveVelocity(const Vector& Velocity) 
+			{
+				ChassisVelocity = Velocity;
+				AutoMoveType = DetectMove;
+			}
+
+			/// @brief 赋予车速度
+			/// @param X 速度直行分量 （m/s）
+			/// @param W 速度旋转分量（rad/s）
+			void MoveVelocity(FloatType X,FloatType W)
+			{
 				ChassisVelocity[1] = X;
 				ChassisVelocity[2] = W;
-				AutoMoveType = Disable;
+				AutoMoveType = DetectMove;
 			}
 
-			void AutoRotateAbs(FloatType AimDegree) {
-				AimPosition[3] = AimDegree, AutoMoveType = Rotate, DegArrived = false, SlowDegRegulator.Reset();
+			/// @brief 旋转至目标角
+			/// @param AimDegree 目标角
+			void AutoRotateAbs(FloatType AimDegree)
+			{
+				SlowDegRegulator.Reset();
+				flag=false;
+				AimPosition[3] = AimDegree;
+				AutoMoveType = Rotate;
+				DegArrived = false; 
 			}
-			void AutoDirectMove(FloatType AimX, FloatType AimY){
+
+			/// @brief 相对旋转一定角度
+			/// @param RelativeDegree 相对角
+			void AutoRotateRelative(FloatType RelativeDegree)
+			{
+				SlowDegRegulator.Reset();
+				flag=false;
+				RelativeDegree += (GetCurPosition())[3];
+				if(RelativeDegree > 180 ) RelativeDegree -= 180;
+				if(RelativeDegree < -180 ) RelativeDegree += 180;
+				AimPosition[3] = RelativeDegree;
+				AutoMoveType = Rotate;
+				DegArrived = false; 
+			}
+			
+			/// @brief 直行到目标点
+			/// @param AimX 目标X
+			/// @param AimY 目标Y
+			/// @param move 是否倒车，必须与目标坐标匹配
+			void AutoDirectMove(FloatType AimX, FloatType AimY,bool move)
+			{
+				AccelerationProcessSpeed = 0;
+				DistanceRegulator.Reset();
+				moveReverse=move;
+				flag=false;
 				AimPosition[1] = AimX;
 				AimPosition[2] = AimY;
 				AimPosition[3] = GetCurPosition()[3];
-				AutoMoveType = MoveForward, DisArrived = false, DistanceRegulator.Reset();
+				DisArrived = false;
+				AutoMoveType = MoveForward;
 			}
-			void AutoMovePosAbs(FloatType xPos, FloatType yPos, FloatType theta){
-				Arrived = false;
-				auto CurPosition = GetCurPosition();
-				FloatType DeltaX = xPos - CurPosition[1], DeltaY = yPos -CurPosition[2];
-				if (DeltaX < 0) {
-					DetectionX = -1;
-				}
-				else {
-					DetectionX = 1;
-				}
-				FloatType TurnDeg = RopoMath::DeltaTwoPoint(DeltaX, DeltaY);
 
-				AutoRotateAbs(TurnDeg);
-				while (!DegArrived)
-				{
-					pros::delay(20);
-				}
+			/// @brief 直接使车移动到目标点
+			/// @param AimX 目标X坐标
+			/// @param AimY 目标Y坐标
+			void AutoPositionMove(FloatType AimX,FloatType AimY)
+			{
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(200);
 				
-				AutoDirectMove(xPos,yPos);
-				while(!DisArrived){
-					pros::delay(20);
-				}
-
-				AutoRotateAbs(theta);
-				while (!DegArrived)
-				{
-					pros::delay(20);
-				}
-				Arrived = true;
+				AutoDirectMove(AimX,AimY,false);
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(200);
 			}
-			void AutoMovePosAbsBack(FloatType xPos, FloatType yPos, FloatType theta){
-				Arrived = false;
-				auto CurPosition = GetCurPosition();
 
-				FloatType DeltaX = xPos - CurPosition[1], DeltaY = yPos -CurPosition[2];
-				if (DeltaX < 0) {
-					DetectionX = 1;
-				}
-				else {
-					DetectionX = -1;
-				}
-				FloatType TurnDeg = RopoMath::DeltaTwoPoint(DeltaX, DeltaY);
-				if (TurnDeg < 0) {
-					TurnDeg += 180;
-				} else {
-					TurnDeg -= 180;
-				}
-				AutoRotateAbs(TurnDeg);
-				while (!DegArrived)
-				{
-					pros::delay(20);
-				}
+			void AutoPositionMoveBack(FloatType AimX,FloatType AimY)
+			{
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(200);
 				
-				AutoDirectMove(xPos,yPos);
-				while(!DisArrived){
-					pros::delay(20);
-				}
+				AutoDirectMove(AimX,AimY,true);
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(200);
+			}
 
-				AutoRotateAbs(theta);
-				while (!DegArrived)
-				{
+			/// @brief 直接使车移动到目标点并旋转至目标角度
+			/// @param AimX 目标X坐标
+			/// @param AimY 目标Y坐标
+			/// @param Theta 目标角度
+			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta)
+			{
+				
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,false);
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(100);
+				//旋转至目标角度
+				AutoRotateAbs(Theta);
+				pros::delay(20);
+				while(!flag) pros::delay(100);
+			}
+
+			void AutoPositionMove(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
+			{
+				FloatType nowTime = pros::millis();
+
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2]));
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,false);
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				//旋转至目标角度
+				if(Theta < 1000){
+					AutoRotateAbs(Theta);
 					pros::delay(20);
+					while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
 				}
-				Arrived = true;
+				flag = true;
+			}
+
+			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta)
+			{
+				
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,true);
+				//等待到达
+				pros::delay(20);
+				while(!flag) pros::delay(100);
+				//旋转至目标角度
+				AutoRotateAbs(Theta);
+				pros::delay(20);
+				while(!flag) pros::delay(100);
+			}
+
+			void AutoPositionMoveBack(FloatType AimX,FloatType AimY,FloatType Theta,FloatType _Time)
+			{
+				FloatType nowTime = pros::millis();
+
+				RopoMath:: Vector CurentPosition=GetCurPosition();
+				//旋转指向目标点
+				AutoRotateAbs(RopoMath::DeltaTwoPoint(AimX-CurentPosition[1],AimY-CurentPosition[2])+180);
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				
+				AutoDirectMove(AimX,AimY,true);
+				//等待到达
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				//旋转至目标角度
+				AutoRotateAbs(Theta);
+				pros::delay(20);
+				while(!flag && pros::millis()-nowTime < _Time) pros::delay(100);
+				flag = true;
+			}
+
+			int GetMoveType(){
+				return MoveType;
 			}
 	};
 }
